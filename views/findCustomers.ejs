@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Duyệt khách mới'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Tra cứu khách hàng</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="block">
+
+          <form action="" method="post">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Họ và tên</label>
+                  <input type="text" class="form-control" name="name" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Điện thoại</label>
+                  <input type="text" class="form-control" name="phone" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Email</label>
+                  <input type="text" class="form-control" name="email" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Mã giới thiệu</label>
+                  <input type="text" class="form-control" name="ref" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Tình trạng</label>
+                  <select id="" class="form-control" name="status">
+                    <option value="true">Đã hết hạn</option>
+                    <option value="false" selected>Chưa hết hạn</option>
+                  </select>
+                </div>
+                <div class="col-12 form-group">
+                  <input type="submit" class="btn btn-secondary" name="find" value="Tìm kiếm"/>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </section>
+
+      <% if(data.length>0) { %>
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <table style="width:100%" id="clientTable">
+                <tr>
+                  <th>ID</th>
+                  <th>Họ và tên</th>
+                  <th>Điện thoại</th>
+                  <th>Email</th>
+                  <th>Mã giới thiệu</th>
+                  <th>Ngày hết hạn</th>
+                  <th></th>
+                </tr>
+                <% for(var i=0; i < data.length; i++) { %>
+                  <tr>
+                    <td id="ID-<%= data[i].id %>"><%= data[i].id %></td>
+                    <td id="name-<%= data[i].id %>"><%= data[i].name %></td>
+                    <td id="phone-<%= data[i].id %>"><%= data[i].phone.replace('+84','0') %></td>
+                    <td id="email-<%= data[i].id %>"><%= data[i].email %></td>
+                    <td id="ref-<%= data[i].id %>"><%= data[i].ref_id.replace('+84','0') %></td>
+                    <td id="expire-<%= data[i].id %>"><%= dateFormat(data[i].expire_date) %></td>
+                    <td id="phongthan-<%= data[i].id %>" style="display:none"><%= data[i].phongthan %></td>
+                    <td id="ddk-<%= data[i].id %>" style="display:none"><%= data[i].ddk %></td>
+                    <td class="text-center">
+                      <button class="border-0 btn-transition btn btn-outline-success clientButton" id="clientInfo-<%= data[i].id %>"></button>
+                    </td>
+                  </tr>
+                <% } %>
+              </table>
+            </div>
+          </div>
+          <div  id="button-excel" class="btn btn-success">Xuất Excel</div>
+        </div>
+
+      </section>
+      <% } else { %>
+        <section>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <p>Không tìm thấy kết quả nào.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      <% } %>
+
+      <div class="overlay overlay-dark" id="client-form-wrapper">
+        <div id="client-form">
+          <form action="" method="post">
+            <div class="modal-content welcome-content client-form-content">
+              <div class="modal-header d-flex justify-content-center">
+                <h3 class="heading">Thay đổi thông tin <% if(user.role_id == 2) { %>người dùng<% } else { %>khách hàng<% } %></h3>
+              </div>
+              <div class="modal-body">
+
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-4 col-12 form-group">
+                        <input type="text" id="id-input" style="display:none" name="id" placeholder=""/>
+                        <label>Họ và tên</label>
+                        <input type="text" id="name-input" class="form-control" name="name" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Điện thoại</label>
+                        <input type="text" id="phone-input" class="form-control" name="phone" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Email</label>
+                        <input type="text" id="email-input" class="form-control" name="email" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Mã giới thiệu</label>
+                        <input type="text" id="ref-input" class="form-control" name="ref" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Ngày hết hạn</label>
+                        <input type="date" id="expire-input" class="form-control" name="expire" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Reset mật khẩu</label>
+                        <select id="" class="form-control" name="resetPassword">
+                          <option value="true">Có</option>
+                          <option value="false" selected>Không</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Sử dụng Bảng Phong thần</label>
+                        <select id="phongthan-input" class="form-control" name="ptChange">
+                          <option value="true">Có</option>
+                          <option value="false">Không</option>
+                        </select>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Sử dụng Bảng điều kiện</label>
+                        <select id="ddk-input" class="form-control" name="ddkChange">
+                          <option value="true">Có</option>
+                          <option value="false">Không</option>
+                        </select>
+                      </div>
+                      <% if(user.role_id == 2) { %>
+                        <div class="col-lg-4 col-12 form-group">
+                          <label>Cấp quyền</label>
+                          <select id="" class="form-control" name="role_id">
+                            <option value="1" selected>Khách hàng</option>
+                            <option value="3">Quản lý</option>
+                          </select>
+                        </div>
+                      <% } %>
+                    </div>
+                  </div>
+
+              </div>
+              <div style="display:none">
+                <% console.log(query) %>
+                <input type="text" name="queryName" value="<%= query.name %>"/>
+                <input type="text" name="queryPhone" value="<%= query.phone %>"/>
+                <input type="text" name="queryEmail" value="<%= query.email %>"/>
+                <input type="text" name="queryRef" value="<%= query.ref %>"/>
+                <input type="text" name="queryStatus" value="<%= query.status %>"/>
+              </div>
+              <div class="modal-footer d-flex justify-content-center">
+                <input type="submit" class="btn btn-success" name="applyChange" value="Thay đổi"/>
+                <span id="client-form-close" class="btn btn-danger">Đóng</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/tableToExcel.js"></script>
+<script>
+  let button = document.querySelector("#button-excel");
+
+  button.addEventListener("click", e => {
+  let table = document.querySelector("#clientTable");
+  TableToExcel.convert(table);
+  });
+</script>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js" charset="utf-8"></script>
+</html>

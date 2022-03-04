@@ -1,0 +1,50 @@
+[
+  {
+    "title":"Tổng quan",
+    "link":"/manager",
+    "child":[]
+  },
+  {
+    "title":"Quản lý khách",
+    "link":"#",
+    "child":[
+      {
+        "title":"Duyệt khách mới",
+        "link":"new-customers"
+      },
+      {
+        "title":"Tra cứu khách",
+        "link":"/find-customers"
+      }
+    ]
+  },
+  {
+    "title":"Trading",
+    "link":"#",
+    "child":[
+      {
+        "title":"Copy trade",
+        "link":"/trade-admin"
+      },
+      {
+        "title":"Tool Phong thần",
+        "link":"/pt-admin"
+      }
+    ]
+  },
+  {
+    "title":"Link tải App",
+    "link":"/download-setup",
+    "child":[]
+  },
+  {
+    "title":"Đổi mật khẩu",
+    "link":"/change-password",
+    "child":[]
+  },
+  {
+    "title":"Đăng xuất",
+    "link":"/logout",
+    "child":[]
+  }
+]

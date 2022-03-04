@@ -1,0 +1,157 @@
+<h3>Tin nhắn cảnh báo</h3>
+<div style="margin:5px;padding:5px;border:1px solid #9999994f;background:#99999954">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-12">
+        <form action="/pt-admin" method="post">
+          <% if(canhbao.display=='none') { %><strong id="canhbaoOn">Cảnh báo đang được TẮT</strong><% } else { %><strong id="canhbaoOn">Cảnh báo đang được BẬT</strong><% } %>
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <p>Nội dung cảnh báo</p>
+                <input id="canhbaoMsg" type="text" placeholder="VD: rủi ro cao" name="canhbaoMsg" style="width: 100%;margin-bottom: 10px">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <p>Số lượng màu</p>
+                <select id="canhbaoColorNumber" name="canhbaoColorNumber">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5" selected="selected">5</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2" id="canhbaoColor1Input">
+                <p>Màu 1</p>
+                <input id="canhbaoColor1" type="color" name="canhbaoCol1" value="#ff3636">
+              </div>
+              <div class="col-2" id="canhbaoColor2Input">
+                <p>Màu 2</p>
+                <input id="canhbaoColor2" type="color" name="canhbaoCol2" value="#00ff44">
+              </div>
+              <div class="col-2" id="canhbaoColor3Input">
+                <p>Màu 3</p>
+                <input id="canhbaoColor3" type="color" name="canhbaoCol3" value="#477eff">
+              </div>
+              <div class="col-2" id="canhbaoColor4Input">
+                <p>Màu 4</p>
+                <input id="canhbaoColor4" type="color" name="canhbaoCol4" value="#ff52f9">
+              </div>
+              <div class="col-2" id="canhbaoColor5Input">
+                <p>Màu 5</p>
+                <input id="canhbaoColor5" type="color" name="canhbaoCol5" value="#ffd500">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <p>Tốc độ</p>
+                <input type="range" id="canhbaoSpeed" name="canhbaoSpeed" min="50" max="200" step="1" value="100">
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-12 text-center">
+              <button id="batcanhbao" type="submit" name="canhbaoSubmitOn" class="btn btn-danger">Bật cảnh báo</button>
+              <button id="tatcanhbao" type="submit" name="canhbaoSubmitOff" class="btn btn-light">Tắt cảnh báo</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6 col-md-6 col-12">
+        <strong>Lịch sử cảnh báo</strong>
+        <div class="console" id="console-canhbao">
+          <%
+            function addZero(numb) {
+              if(numb<10){
+                return "0"+numb;
+              } else {
+                return ""+numb;
+              }
+            }
+          %>
+          <% for(var i=0; i<lichsucanhbao.length; i++) {
+            var d = new Date(Date.parse(lichsucanhbao[i].warning_time));
+            var year = d.getFullYear();
+            var month = addZero(d.getMonth()+1);
+            var date = addZero(d.getDate());
+            var hour = addZero(d.getHours());
+            var min = addZero(d.getMinutes());
+            var sec = addZero(d.getSeconds());
+            var time = year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
+            %>
+            <p><span class="text-secondary"><%- time %>: </span> <%- lichsucanhbao[i].warning_msg %></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    const canhbaoColNum = document.getElementById('canhbaoColorNumber');
+    let canhbaoCol1Input = document.getElementById('canhbaoColor1Input');
+    let canhbaoCol2Input = document.getElementById('canhbaoColor2Input');
+    let canhbaoCol3Input = document.getElementById('canhbaoColor3Input');
+    let canhbaoCol4Input = document.getElementById('canhbaoColor4Input');
+    let canhbaoCol5Input = document.getElementById('canhbaoColor5Input');
+
+    canhbaoCol1Input.style.display = 'block';
+    canhbaoCol2Input.style.display = 'block';
+    canhbaoCol3Input.style.display = 'block';
+    canhbaoCol4Input.style.display = 'block';
+    canhbaoCol5Input.style.display = 'block';
+
+    canhbaoColNum.addEventListener('change', (event) => {
+      let colNumValue = canhbaoColNum.value;
+      switch(colNumValue) {
+        case "1":
+          canhbaoCol1Input.style.display = 'block';
+          canhbaoCol2Input.style.display = 'none';
+          canhbaoCol3Input.style.display = 'none';
+          canhbaoCol4Input.style.display = 'none';
+          canhbaoCol5Input.style.display = 'none';
+          break;
+        case "2":
+          canhbaoCol1Input.style.display = 'block';
+          canhbaoCol2Input.style.display = 'block';
+          canhbaoCol3Input.style.display = 'none';
+          canhbaoCol4Input.style.display = 'none';
+          canhbaoCol5Input.style.display = 'none';
+          break;
+        case "3":
+          canhbaoCol1Input.style.display = 'block';
+          canhbaoCol2Input.style.display = 'block';
+          canhbaoCol3Input.style.display = 'block';
+          canhbaoCol4Input.style.display = 'none';
+          canhbaoCol5Input.style.display = 'none';
+          break;
+        case "4":
+          canhbaoCol1Input.style.display = 'block';
+          canhbaoCol2Input.style.display = 'block';
+          canhbaoCol3Input.style.display = 'block';
+          canhbaoCol4Input.style.display = 'block';
+          canhbaoCol5Input.style.display = 'none';
+          break;
+        case "5":
+          canhbaoCol1Input.style.display = 'block';
+          canhbaoCol2Input.style.display = 'block';
+          canhbaoCol3Input.style.display = 'block';
+          canhbaoCol4Input.style.display = 'block';
+          canhbaoCol5Input.style.display = 'block';
+          break;
+        default:
+          canhbaoCol1Input.style.display = 'block';
+          canhbaoCol2Input.style.display = 'block';
+          canhbaoCol3Input.style.display = 'none';
+          canhbaoCol4Input.style.display = 'none';
+          canhbaoCol5Input.style.display = 'none';
+          // code block
+      }
+    });
+  </script>
+
+</div>

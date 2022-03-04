@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Tổng quan</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="block">
+                <h4 class="title">Người dùng mới đăng ký</h4>
+                <div class="number dashtext-1" style="font-size:2em;text-align:right;">1,000</div>
+                <div class="progress progress-template">
+                  <div role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-1"></div>
+                </div>
+                <div style="text-align:right"><a class="text-light" href="../new-customers">Xem chi tiết</a></div>
+              </div>
+              <div class="block">
+                <h4 class="title">Người dùng sắp hết hạn</h4>
+                <div class="number dashtext-3" style="font-size:2em;text-align:right;">1,000</div>
+                <div class="progress progress-template">
+                  <div role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-3"></div>
+                </div>
+                <div style="text-align:right"><a class="text-light" href="../expire-customers">Xem chi tiết</a></div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="block">
+                <h4 class="title" style="display:flex;margin-bottom:20px">Note những việc cần làm <div class="btn btn-success todo-add">+ Thêm mới</div></h4>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-12 p-3 todo">
+                      <ul>
+                        <% for(var i=0; i < 10; i++) { %>
+                        <li>
+                          <div class="todo-content-left">
+                              <div class="todo-heading">Call Sam For payments</div>
+                              <div class="todo-subheading"><i>By Bob</i></div>
+                          </div>
+                          <div class="todo-content-right">
+                            <button class="border-0 btn-transition btn btn-outline-success"> <i class="fa fa-check"></i></button>
+                            <button class="border-0 btn-transition btn btn-outline-danger"> <i class="fa fa-trash"></i> </button>
+                          </div>
+                        </li>
+                        <% } %>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+</html>

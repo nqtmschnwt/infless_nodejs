@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trading'}) %>
+<link rel="stylesheet" href="assets/css/appMain.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Dashboard</h2>
+        </div>
+      </div>
+      <!-- Main content begin -->
+      <% let ddd = new Date();
+      if(ddd>user.expire_date) {
+        %>
+        <h4 class="text-danger text-center">Tài khoản đã hết hạn sẻ dụng. Hãy liên hệ với nhân viên chăm sóc để gia hạn.</h4>
+        <%
+      } else {
+        console.log('User not expired'); %>
+        <%- include('appMainContent.ejs') %>
+      <% } %>
+      <!-- Main content end -->
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+<script src="/js/dashboard-main.js"></script>
+</html>

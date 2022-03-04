@@ -1,0 +1,401 @@
+/* COLOR PATTETE */
+:root {
+  --color-1: #fff;
+  --color-2: #ff214f;
+  --color-3: #ea1945;
+  --color-4: #515151;
+  --color-5: #777;
+  --color-6: #fbf5cc;
+  --color-7: #fff;
+  --color-8: #d6ca6f;
+  --color-9: #111;
+}
+
+
+.btn-theme{
+    color: var(--color-1);
+    background: var(--color-2);
+    border: solid 1px var(--color-2);
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.btn-theme:hover{
+    color: var(--color-1);
+    background: var(--color-3);
+    border: solid 1px var(--color-3);
+}
+
+.blog-4 .detail h3 a{
+    color: var(--color-2);
+}
+
+.blog-4 .detail .post-meta span a i{
+    color: var(--color-2);
+}
+
+.modal-right-content .bullets li i{
+   color: var(--color-2);
+}
+
+.top-header-bg {
+    background: var(--color-2);
+}
+
+.form-inline a:hover{
+    color: var(--color-2);
+}
+
+.show-more-options, .show-more-options:hover {
+    color: var(--color-2) !important;
+}
+
+.categories ul li a:hover{
+    color: var(--color-2);
+}
+
+.checkbox-theme input[type="checkbox"]:checked + label::before {
+    background-color: var(--color-2);
+    border-color: var(--color-2);
+}
+
+.tabbing-box .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    background-color: var(--color-2);
+}
+
+.tabbing-box .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link:hover {
+    background-color: var(--color-2);
+}
+
+#page_scroller {
+    background: var(--color-2);
+}
+
+.setting-button {
+    background: var(--color-2);
+}
+
+.banner-bg-color{
+    background: var(--color-3);
+}
+
+.btn-white-sm-outline:hover{
+    background: var(--color-3);
+    border: solid 1px var(--color-3);
+}
+
+.btn-white-lg-outline:hover{
+    background: var(--color-3);
+    border: solid 2px var(--color-3);
+}
+
+.btn-color{
+    background: var(--color-2);
+    border-color: var(--color-2);
+}
+
+.btn-color:hover{
+    background: var(--color-3);
+    border-color: var(--color-3);
+}
+
+.btn-color:not([disabled]):not(.disabled).active, .btn-color:not([disabled]):not(.disabled):active, .show > .btn-color.dropdown-toggle {
+    color: var(--color-1);
+    background-color: var(--color-3);
+    border-color: var(--color-3);
+    box-shadow: none;
+}
+
+.btn-theme-sm-outline{
+    color: var(--color-3) !important;
+    border: solid 2px var(--color-3);
+}
+
+.btn-theme-sm-outline:hover{
+    background: var(--color-3);
+    border: solid 2px var(--color-3);
+}
+
+.btn-border{
+    color: var(--color-2);
+    border: solid 1px var(--color-2);
+}
+
+.btn-border:not([disabled]):not(.disabled).active, .btn-border:not([disabled]):not(.disabled):active, .show > .btn-border.dropdown-toggle {
+    color: var(--color-1);
+    background-color: var(--color-2);
+    border-color: var(--color-2);
+    box-shadow: none;
+}
+
+.btn-border:hover{
+    color: var(--color-1);
+    border: solid 1px var(--color-3);
+    background: var(--color-3);
+}
+
+.read-more {
+    color: var(--color-2);
+}
+
+.blog-1 .date-box {
+    background: var(--color-2);
+}
+
+.blog-1 .date-box::after {
+    border-left: 15px solid var(--color-2);
+}
+
+.coming-soon-inner .btn, .coming-soon-inner .btn:hover, .coming-soon-inner .btn:active {
+    background: var(--color-2);
+}
+
+.megamenu-area .dropdown-item:hover {
+    color: var(--color-2);
+}
+
+.main-header .navbar-expand-lg .navbar-nav .active .nav-link{
+    color: var(--color-2) !important;
+    border-bottom: solid 2px var(--color-2);
+}
+
+.main-header .navbar-expand-lg .navbar-nav .nav-link:hover{
+    border-bottom: solid 2px var(--color-2);
+    color: var(--color-2) !important;
+}
+
+.main-header .dropdown-menu a:hover {
+    background: transparent;
+    color: var(--color-2);
+}
+
+.sub-banner .breadcrumbs li a:hover {
+    color: var(--color-2);
+}
+
+.sub-banner-2 .breadcrumbs li a:hover {
+    color: var(--color-2);
+}
+
+.overlay-link:hover{
+    background: var(--color-2);
+    border: 1px solid var(--color-2);
+}
+
+.service-box-3 .heading .number h5{
+    color: var(--color-2);
+}
+
+.services-info-3 .heading .number h5{
+    color: var(--color-2);
+}
+
+.services-info i{
+    color: var(--color-2);
+}
+
+.pricing-2 .price-for-user .price .dolar{
+    color: var(--color-2);
+}
+
+.faq-accordion .card-header:before {
+    color: var(--color-2);
+}
+
+.intro-section {
+    background: var(--color-2);
+}
+
+.modal-left-content .control{
+    background: var(--color-2);
+}
+
+.modal-right-content .price {
+    color: var(--color-2);
+}
+
+.testimonial .carousel-indicators .active {
+    background-color: var(--color-2);
+}
+
+.carousel-indicators .active {
+    background-color: var(--color-2);
+}
+
+.pages-404 .pages-404-inner h3 {
+    color: var(--color-2);
+}
+
+.pagination > li > .active {
+    background: var(--color-2);
+}
+
+.pagination > li > a:hover{
+    background: var(--color-2);
+}
+
+.tags ul li a:hover{
+    border: solid 1px var(--color-2);
+    background: var(--color-2);
+}
+
+.latest-tweet p a{
+    color: var(--color-2);
+}
+
+.shop-box .shop-details h6{
+    color: var(--color-2);
+}
+
+.form-check a{
+    color: var(--color-2);
+}
+
+.form-check a:hover{
+    color: var(--color-3);
+}
+
+.about-text ul li i {
+    color: var(--color-2);
+}
+
+.helping-center i{
+    color: var(--color-2);
+}
+
+.coming-soon-inner h1 a{
+    color: var(--color-2);
+}
+
+.filteriz-navigation li:hover {
+    color: var(--color-1);
+    background: var(--color-2);
+}
+
+li.active.btn.filtr-button.filtr {
+    color: var(--color-1);
+    background: var(--color-2);
+}
+
+.testimonial .testimonial-inner .testimonia-header h1 span{
+    color: var(--color-2);
+}
+
+.main-title h1 span{
+    color: var(--color-2);
+}
+
+.managment-border {
+    background: var(--color-2);
+}
+
+.testimonial-1 .testimonial-inner .testimonia-header h1 span{
+    color: var(--color-2);
+}
+
+.brand-box-2 h5 a{
+    color: var(--color-2);
+}
+
+.min-value {
+    color: var(--color-2);
+}
+
+.max-value {
+    color: var(--color-2);
+}
+
+.managment-area-2  .carousel-indicators .active{
+    background: var(--color-2);
+}
+
+.managment-area-2 h1 span{
+    color: var(--color-2);
+}
+
+.managment-area-2 ul li i{
+    color: var(--color-2);
+}
+
+.range-slider .ui-slider .ui-slider-handle {
+    background: var(--color-2);
+}
+
+.range-slider .ui-slider .ui-slider-handle {
+    border: 2px solid var(--color-2);
+}
+
+.range-slider .ui-widget-header {
+    background-color: var(--color-2);
+}
+
+.project-specification-2 ul li i{
+    color: var(--color-2);
+}
+
+.project-specification-2 ul li a{
+    color: var(--color-2);
+}
+
+.faq-accordion .card-header a:before {
+    color: var(--color-2);
+}
+
+/** MEDIA **/
+@media (max-width: 992px) {
+    .navbar-light .navbar-toggler {
+        color: var(--color-2);
+    }
+
+    .main-header .navbar-expand-lg .navbar-nav .active .nav-link {
+        border-bottom: solid 1px var(--color-2);
+        color: var(--color-2) !important;
+    }
+
+    .main-header .navbar-expand-lg .navbar-nav .nav-link:hover {
+        border-bottom: solid 1px var(--color-2);
+        color: var(--color-2) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .btn-white-lg-outline:hover{
+        background: var(--color-3);
+        border: solid 1px var(--color-3);
+    }
+
+}
+
+
+@media (min-width: 991px) {
+    .sticky-header .navbar-expand-lg .navbar-nav .active .nav-link {
+        color: var(--color-1) !important;
+        border-bottom: solid 2px transparent;
+    }
+
+    .sticky-header .navbar-expand-lg .navbar-nav .nav-link:hover {
+        color: var(--color-1) !important;
+        border-bottom: solid 2px transparent;
+        opacity: .8;
+    }
+
+    .header-shrink .navbar-expand-lg .navbar-nav .active .nav-link {
+        color: var(--color-4) !important;
+    }
+
+    .header-shrink .navbar-expand-lg .navbar-nav .nav-link:hover {
+        color: var(--color-4) !important;
+    }
+
+    .header-shrink .btn-white-sm-outline {
+        color: var(--color-2);
+        border: solid 2px var(--color-2);
+        padding: 5px 18px;
+        font-size: 12px;
+    }
+
+    .header-shrink .btn-white-sm-outline:hover{
+        color: var(--color-1);
+    }
+}

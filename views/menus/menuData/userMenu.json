@@ -1,0 +1,44 @@
+[
+  {
+    "title":"Home",
+    "link":"/home",
+    "child":[]
+  },
+  {
+    "title":"Lịch sử lệnh",
+    "link":"#",
+    "child":[
+      {
+        "title":"Tuần",
+        "link":"#"
+      },
+      {
+        "title":"Tháng",
+        "link":"#"
+      },
+      {
+        "title":"Năm",
+        "link":"#"
+      },
+      {
+        "title":"Hiệu quả đầu tư",
+        "link":"#"
+      }
+    ]
+  },
+  {
+    "title":"Gia hạn sử dụng",
+    "link":"#",
+    "child":[]
+  },
+  {
+    "title":"Đổi mật khẩu",
+    "link":"/change-password",
+    "child":[]
+  },
+  {
+    "title":"Đăng xuất",
+    "link":"/logout",
+    "child":[]
+  }
+]

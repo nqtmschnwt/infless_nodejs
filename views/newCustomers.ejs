@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Duyệt khách mới'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Duyệt khách mới</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="block">
+                <% if(data.length>0) {%>
+                <table style="width:100%">
+                  <tr>
+                    <th>ID</th>
+                    <th>Họ và tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Mã giới thiệu</th>
+                    <th>Hạn sử dụng</th>
+                    <th></th>
+                  </tr>
+                  <% for(var i=0; i < data.length; i++) { %>
+                    <form action="" method="post" name="newCustomer-<%= data[i].id %>">
+                      <tr>
+                        <td><%= data[i].id %></td>
+                        <td><%= data[i].name %></td>
+                        <td><%= data[i].phone.replace('+84','0') %></td>
+                        <td><%= data[i].email %></td>
+                        <td><%= data[i].ref_id %></td>
+                        <td>
+                          <input type="text" name="id" value="<%= data[i].id %>" readonly style="display:none">
+                          <input type="text" name="expiry" value="30" style="width:5em"/> ngày
+                        </td>
+                        <td class="text-center">
+                          <button type="submit" class="btn btn-success" value="acceptCustomer" name="action">
+                            <i class="fa fa-check"></i>
+                          </button>
+                          <button type="submit" class="btn btn-danger" value="declineCustomer" name="action">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </form>
+                  <% } %>
+                </table>
+                <% } else { %>
+                  <p>Không có khách mới đăng ký</p>
+                <% } %>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js" charset="utf-8"></script>
+</html>

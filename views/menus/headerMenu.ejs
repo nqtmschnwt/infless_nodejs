@@ -1,0 +1,33 @@
+<header class="header">
+  <nav id="header" class="navbar navbar-expand-lg">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <div class="navbar-header">
+        <!--Navbar header-->
+        <a href="/home" class="navbar-brand">
+          <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Infless</strong><strong>Investment</strong><span class="badge badge-warning">Pro</span><span class="badge badge-success">v3.0.1</span></div>
+          <div class="brand-text brand-sm text-uppercase"><strong class="text-primary">Infless</strong><strong>Investment</strong><span class="badge badge-warning">Pro</span><span class="badge badge-success">v3.0.1</span></div>
+        </a>
+      </div>
+      <div id="userHeaderPc" class="user-header d-flex align-items-center">
+        <div class="title text-right">
+          <h1 class="h5" id="user"><%= user.name %></h1>
+          <% if(user.role_id==2 || user.role_id==3) {%>
+            <p id="role-name"><%= user.role_name %></p>
+          <% } else { %>
+            <p id="role-name">Hạn sử dụng: <%- user.expire_date.toLocaleDateString("vi-VN", {year:"numeric", month:"2-digit", day:"numeric"}).replace(/^(\d{1,2}\/)(\d{1,2}\/)(\d{4})$/,"$2$1$3") %></p>
+          <% } %>
+        </div>
+        <a href="/user">
+          <div class="avatar"><img src="img/icons/profle-512.png" alt="..." class="img-fluid rounded-circle"></div>
+        </a>
+      </div>
+      <a href="javascript:void(0);" id="respMenuIcon" onclick="toggleRespMenu()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </nav>
+  <div id="token" style="display:none"><%= user.token %></div>
+</header>
+<nav id="mobileNav" class="mobileNav">
+  <%- include('menu.ejs',{device:'mobile'}) %>
+</nav>

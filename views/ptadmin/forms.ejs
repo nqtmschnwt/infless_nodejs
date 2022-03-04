@@ -1,0 +1,146 @@
+<div class="overlay form-popup"  id="addForm">
+  <div class="form-content">
+    <form action="" method="post" class="form-container">
+      <h1>Thêm điều kiện</h1>
+
+      <p>Mã</p>
+      <input id="newTickerInput" type="text" placeholder="Nhập mã" name="ticker" required>
+      <p>Giá điều kiện</p>
+      <input id="newPriceInput" type="text" placeholder="Nhập giá điều kiện" name="price">
+      <p>Khối lượng điều kiện</p>
+      <input id="newVolInput" type="text" placeholder="Nhập khối lượng" name="vol">
+      <p>Cắt lỗ</p>
+      <input id="newSLInput" type="text" placeholder="Nhập giá cắt lõ" name="stopLoss">
+      <p>Form</p>
+      <input id="newFormInput" type="text" placeholder="Nhập form" name="form">
+
+      <!--button id="newTickerButton" type="submit" name="addTicker" class="btn btn-success">Gửi</button-->
+      <button id="newTickerButton" type="button" onclick="sendAddForm()" class="btn btn-success">Gửi</button>
+      <button type="button" class="btn btn-danger" onclick="closeAddForm()">Đóng</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay form-popup"  id="editForm">
+  <div class="form-content">
+    <form action="" method="post" class="form-container">
+      <h1>Sửa điều kiện</h1>
+
+      <p>Mã</p>
+      <input id="editIdInput" type="text" value="" name="id" readonly style="display:none">
+      <input id="editTickerInput" type="text" placeholder="Nhập mã" name="ticker" required readonly>
+      <p>Giá điều kiện</p>
+      <input id="editPriceInput" type="text" placeholder="Nhập giá điều kiện" name="price">
+      <p>Khối lượng điều kiện</p>
+      <input id="editVolInput" type="text" placeholder="Nhập khối lượng điều kiện" name="vol">
+      <p>Cắt lỗ</p>
+      <input id="editSLInput" type="text" placeholder="Nhập giá cắt lõ" name="stopLoss">
+      <p>Form</p>
+      <input id="editFormInput" type="text" placeholder="Nhập form" name="form">
+
+      <button id="editTickerButton" type="button" onclick="sendEditForm()" class="btn btn-success">Gửi</button>
+      <button type="button" class="btn btn-danger" onclick="closeEditForm()">Đóng</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay form-popup"  id="delForm">
+  <div class="form-content">
+    <form action="" method="post" class="form-container">
+      <h1>Xóa điều kiện</h1>
+
+      <p>Bạn chắc chắn muốn xóa mã này?</p>
+      <input id="delIdInput" type="text" value="" name="id" readonly style="display:none">
+      <input id="delTickerInput" type="text" value="" name="ticker" readonly>
+
+      <button id="delTickerButton" type="button"  onclick="sendDelForm()" class="btn btn-success">Xác nhận</button>
+      <button type="button" class="btn btn-danger" onclick="closeDelForm()">Hủy</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay form-popup"  id="delMultiForm">
+  <div class="form-content">
+    <form action="" method="post" class="form-container">
+      <h1>Xóa điều kiện</h1>
+
+      <p>Bạn chắc chắn muốn xóa hết tất cả điều kiện?</p>
+      <input id="delTickerInput" type="text" value="" name="ticker" readonly style="display:none">
+
+      <button type="submit" name="delMultiTicker" class="btn btn-success">Xác nhận</button>
+      <button type="button" class="btn btn-danger" onclick="closeDelForm()">Hủy</button>
+    </form>
+  </div>
+</div>
+
+<script>
+// Add Form
+function openAddForm() {
+  document.getElementById("addForm").style.display = "block";
+}
+function closeAddForm() {
+  document.getElementById("addForm").style.display = "none";
+}
+function clearAddForm() {
+  document.getElementById("newTickerInput").value = "";
+  document.getElementById("newPriceInput").value = "";
+  document.getElementById("newVolInput").value = "";
+  document.getElementById("newSLInput").value = "";
+  document.getElementById("newFormInput").value = "";
+}
+
+// Edit Form
+function openEditForm(id) {
+  document.getElementById("editForm").style.display = "block";
+  editFormFill(id);
+}
+function closeEditForm() {
+  document.getElementById("editForm").style.display = "none";
+}
+function editFormFill(id) {
+  let ticker = document.getElementById('ticker-'+id).innerHTML;
+  let price = document.getElementById('price-'+id).innerHTML;
+  let vol = document.getElementById('vol-'+id).innerHTML;
+  let sl = document.getElementById('sl-'+id).innerHTML;
+  let form = document.getElementById('form-'+id).innerHTML;
+  document.getElementById('editIdInput').value = id;
+  document.getElementById('editTickerInput').value = ticker;
+  document.getElementById('editPriceInput').value = price;
+  document.getElementById('editVolInput').value = vol;
+  document.getElementById('editSLInput').value = sl;
+  document.getElementById('editFormInput').value = form;
+}
+function clearEditForm() {
+  document.getElementById("editTickerInput").value = "";
+  document.getElementById("editPriceInput").value = "";
+  document.getElementById("editVolInput").value = "";
+  document.getElementById("editSLInput").value = "";
+  document.getElementById("editFormInput").value = "";
+}
+
+// Del Form
+function openDelForm(id) {
+  document.getElementById("delForm").style.display = "block";
+  delFormFill(id);
+}
+function closeDelForm() {
+  document.getElementById("delForm").style.display = "none";
+}
+function delFormFill(id) {
+  let ticker = document.getElementById('ticker-'+id).innerHTML;
+  document.getElementById('delIdInput').value = id;
+  document.getElementById('delTickerInput').value = ticker;
+}
+function clearDelForm() {
+  document.getElementById("delTickerInput").value = "";
+  document.getElementById("delIdInput").value = "";
+}
+
+// Del Form
+function openDelMultiForm() {
+  document.getElementById("delMultiForm").style.display = "block";
+}
+function closeDelMultiForm() {
+  document.getElementById("delMultiForm").style.display = "none";
+}
+</script>

@@ -1,0 +1,16 @@
+<!-- Sidebar Navidation Menus-->
+<ul class="list-unstyled">
+  <% for(var i=0; i < menu.length; i++) { %>
+    <% if(menu[i].child.length==0) {%>
+      <li><a href="<%= menu[i].link %>"><%= menu[i].title %></a></li>
+    <% } else { %>
+      <li><a href="#<% if(device=='pc') {%>dropdown<% } else {%>dropdownMobile<% } %><%= i %>" aria-expanded="false" data-toggle="collapse"><%= menu[i].title %></a>
+        <ul id="<% if(device=='pc') {%>dropdown<% } else {%>dropdownMobile<% } %><%= i %>"  class="collapse list-unstyled">
+          <% for(var j=0; j < menu[i].child.length; j++) {%>
+            <li><a href="<%= menu[i].child[j].link %>"><%= menu[i].child[j].title %></a></li>
+          <% } %>
+        </ul>
+      </li>
+    <% } %>
+  <% } %>
+</ul>

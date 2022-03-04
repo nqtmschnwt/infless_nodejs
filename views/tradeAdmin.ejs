@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Nhập lệnh</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xl-6 col-12">
+              <div class="block">
+                  <form onchange="sellCheck(this);" action="" method="post">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-12 form-group">
+                          <label>NAV quỹ</label>
+                          <input type="text" id="fund_nav_input" class="form-control  number-separator" name="fund_nav" placeholder="" value="<%- (parseFloat(fund_nav)*1000000000).toLocaleString('en') %>" readonly/>
+                        </div>
+                        <div class="col-6 form-group">
+                          <label>Tiền mặt còn lại</label>
+                          <input type="text" id="fund_cash_input" class="form-control  number-separator" name="fund_cash" placeholder="" value="" readonly/>
+                        </div>
+                        <div class="col-6 form-group">
+                          <label>Giá trị lệnh đặt</label>
+                          <input type="text" id="order_value_input" class="form-control  number-separator" name="order_value" placeholder="" value="" readonly/>
+                        </div>
+
+                        <div class="col-12 form-group">
+                          <label>Loại lệnh</label>
+
+                          <div class="row">
+                            <div class="col-6">
+                              <select id="order" class="form-control" name="order_direction">
+                                <option value="buy">Mua</option>
+                                <option value="sell">Bán</option>
+                              </select>
+                            </div>
+                            <div class="col-6">
+                              <select id="ordertype" class="form-control" name="order_type">
+                                <option value="lo">Lệnh thường</option>
+                                <option value="ato">ATO</option>
+                                <option value="atc">ATC</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 form-group">
+                          <label>Mã</label>
+                          <input id="symbol" type="text" class="form-control" name="ticker" placeholder=""/>
+                        </div>
+                        <div class="col-12 form-group">
+                          <label>Khối lượng</label>
+                          <input id="vol_input" type="text" class="form-control  number-separator" name="vol" placeholder=""/>
+                        </div>
+                        <div class="col-12" id="vol-warning" style="display:none">
+                          <label class="text-danger font-weight-bold" id="vol-warning-content"></label>
+                        </div>
+                        <div id="sell_pct" class="col-12 form-group" style="display:none">
+                          <label>Tỷ trọng (%)</label>
+                          <input id="pct_input" type="text" class="form-control" name="pct" placeholder=""/>
+                        </div>
+                        <div class="col-12 form-group">
+                          <label>Giá</label>
+                          <input id="price_input" type="text" class="form-control" name="price" placeholder=""/>
+                        </div>
+                        <div class="col-12" id="order_errors"></div>
+                        <div class="col-12 form-group">
+                          <div class="btn btn-primary" id="send" onclick="orderSend()">Gửi lệnh</div>
+                          <!--input type="submit" class="btn btn-primary" name="orderSend" value="Gửi lệnh" id="send" onsubmit="orderSend()"/-->
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+              </div>
+            </div>
+
+            <div class="col-xl-6 col-12">
+              <div class="block" style="height: -webkit-calc(100% - 30px); height:calc(100% - 30px);">
+                <div class="title">
+                  Danh mục đang nắm giữ
+                </div>
+                <div class="block-content">
+                  <div style="position:relative;margin-top:30px;">
+                    <div id="chartContainer" style="height: 370px; width: 100%;">
+
+                    </div>
+                    <div id="canvasTrialHide"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="block">
+                <div class="title">
+                  Lịch sử lệnh
+                </div>
+                <div class="block-content" id="records">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<script type="text/javascript">
+    var orderType = document.getElementById("order");
+
+    function sellCheck() {
+      if (orderType.value == "sell") {
+        //alert("check");
+            document.getElementById("sell_pct").style.display = "block";
+        } else {
+            document.getElementById("sell_pct").style.display = "none";
+      }
+      document.getElementById('order_value_input').value = (document.getElementById('price_input').value*document.getElementById('vol_input').value.replace(/,/g, '')*1000).toLocaleString('en');
+      if(document.getElementById('vol_input').value!=''){
+        let vol_input = parseInt(document.getElementById('vol_input').value.replace(/,/g, ''));
+        let fNav_input = parseInt(document.getElementById('fund_nav_input').value.replace(/,/g, ''));
+        if(vol_input!=0) {
+          let min_nav = fNav_input/(vol_input/100);
+          document.getElementById('vol-warning-content').innerHTML = 'Chú ý: Các tài khoản có NAV dưới '+ min_nav.toLocaleString('en') +' sẽ không nhận được lệnh này vì không đủ lô 100 cổ phiếu.'
+          document.getElementById('vol-warning').style.display='block';
+        }
+      } else document.getElementById('vol-warning').style.display='none';
+    }
+</script>
+<script type="text/javascript">
+    // Make connection
+    //var socket = io('https://infless-copy-trade.herokuapp.com/', { transport : ['websocket'] }); //heroku
+    var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
+
+
+
+    //document.getElementById('fnav').value = fundnav.value;
+    // Emit events
+    function orderSend(){
+        console.log('Send button clicked');
+        // Query DOM
+        var   fundnav = document.getElementById('fund_nav_input'),
+              btn = document.getElementById('send'),
+              order = document.getElementById('order'),
+              ordertype = document.getElementById('ordertype'),
+              symbol = document.getElementById('symbol'),
+              vol = document.getElementById('vol_input'),
+              pct = document.getElementById('pct_input'),
+              price = document.getElementById('price_input');
+        //console.log('chat', {
+        socket.emit('trade', {
+            fundnav: fundnav.value.replace(/\,/g, ''),
+            order: order.value,
+            ordertype: ordertype.value.toUpperCase(),
+            symbol: symbol.value.toUpperCase(),
+            vol: vol.value.replace(/\,/g, ''),
+            pct: pct.value,
+            price: price.value
+        });
+        alert("Lệnh đã được gửi!");
+    }
+</script>
+<script>
+  var portfolio = [{ticker:'Tiền mặt',amount:<%- fund_nav*1000 %>,equity:<%- fund_nav %>,price:0.001}];  //ticker,amount,equity,price
+  var records = [];  //time,direction,ticker,vol,pct,price,avg_cost,profit
+  var trades = <%- JSON.stringify(trades) %>;
+
+  console.log(JSON.stringify(portfolio));
+  for(var i=0; i<trades.length; i++){
+    if(trades[i].order_direction=='buy'){
+      if(portfolio.length==0){
+        // Portfolio is empty
+        portfolio.push({ticker:trades[i].ticker.toUpperCase(),amount:trades[i].vol,equity:trades[i].vol*trades[i].price,price:trades[i].price});
+        records.push({
+          id:trades[i].id,
+          time:trades[i].order_time,
+          direction:'MUA',
+          ticker:trades[i].ticker.toUpperCase(),
+          vol:trades[i].vol,
+          pct:0,
+          price:trades[i].price,
+          avg_cost:trades[i].price,
+          profit:0
+        });
+        portfolio[0].equity-=trades[i].vol*trades[i].price;
+        portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+      } else {
+        // Portfolio has stocks in it
+        let tickerFound=0;
+        for(var j=0; j<portfolio.length; j++){
+          if(trades[i].ticker.toUpperCase()==portfolio[j].ticker){
+            tickerFound++;
+            portfolio[j].amount+=trades[i].vol;
+            portfolio[j].equity+=trades[i].vol*trades[i].price;
+            portfolio[j].price=trades[i].price;
+            records.push({
+              id:trades[i].id,
+              time:trades[i].order_time,
+              direction:'MUA',
+              ticker:trades[i].ticker.toUpperCase(),
+              vol:trades[i].vol,
+              pct:0,
+              price:trades[i].price,
+              avg_cost:portfolio[j].equity/portfolio[j].amount,
+              profit:0
+            });
+            portfolio[0].equity-=trades[i].vol*trades[i].price;
+            portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+            break;
+          }
+        }
+        if(tickerFound==0){
+          // Add ticker to portfolio
+          portfolio.push({ticker:trades[i].ticker.toUpperCase(),amount:trades[i].vol,equity:trades[i].vol*trades[i].price,price:trades[i].price});
+          records.push({
+            id:trades[i].id,
+            time:trades[i].order_time,
+            direction:'MUA',
+            ticker:trades[i].ticker.toUpperCase(),
+            vol:trades[i].vol,
+            pct:0,
+            price:trades[i].price,
+            avg_cost:trades[i].price,
+            profit:0
+          });
+          portfolio[0].equity-=trades[i].vol*trades[i].price;
+          portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+        }
+      }
+    } else {
+      // Sell order
+      if(portfolio.length>0){
+        if(trades[i].pct==null){
+          for(var j=0; j<portfolio.length; j++){
+            if(trades[i].ticker.toUpperCase()==portfolio[j].ticker){
+              if(portfolio[j].amount<trades[i].vol){
+                let avg_cost = portfolio[j].equity/portfolio[j].amount;
+                records.push({
+                  id:trades[i].id,
+                  time:trades[i].order_time,
+                  direction:'BÁN',
+                  ticker:trades[i].ticker.toUpperCase(),
+                  vol:trades[i].vol,
+                  pct:0,
+                  price:trades[i].price,
+                  avg_cost:avg_cost,
+                  profit:((trades[i].price-avg_cost)/avg_cost)*100
+                });
+                portfolio[j].amount=0;
+                portfolio[j].equity=0;
+                portfolio[j].price=trades[i].price;
+                portfolio[0].equity+=trades[i].vol*trades[i].price;
+                portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+              } else {
+                let avg_cost = portfolio[j].equity/portfolio[j].amount;
+                records.push({
+                  id:trades[i].id,
+                  time:trades[i].order_time,
+                  direction:'BÁN',
+                  ticker:trades[i].ticker.toUpperCase(),
+                  vol:trades[i].vol,
+                  pct:0,
+                  price:trades[i].price,
+                  avg_cost:avg_cost,
+                  profit:((trades[i].price-avg_cost)/avg_cost)*100
+                });
+                portfolio[j].amount-=trades[i].vol;
+                portfolio[j].equity-=trades[i].vol*avg_cost;
+                portfolio[j].price=trades[i].price;
+                portfolio[0].equity+=trades[i].vol*trades[i].price;
+                portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+              }
+            }
+          }
+        } else {
+          for(var j=0; j<portfolio.length; j++){
+            if(trades[i].ticker.toUpperCase()==portfolio[j].ticker){
+              let sellAmount = trades[i].pct*portfolio[j].amount/100;
+              if(portfolio[j].amount<sellAmount){
+                let avg_cost = portfolio[j].equity/portfolio[j].amount;
+                records.push({
+                  id:trades[i].id,
+                  time:trades[i].order_time,
+                  direction:'BÁN',
+                  ticker:trades[i].ticker.toUpperCase(),
+                  vol:sellAmount,
+                  pct:trades[i].pct,
+                  price:trades[i].price,
+                  avg_cost:avg_cost,
+                  profit:((trades[i].price-avg_cost)/avg_cost)*100
+                });
+                portfolio[j].amount=0;
+                portfolio[j].equity=0;
+                portfolio[j].price=trades[i].price;
+                portfolio[0].equity+=sellAmount*trades[i].price;
+                portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+              } else {
+                let avg_cost = portfolio[j].equity/portfolio[j].amount;
+                records.push({
+                  id:trades[i].id,
+                  time:trades[i].order_time,
+                  direction:'BÁN',
+                  ticker:trades[i].ticker.toUpperCase(),
+                  vol:sellAmount,
+                  pct:trades[i].pct,
+                  price:trades[i].price,
+                  avg_cost:avg_cost,
+                  profit:((trades[i].price-avg_cost)/avg_cost)*100
+                });
+                portfolio[j].amount-=sellAmount;
+                portfolio[j].equity-=sellAmount*avg_cost;
+                portfolio[j].price=trades[i].price;
+                portfolio[0].equity+=sellAmount*trades[i].price;
+                portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log(JSON.stringify(portfolio));
+  }
+
+  //console.log(portfolio);
+  //console.log(records);
+
+  let recordTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>id</th><th>Thời gian</th><th>Lệnh</th><th>Mã</th><th>Khối lượng</th><th>Tỷ trọng bán</th><th>Giá</th><th>Giá vốn TB</th><th>Lãi/lỗ</th></tr>';
+  for(var i=records.length-1; i>=0; i--){
+    var pctDisplay='',
+        profitDisplay='',
+        profitStyle='';
+    if(records[i].pct>0) pctDisplay=records[i].pct.toFixed(2)+'%';
+    if(records[i].profit>0) {
+      profitDisplay=records[i].profit.toFixed(2)+'%';
+      profitStyle='text-success';
+    }
+    if(records[i].profit<0) {
+      profitDisplay=records[i].profit.toFixed(2)+'%';
+      profitStyle='text-danger';
+    }
+    var m = new Date(records[i].time);
+    var dt = addZero(m.getDate()) +"/"+ addZero(m.getMonth()+1) +"/"+ m.getFullYear()  + " " + addZero(m.getHours()) + ":" + addZero(m.getMinutes()) + ":" + addZero(m.getSeconds());
+    recordTableContent+='<tr><td>'+records[i].id+'</td><td>'+dt+'</td><td>'+records[i].direction+'</td><td>'+records[i].ticker+'</td><td>'+(records[i].vol*1000000).toLocaleString('en')+'</td><td>'+pctDisplay+'</td><td>'+records[i].price+'</td><td>'+records[i].avg_cost.toFixed(2)+'</td><td class="'+profitStyle+'">'+profitDisplay+'</td></tr>';
+  }
+  recordTableContent+='</table>';
+
+  let  recordTable = document.getElementById('records');
+  if(recordTable!=null){
+    recordTable.innerHTML = recordTableContent;
+  }
+
+  console.log('----------------------------------');
+  let totalCap=0;
+  let portfolioChartData=[];
+  if(portfolio.length<=1){
+    portfolioChartData=[{y:100,label:'Tiền mặt'}];
+  } else {
+    for(var i=0;i<portfolio.length;i++){
+      totalCap+=portfolio[i].amount * portfolio[i].price;
+    }
+    let stock_pct=0;
+    for(var i=1;i<portfolio.length;i++){
+      if(portfolio[i].amount>0){
+        portfolioChartData.push({y:(portfolio[i].equity/totalCap*100).toFixed(2),label:portfolio[i].ticker});
+        stock_pct+=portfolio[i].equity/totalCap*100;
+        console.log(portfolio[i].equity/totalCap*100,stock_pct);
+      }
+    }
+    portfolioChartData.push({y:100-stock_pct,label:'Tiền mặt'});
+  }
+
+
+  document.getElementById('fund_nav_input').value = (totalCap*1000000000).toLocaleString('en');
+  document.getElementById('fund_cash_input').value = (portfolio[0].equity*1000000000).toLocaleString('en');
+
+
+</script>
+
+<script>
+window.onload = function() {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+
+  backgroundColor: "rgba(0,0,0,0)",
+	data: [{
+		type: "pie",
+		startAngle: 240,
+		yValueFormatString: "##0.00\"%\"",
+		indexLabel: "{label} {y}",
+    indexLabelFontColor: "white",
+		dataPoints: portfolioChartData/*[
+			{y: 79.45, label: "Google"},
+			{y: 7.31, label: "Bing"},
+			{y: 7.06, label: "Baidu"},
+			{y: 4.91, label: "Yahoo"},
+			{y: 1.26, label: "Others"}
+		]*/
+	}]
+});
+chart.render();
+
+}
+</script>
+
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <style media="screen">
+    .console {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      height: 330px;
+      width: 100%;
+      overflow: auto;
+      padding: 20px;
+      overscroll-behavior-y: contain;
+      scroll-snap-type: y proximity;
+    }
+    .form-popup {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+    .overlay {
+      width: 500px;
+      height: 600px;
+      background: #000000de;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 10px;
+      z-index:10;
+    }
+    .form-content {
+      margin: 15px;
+      color: #fff;
+      background: #5a5a5ad9;
+      height: 570px;
+      border-radius: 5px;
+      padding: 20px;
+    }
+    .form-container h1{
+      text-align: center;
+      color: #fff;
+    }
+    .form-container input{
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .form-container p{
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    .form-container button{
+      width: 100%;
+      margin-bottom: 5px;
+    }
+  </style>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Admin phong thần</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="block">
+                <h3>Bảng điều kiện</h3>
+                <div style="margin:5px;padding:5px;border:1px solid #9999994f;background:#99999954">
+                  <div id="bangPhongThan" style="max-height:300px;overflow:auto"></div>
+                  <div class="btn btn-info"  onclick="openAddForm()">
+                    + Thêm điều kiện
+                  </div>
+                  <div class="btn btn-danger"  onclick="openDelMultiForm()">
+                    - Xóa hết
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-8 col-12">
+              <div class="block">
+                <h3>Đã đủ điều kiện</h3>
+                <div style="margin:5px;padding:5px;border:1px solid #9999994f;background:#99999954">
+                  <div class="" id="bangDK" style="max-height:300px;overflow:auto">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 col-12">
+              <div class="block">
+                <h3>Cắt lỗ</h3>
+                <div style="margin:5px;padding:5px;border:1px solid #9999994f;background:#99999954">
+                  <div id="bangCatLo" class="" style="max-height:300px;overflow:auto">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <!-- Cảnh báo -->
+              <div class="block">
+                <%- include ('ptadmin/canhbao.ejs',canhbao,lichsucanhbao) %>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <!-- Hệ thống -->
+              <div class="block">
+                <%- include ('ptadmin/checksystem.ejs') %>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Forms -->
+          <%- include ('ptadmin/forms.ejs') %>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script type="text/javascript">
+  //var socket = io('https://infless-copy-trade.herokuapp.com/', { transport : ['websocket'] });
+  var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
+  var consoleDiv = document.getElementById('console-21'),
+      clientConsole = document.getElementById('vol21ClientConsole'),
+      clientLoading = document.getElementById('vol21ClientLoading'),
+      clientSignal = document.getElementById('vol21ClientSignal'),
+      clientDK = document.getElementById('vol21DK'),
+      batcanhbao = document.getElementById('batcanhbao'),
+      tatcanhbao = document.getElementById('tatcanhbao'),
+      echo = document.getElementById('echo');
+
+  var m = new Date();
+  var dt = m.getFullYear() +"-"+ addZero(m.getMonth()+1) +"-"+ addZero(m.getDate())  + " " + addZero(m.getHours()) + "-" + addZero(m.getMinutes()) + "-" + addZero(m.getSeconds());
+  socket.emit('vol21Admin', {
+    'key':'tungdeptrai',
+    'DateTime':dt,
+    'cmd':{
+      'cmdHeader':'connect',
+      'cmdContent':''
+    }
+  });
+
+  function sendSysCmd(){
+    socket.emit('vol21SysAdmin', {
+      'key':document.getElementById("sysPsw").value,
+      'DateTime':dt,
+      'cmd':{
+        'cmdHeader':'query',
+        'cmdContent':document.getElementById("sysCmd").value
+      }
+    });
+    document.getElementById("sysCmd").value = "";
+  }
+
+  function sendAddForm(){
+    let vol=parseInt(document.getElementById("newVolInput").value.replace(/,/g, ''))/1000000;
+    socket.emit('vol21Admin', {
+      'key':'tungdeptrai',
+      'DateTime':dt,
+      'cmd':{
+        'cmdHeader':'addTicker',
+        'cmdContent':{
+          'ticker':document.getElementById("newTickerInput").value.toUpperCase(),
+          'price':document.getElementById("newPriceInput").value,
+          'vol':vol,
+          'sl':document.getElementById("newSLInput").value,
+          'form':document.getElementById("newFormInput").value,
+        }
+      }
+    });
+  }
+
+  function sendEditForm(){
+    let vol=parseInt(document.getElementById("editVolInput").value.replace(/,/g, ''))/1000000;
+    socket.emit('vol21Admin', {
+      'key':'tungdeptrai',
+      'DateTime':dt,
+      'cmd':{
+        'cmdHeader':'editTicker',
+        'cmdContent':{
+          'id':document.getElementById("editIdInput").value,
+          'ticker':document.getElementById("editTickerInput").value.toUpperCase(),
+          'price':document.getElementById("editPriceInput").value,
+          'vol':vol.toString(),
+          'sl':document.getElementById("editSLInput").value,
+          'form':document.getElementById("editFormInput").value,
+        }
+      }
+    });
+  }
+
+  function sendDelForm(){
+    socket.emit('vol21Admin', {
+      'key':'tungdeptrai',
+      'DateTime':dt,
+      'cmd':{
+        'cmdHeader':'delTicker',
+        'cmdContent':{
+          'ticker':document.getElementById("delTickerInput").value.toUpperCase(),
+          'id':document.getElementById("delIdInput").value,
+        }
+      }
+    });
+  }
+
+  batcanhbao.addEventListener('click', function(){
+    var   canhbaoMsg = document.getElementById('canhbaoMsg');
+    var   canhbaoColor1 = document.getElementById('canhbaoColor1');
+    var   canhbaoColor2 = document.getElementById('canhbaoColor2');
+    var   canhbaoColor3 = document.getElementById('canhbaoColor3');
+    var   canhbaoColor4 = document.getElementById('canhbaoColor4');
+    var   canhbaoColor5 = document.getElementById('canhbaoColor5');
+    var   canhbaoSpeed = document.getElementById('canhbaoSpeed');
+    var   canhbaoColNum = document.getElementById('canhbaoColorNumber');
+    //console.log(canhbaoMsg.value);
+    //console.log('adminCanhbao', {
+    socket.emit('adminCanhbao', {
+      'sw':'on',
+      'msg':canhbaoMsg.value,
+      'color1':canhbaoColor1.value,
+      'color2':canhbaoColor2.value,
+      'color3':canhbaoColor3.value,
+      'color4':canhbaoColor4.value,
+      'color5':canhbaoColor5.value,
+      'color_num':canhbaoColNum.value,
+      'speed':canhbaoSpeed.value
+    });
+  });
+
+  tatcanhbao.addEventListener('click', function(){
+    //console.log('adminCanhbao', {'sw':'off','msg':canhbaoMsg.value});
+    socket.emit('adminCanhbao', {'sw':'off','msg':canhbaoMsg.value});
+  });
+
+
+  function addZero(numb) {
+    if(numb<10){
+      return "0"+numb;
+    } else {
+      return ""+numb;
+    }
+  }
+
+  function numberFormat(x) {
+      x = Number(x.replace(" ",""));
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function vnDateFormat(dateStr) {
+    var dateFormatter = new Intl.DateTimeFormat("vi-VN");
+    return dateFormatter.format(Date.parse(dateStr)).replace(/\b(\d\/)/g,'0$1');
+  }
+
+
+  // Listen for events
+  socket.on('vol21Admin', function(data){
+    if(data.msgHeader == "connectionConfirm"){
+      consoleDiv.innerHTML += "<p><span class='text-secondary'>"+dt+": </span><strong class='text-primary'>Admin kết nối thành công.</strong></p>";
+      clientConsole.innerHTML = '<p class="text-success">Kết nối server thành công.</p>';
+      clientLoading.style.display = "none";
+    } else if (data.msgHeader == 'cmdConfirm') {
+      consoleDiv.innerHTML += "<p><span class='text-secondary'>"+dt+": </span><strong>Server đã nhận được lệnh từ Admin: <span class='text-warning'>" + JSON.stringify(data.msgContent) + "</span></strong></p>";
+      if(data.msgContent.cmdHeader == 'addTicker'){
+        closeAddForm();
+        clearAddForm();
+      }
+      if(data.msgContent.cmdHeader == 'editTicker'){
+        closeEditForm();
+        clearEditForm();
+      }
+      if(data.msgContent.cmdHeader == 'delTicker'){
+        closeDelForm();
+        clearDelForm();
+      }
+      console.log(data);
+    } else if (data.msgHeader == 'cmdError') {
+      let errors = data.msgContent;
+      for(var i = 0; i < errors.length; i++) {
+        consoleDiv.innerHTML += "<p><span class='text-secondary'>"+dt+": </span><strong class='text-danger'>Lỗi: " + errors[i].message + "</strong></p>";
+      }
+      console.log(data.msgContent);
+    } else if (data.msgHeader == 'queryConfirm') {
+      consoleDiv.innerHTML += "<p><span class='text-secondary'>"+dt+": </span><strong>Server đã nhận được lệnh từ SysAdmin: <span class='text-warning'>" + data.msgContent + "</span></strong></p>";
+    } else if (data.msgHeader == 'warning') {
+      consoleDiv.innerHTML += "<p><span class='text-secondary'>"+dt+": </span><strong class='text-danger'>Lỗi: " + data.msgContent + "</strong></p>";
+    }
+    /*else {
+
+      for(var i = 0; i < dieukien.length; i++) {
+
+        clientSignal.innerHTML += "<tr class='text-center' id='"+dieukien[i]['ticker']+"-phongthan-"+dieukien[i]['id']+"'><td id='"+dieukien[i]['ticker']+"-dt'>" + dieukien[i]['_datetime'] + "</td>" +
+                                  "<td class='text-center' id='"+dieukien[i]['ticker']+"-ticker'>" + dieukien[i]['ticker'] + "</td>" +
+                                  "<td class='text-center' id='"+dieukien[i]['ticker']+"-price'>" + dieukien[i]['giaVao'] + "</td>" +
+                                  "<td class='text-right' id='"+dieukien[i]['ticker']+"-vol'>" + numberFormat(dieukien[i]['vol'].replace(".0000","")) + "</td>" +
+                                  "<td class='text-center' id='"+dieukien[i]['ticker']+"-voldb'></td>" +
+                                  "<td class='text-center' id='"+dieukien[i]['ticker']+"-form'>"+dieukien[i]['form']+"</td></tr>" ;
+      }
+
+    }*/
+  });
+
+  // UPDATE INFO
+  socket.on('phongThan',function(data){
+    console.log("Cap nhat phong than: ",data);
+    let bangPhongThanBegin = "<table style='width:100%'><tr>"+
+      "<th class='text-center'>Ngày</th>"+
+      "<th class='text-center'>Mã</th>"+
+      "<th class='text-center'>Giá điều kiện</th>"+
+      "<th class='text-center'>Khối lượng điều kiện</th>"+
+      "<th class='text-center'>Giá cắt lỗ</th>"+
+      "<th class='text-center'>Form</th>"+
+      "<th></th></tr>";
+    let bangPhongThanEnd = "</table>";
+    for(var i = 0; i < data.length; i++) {
+        bangPhongThanBegin += "<tr id='phongThan-"+data[i].id+"'>"+
+          "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._add_date)+"</td>"+
+          "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
+          "<td class='number-mid' id='price-"+data[i].id+"'>"+data[i]._dk_price+"</td>"+
+          "<td class='number-mid' id='vol-"+data[i].id+"'>"+numberFormat((parseFloat(data[i]._dk_vol)*1000000).toString())+"</td>"+
+          "<td class='number-mid' id='sl-"+data[i].id+"'>"+data[i]._sl_price+"</td>"+
+          "<td class='number-mid' id='form-"+data[i].id+"'>"+data[i]._form+"</td>"+
+          "<td><div class='btn btn-warning edit-btn' id='edit-"+data[i].id+"' onclick='openEditForm("+data[i].id+")'>Sửa</div><div class='btn btn-danger clear-btn' id='clear-"+data[i].id+"' onclick='openDelForm("+data[i].id+")''>Xóa</div></td></tr>";
+    }
+    document.getElementById("bangPhongThan").innerHTML=bangPhongThanBegin+bangPhongThanEnd;
+  });
+
+  socket.on('DK', function(data){
+    console.log("Cap nhat dieu kien: ", data);
+    let bangDKBegin = "<table style='width:100%'><tr>"+
+      "<th class='text-center'>Thời gian</th>"+
+      "<th class='text-center'>Mã</th>"+
+      "<th class='text-center'>Giá điều kiện</th>"+
+      "<th class='text-center'>Khối lượng điều kiện</th>"+
+      "<th class='text-center'>Form</th></tr>";
+    let bangDKEnd = "</table>";
+    for(var i = 0; i < data.length; i++) {
+        bangDKBegin += "<tr id='dk-"+data[i].id+"'>"+
+          "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._passed_time)+"</td>"+
+          "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
+          "<td class='number-mid' id='price-"+data[i].id+"'>"+data[i]._dk_price+"</td>"+
+          "<td class='number-mid' id='vol-"+data[i].id+"'>"+numberFormat((parseFloat(data[i]._dk_vol)*1000000).toString())+"</td>"+
+          "<td class='number-mid' id='form-"+data[i].id+"'>"+data[i]._form+"</td></tr>";
+    }
+    document.getElementById("bangDK").innerHTML=bangDKBegin+bangDKEnd;
+  });
+
+  socket.on('SL', function(data){
+    console.log("Cap nhat cat lo: ", data);
+    let bangCatLoBegin = "<table style='width:100%'><tr>"+
+      "<th class='text-center'>Thời gian</th>"+
+      "<th class='text-center'>Mã</th>"+
+      "<th class='text-center'>Giá cắt lỗ</th></tr>";
+    let bangCatLoEnd = "</table>";
+    for(var i = 0; i < data.length; i++) {
+        bangCatLoBegin += "<tr id='dk-"+data[i].id+"'>"+
+          "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._sl_time)+"</td>"+
+          "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
+          "<td class='number-mid' id='sl-"+data[i].id+"'>"+data[i]._sl_price+"</td></tr>";
+    }
+    document.getElementById("bangCatLo").innerHTML=bangCatLoBegin+bangCatLoEnd;
+  });
+
+
+</script>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+
+</html>

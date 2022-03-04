@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Cập nhật đường link</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+
+              <div class="block">
+                  <form action="" method="post">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-12 form-group">
+                          <label>Link tải bản cài đặt đầy đủ</label>
+                          <input type="text" class="form-control" name="download_full" placeholder=""/>
+                        </div>
+                        <div class="col-12 form-group">
+                          <label>Link tải bản cập nhật</label>
+                          <input type="text" class="form-control" name="download_update" placeholder=""/>
+                        </div>
+                        <div class="col-12 form-group">
+                          <input type="submit" class="btn btn-primary" name="update" value="Cập nhật"/>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+              </div>
+              <% if(result.result=='success') { %><h4 class='text-success'><% } else { %><h4 class='text-danger'><% } %><%- result.msg %></h4>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+</html>

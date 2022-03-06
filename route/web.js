@@ -38,7 +38,8 @@ let initWebRoutes = (app) => {
       router.post("/apphome", homeController.postAppHomePage);
       // Login page
       router.get("/login", checkAuthenticated, loginController.getLoginPage);
-      router.post("/login", limiter(1,5,'Đăng nhập không thành công quá nhiều lần. Bạn sẽ không thể đăng nhập trong vòng 1 giờ nữa.'), loginController.postLoginPage);
+      //router.post("/login", limiter(1,5,'Đăng nhập không thành công quá nhiều lần. Bạn sẽ không thể đăng nhập trong vòng 1 giờ nữa.'), loginController.postLoginPage);
+      router.post("/login", loginController.postLoginPage);
       // Logout
       router.get("/logout", logoutController.getLogoutPage);
       // Register page

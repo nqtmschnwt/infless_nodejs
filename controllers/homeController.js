@@ -23,10 +23,11 @@ let getAppHomePage = (req,res) => {
         }
         let cb = results.rows[0];
         let cbDisplay = 'none';
+        var canhbao={display:cbDisplay,msg:''};
         if(cb!=undefined){
           if(cb.warning_show) cbDisplay = 'block';
+          canhbao={display:cbDisplay,msg:cb.warning_msg};
         }
-        let canhbao={display:cbDisplay,msg:cb.warning_msg};
         pool.query(
           `SELECT * FROM trade_orders
           WHERE order_time > (current_date - INTERVAL '1 year') ORDER BY id ASC;`, (err,results) => {

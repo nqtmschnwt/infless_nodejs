@@ -87,10 +87,12 @@ let getPTPage = (req,res) => {
           }
           let cb = results.rows[0];
           let cbDisplay = 'none';
+          var canhbao={display:cbDisplay,msg:''};
           if(cb!=undefined){
             if(cb.warning_show) cbDisplay = 'block';
+            canhbao={display:cbDisplay,msg:cb.warning_msg};
           }
-          let canhbao={display:cbDisplay,msg:cb.warning_msg};
+          
           let lichsucanhbao = results.rows;
           return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao});
         }

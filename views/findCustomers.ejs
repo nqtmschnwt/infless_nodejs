@@ -85,6 +85,7 @@
                     <td id="expire-<%= data[i].id %>"><%= dateFormat(data[i].expire_date) %></td>
                     <td id="phongthan-<%= data[i].id %>" style="display:none"><%= data[i].phongthan %></td>
                     <td id="ddk-<%= data[i].id %>" style="display:none"><%= data[i].ddk %></td>
+                    <td id="sl-<%= data[i].id %>" style="display:none"><%= data[i].sl %></td>
                     <td class="text-center">
                       <button class="border-0 btn-transition btn btn-outline-success clientButton" id="clientInfo-<%= data[i].id %>"></button>
                     </td>
@@ -160,6 +161,13 @@
                       <div class="col-lg-4 col-12 form-group">
                         <label>Sử dụng Bảng điều kiện</label>
                         <select id="ddk-input" class="form-control" name="ddkChange">
+                          <option value="true">Có</option>
+                          <option value="false">Không</option>
+                        </select>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Sử dụng Bảng cắt lỗ</label>
+                        <select id="sl-input" class="form-control" name="slChange">
                           <option value="true">Có</option>
                           <option value="false">Không</option>
                         </select>

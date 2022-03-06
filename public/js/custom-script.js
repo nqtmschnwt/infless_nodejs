@@ -187,6 +187,7 @@ function clientInfoFill(id){
   let expireStringISO = expireDate.getFullYear().toString() + '-' + (expireDate.getMonth()+1).toString().padStart(2, '0') + '-' + expireDate.getDate().toString().padStart(2, '0');
   let phongthan = document.getElementById('phongthan-'+id).innerHTML;
   let ddk = document.getElementById('ddk-'+id).innerHTML;
+  let sl = document.getElementById('sl-'+id).innerHTML;
 
   console.log(expireDate);
 
@@ -198,6 +199,7 @@ function clientInfoFill(id){
   document.getElementById('expire-input').value = expireStringISO;
   document.getElementById('phongthan-input').value = phongthan;
   document.getElementById('ddk-input').value = ddk;
+  document.getElementById('sl-input').value = sl;
 }
 
 const clientFormCloseBtn = document.getElementById('client-form-close');

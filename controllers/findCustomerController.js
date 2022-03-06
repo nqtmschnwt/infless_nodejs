@@ -122,6 +122,12 @@ let postFindCustomers = async (req,res) => {
         let resetPassword = req.body.resetPassword;
         let ptChange = req.body.ptChange;
         let ddkChange = req.body.ddkChange;
+        let slChange = req.body.slChange;
+
+        var roleID;
+        if(req.body.role_id){
+          roleID=req.body.role_id;
+        } else roleID=1;
 
         if(resetPassword=='true'){
           // Change password
@@ -158,10 +164,14 @@ let postFindCustomers = async (req,res) => {
           change_expiry AS (
             UPDATE expiry SET expire_date=$6
             WHERE user_id=$1
+          ),
+          change_role AS (
+            UPDATE user_role SET role_id=$10
+            WHERE user_id=$1
           )
-          UPDATE user_services SET phongthan=$7,ddk=$8
+          UPDATE user_services SET phongthan=$7,ddk=$8,sl=$9
           WHERE user_id=$1`,
-          [id,name,phoneFormatted,email,ref,expire,ptChange,ddkChange],
+          [id,name,phoneFormatted,email,ref,expire,ptChange,ddkChange,slChange,roleID],
           (err,results) => {
             if(err) {
               throw err;
@@ -175,10 +185,12 @@ let postFindCustomers = async (req,res) => {
               query.status = req.body.queryStatus;
               if(!query.name && !query.phone && !query.email && !query.ref){
                 pool.query(
-                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.phongthan,us.ddk FROM users u
+                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.phongthan,us.ddk,us.sl FROM users u
                   INNER JOIN ref_info r ON u.id=r.user_id
                   INNER JOIN expiry e ON u.id=e.user_id
                   INNER JOIN user_services us on u.id=us.user_id
+                  INNER JOIN user_role ur on u.id=ur.user_id
+                  WHERE ur.role_id=1
                   ORDER BY u.id ASC`,
                   (err,results) => {
                     if(err) {

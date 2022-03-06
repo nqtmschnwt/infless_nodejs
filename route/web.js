@@ -80,8 +80,8 @@ let initWebRoutes = (app) => {
     res.status(404).render('404');
   });
 
-  //return app.use("/", router);
-  return app.use(contextPath, router);
+  return app.use("/", router);
+  //return app.use(contextPath, router);
 }
 
 // Check user logged in or not, then redirect

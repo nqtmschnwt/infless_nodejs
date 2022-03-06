@@ -30,6 +30,14 @@ let getSetup = async (req,res) => {
     new_services AS(
       INSERT INTO user_services (user_id, copytrade, phongthan, ddk, sl)
       VALUES((SELECT id FROM new_user),'true','true','true','true')
+    ),
+    new_nav AS (
+      INSERT INTO user_nav (user_id,total_nav)
+      VALUES((SELECT id FROM new_user),1)
+    ),
+    new_expiry AS(
+      INSERT INTO expiry (user_id, expire_date)
+      VALUES ((SELECT id FROM new_user),'2050-12-31')
     )
     INSERT INTO user_role (user_id, role_id)
       VALUES((SELECT id FROM new_user),2)`,

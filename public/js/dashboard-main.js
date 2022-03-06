@@ -270,27 +270,6 @@ socket.on('trade', function(data){
       intraday.innerHTML = '<p class="order-msg"><span class="text-secondary mr-2">' + dt + ': </span><strong>' + order + " " + data.pct + "% " + data.symbol.toUpperCase() + " giá " + prz + '</strong></p>';
       intraday.innerHTML += intradayCache;
     }
-
-    /*var recordTable = document.getElementById("recordTable");
-    var row = recordTable.insertRow(1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
-    var cell7 = row.insertCell(6);
-    var cell8 = row.insertCell(7);
-
-    cell1.innerHTML = dt;
-    cell2.innerHTML = order;
-    cell3.innerHTML = data.symbol.toUpperCase();
-    cell4.innerHTML = neuVol;
-    cell5.innerHTML = data.pct;
-    cell6.innerHTML = prz;
-    cell7.innerHTML = '';
-    cell8.innerHTML = '';*/
-    //console.log(portfilio);
 });
 
 socket.on('ID', function(data){
@@ -299,85 +278,91 @@ socket.on('ID', function(data){
 
 socket.on('phongThan',function(data){
   console.log('phong than: ',data);
-  if(data.length==0) {
-    document.getElementById("bangPhongThan").innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
-  } else {
-    dk = data;
-    let bangPhongThanBegin = "<table style='margin-top:30px;width:100%'><tr>"+
-              "<th class='text-center'>Ngày thêm vào</th>"+
-              "<th class='text-center'>Mã</th>"+
-              "<th class='text-center'>Giá điều kiện</th>"+
-              "<th class='text-center'>KL điều kiện</th>"+
-              "<th class='text-center'>Giá cắt lỗ</th>"+
-              "<th class='text-center'>ĐBKL</th>"+
-              "<th class='text-center'>Form</th></tr>";
-    let bangPhongThanEnd = "</table>";
-    for(var i = 0; i < data.length; i++) {
-      let dotbien = 'loading...';
-      for(var j = 0; j<dbkl.length; j++) {
-        //console.log(data[i]._ticker,dbkl[j].ticker,(data[i]._ticker == dbkl[j].ticker))
-        if(data[i]._ticker == dbkl[j].ticker) {
-          dotbien = dbkl[j].volDB+" %";
+  let bangPhongThan = document.getElementById("bangPhongThan");
+  if(bangPhongThan!=null){
+    if(data.length==0) {
+      bangPhongThan.innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
+    } else {
+      dk = data;
+      let bangPhongThanBegin = "<table style='margin-top:30px;width:100%'><tr>"+
+                "<th class='text-center'>Ngày thêm vào</th>"+
+                "<th class='text-center'>Mã</th>"+
+                "<th class='text-center'>Giá điều kiện</th>"+
+                "<th class='text-center'>KL điều kiện</th>"+
+                "<th class='text-center'>Giá cắt lỗ</th>"+
+                "<th class='text-center'>ĐBKL</th>"+
+                "<th class='text-center'>Form</th></tr>";
+      let bangPhongThanEnd = "</table>";
+      for(var i = 0; i < data.length; i++) {
+        let dotbien = 'loading...';
+        for(var j = 0; j<dbkl.length; j++) {
+          //console.log(data[i]._ticker,dbkl[j].ticker,(data[i]._ticker == dbkl[j].ticker))
+          if(data[i]._ticker == dbkl[j].ticker) {
+            dotbien = dbkl[j].volDB+" %";
+          }
         }
+        bangPhongThanBegin += "<tr id='"+data[i]._ticker+"-phongthan-"+data[i].id+"'>"+
+                "<td class='text-center'>"+vnDateFormat(data[i]._add_date)+"</td>"+
+                "<td class='text-center'>"+data[i]._ticker+"</td>"+
+                "<td class='number-mid'>"+data[i]._dk_price+"</td>"+
+                //"<td class='number-mid'>"+numberFormat((parseFloat(data[i]._dk_vol)*1000000).toString())+"</td>"+
+                "<td class='number-mid'>"+(parseFloat(data[i]._dk_vol)*1000000).toLocaleString('en')+"</td>"+
+                "<td class='number-mid'>"+data[i]._sl_price+"</td>"+
+                "<td id='"+data[i]._ticker+"-pt-dbkl' class='text-center'>"+dotbien+"</td>"+
+                "<td class='number-mid'>"+data[i]._form+"</td></tr>";
       }
-      bangPhongThanBegin += "<tr id='"+data[i]._ticker+"-phongthan-"+data[i].id+"'>"+
-              "<td class='text-center'>"+vnDateFormat(data[i]._add_date)+"</td>"+
-              "<td class='text-center'>"+data[i]._ticker+"</td>"+
-              "<td class='number-mid'>"+data[i]._dk_price+"</td>"+
-              //"<td class='number-mid'>"+numberFormat((parseFloat(data[i]._dk_vol)*1000000).toString())+"</td>"+
-              "<td class='number-mid'>"+(parseFloat(data[i]._dk_vol)*1000000).toLocaleString('en')+"</td>"+
-              "<td class='number-mid'>"+data[i]._sl_price+"</td>"+
-              "<td id='"+data[i]._ticker+"-pt-dbkl' class='text-center'>"+dotbien+"</td>"+
-              "<td class='number-mid'>"+data[i]._form+"</td></tr>";
+      bangPhongThan.innerHTML=bangPhongThanBegin+bangPhongThanEnd;
     }
-    document.getElementById("bangPhongThan").innerHTML=bangPhongThanBegin+bangPhongThanEnd;
   }
-
 });
 
 socket.on('DK', function(data){
-  if(data.length==0) {
-    document.getElementById("bangDK").innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
-  } else {
-    console.log('dk: ',data);
-    let bangDKBegin = "<table id='ddk-table' style='margin-top:30px;width:100%'><tr>"+
-      "<th class='text-center'>Thời gian</th>"+
-      "<th class='text-center'>Mã</th>"+
-      "<th class='text-center'>Giá điều kiện</th>"+
-      "<th class='text-center'>Khối lượng điều kiện</th>"+
-      "<th class='text-center'>Form</th></tr>";
-    let bangDKEnd = "</table>";
-    for(var i = 0; i < data.length; i++) {
-        bangDKBegin += "<tr id='dk-"+data[i].id+"'>"+
-          "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._passed_time)+"</td>"+
-          "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
-          "<td class='number-mid' id='price-"+data[i].id+"'>"+data[i]._dk_price+"</td>"+
-          //"<td class='number-mid' id='vol-"+data[i].id+"'>"+numberFormat((parseFloat(data[i]._dk_vol)*1000000).toString())+"</td>"+
-          "<td class='number-mid' id='vol-"+data[i].id+"'>"+(parseFloat(data[i]._dk_vol)*1000000).toLocaleString('en')+"</td>"+
-          "<td class='number-mid' id='form-"+data[i].id+"'>"+data[i]._form+"</td></tr>";
+  let bangDieuKien = document.getElementById("bangDK");
+  if(bangDieuKien!=null){
+    if(data.length==0) {
+      bangDieuKien.innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
+    } else {
+      console.log('dk: ',data);
+      let bangDKBegin = "<table id='ddk-table' style='margin-top:30px;width:100%'><tr>"+
+        "<th class='text-center'>Thời gian</th>"+
+        "<th class='text-center'>Mã</th>"+
+        "<th class='text-center'>Giá điều kiện</th>"+
+        "<th class='text-center'>Khối lượng điều kiện</th>"+
+        "<th class='text-center'>Form</th></tr>";
+      let bangDKEnd = "</table>";
+      for(var i = 0; i < data.length; i++) {
+          bangDKBegin += "<tr id='dk-"+data[i].id+"'>"+
+            "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._passed_time)+"</td>"+
+            "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
+            "<td class='number-mid' id='price-"+data[i].id+"'>"+data[i]._dk_price+"</td>"+
+            //"<td class='number-mid' id='vol-"+data[i].id+"'>"+numberFormat((parseFloat(data[i]._dk_vol)*1000000).toString())+"</td>"+
+            "<td class='number-mid' id='vol-"+data[i].id+"'>"+(parseFloat(data[i]._dk_vol)*1000000).toLocaleString('en')+"</td>"+
+            "<td class='number-mid' id='form-"+data[i].id+"'>"+data[i]._form+"</td></tr>";
+      }
+      bangDieuKien.innerHTML=bangDKBegin+bangDKEnd;
     }
-    document.getElementById("bangDK").innerHTML=bangDKBegin+bangDKEnd;
   }
 });
 
 socket.on('SL', function(data){
-  if(data.length==0) {
-    if(document.getElementById("bangCatLo") != null) {
-      document.getElementById("bangCatLo").innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
+  let bangCatLo = document.getElementById("bangCatLo");
+  if(bangCatLo!=null){
+    if(data.length==0) {
+        bangCatLo.innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
+    } else {
+      console.log("sl: ", data);
+      let bangCatLoBegin = "<table><tr>"+
+        "<th class='text-center'>Thời gian</th>"+
+        "<th class='text-center'>Mã</th>"+
+        "<th class='text-center'>Giá cắt lỗ</th></tr>";
+      let bangCatLoEnd = "</table>";
+      for(var i = 0; i < data.length; i++) {
+          bangCatLoBegin += "<tr id='dk-"+data[i].id+"'>"+
+            "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._sl_time)+"</td>"+
+            "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
+            "<td class='number-mid' id='sl-"+data[i].id+"'>"+data[i]._sl_price+"</td></tr>";
+      }
+      bangCatLo.innerHTML=bangCatLoBegin+bangCatLoEnd;
     }
-  } else {
-    console.log("sl: ", data);
-    let bangCatLoBegin = "<table><tr>"+
-      "<th class='text-center'>Thời gian</th>"+
-      "<th class='text-center'>Mã</th>"+
-      "<th class='text-center'>Giá cắt lỗ</th></tr>";
-    let bangCatLoEnd = "</table>";
-    for(var i = 0; i < data.length; i++) {
-        bangCatLoBegin += "<tr id='dk-"+data[i].id+"'>"+
-          "<td class='text-center' id='date-"+data[i].id+"'>"+vnDateFormat(data[i]._sl_time)+"</td>"+
-          "<td class='text-center' id='ticker-"+data[i].id+"'>"+data[i]._ticker+"</td>"+
-          "<td class='number-mid' id='sl-"+data[i].id+"'>"+data[i]._sl_price+"</td></tr>";
-    }
-    document.getElementById("bangCatLo").innerHTML=bangCatLoBegin+bangCatLoEnd;
   }
 });

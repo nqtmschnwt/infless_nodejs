@@ -381,6 +381,7 @@
   let portfolioChartData=[];
   if(portfolio.length<=1){
     portfolioChartData=[{y:100,label:'Tiền mặt'}];
+    totalCap=1;
   } else {
     for(var i=0;i<portfolio.length;i++){
       totalCap+=portfolio[i].amount * portfolio[i].price;

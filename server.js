@@ -236,7 +236,26 @@ socket.on('SL',function(data){
   }
 });
 
-socket.on('chat', function(data){
-    console.log(data);
+socket.on('trade', function(data){
+    //console.log(data);
+    let fundnav = parseFloat(data.fundnav/1000000000);
+    let order= data.order;
+    let ordertype= data.ordertype;
+    let symbol= data.symbol;
+    let vol= parseFloat(data.vol/1000000);
+    let pct= parseFloat(data.pct);
+    let price= parseFloat(data.price);
+    //console.log([fundnav,order,ordertype,symbol,vol,pct,price]);
+    let d = new Date();
+    let dformat = [d.getFullYear(),d.getMonth()+1,d.getDate()].join('-')+' '+[d.getHours(),d.getMinutes(),d.getSeconds()].join(':');
+    pool.query(
+      `INSERT INTO trade_orders(order_time, order_direction, order_type, ticker, vol, price, pct, fund_nav)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+      [dformat,order,ordertype,symbol,vol,price,pct,fundnav],(err,results)=>{
+        if(err) {
+          console.log('Error: ', err);
+        }
+      }
+    )
     //io.sockets.emit('chat', data);
 });

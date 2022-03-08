@@ -201,6 +201,23 @@ let postFindCustomers = async (req,res) => {
                   }
                 )
               } else {
+                // Any field having value
+                var d,dt;
+                if(status=='true') {d=new Date();dt=d.toISOString().split('T')[0]}
+                else dt = '3000-12-31';
+
+                let refSearch = ref;
+                if(ref!=''){
+                  var refNumber = new phoneNumber(ref,'VN');
+                  if(refNumber.isValid( ) && refNumber.isMobile( ) && refNumber.canBeInternationallyDialled( ))  refSearch = refNumber.getNumber( 'e164' ).replace('+','');
+                }
+
+                // Check phone valid
+                let phoneFormatted = '';
+                if(phone!=''){
+                  var pn = new phoneNumber(phone,'VN');
+                  if(pn.isValid( ) && pn.isMobile( ) && pn.canBeInternationallyDialled( ))  phoneFormatted = pn.getNumber( 'e164' );
+                }
                 pool.query(
                   `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl FROM users u
                   INNER JOIN ref_info r ON u.id=r.user_id
@@ -209,7 +226,7 @@ let postFindCustomers = async (req,res) => {
                   INNER JOIN user_role ur on u.id=ur.user_id
                   WHERE ur.role_id=1 AND u.name LIKE $1 AND u.phone LIKE $2 AND u.email LIKE $3 AND r.ref_id LIKE $4 AND e.expire_date<=$5
                   ORDER BY u.id ASC`,
-                  ['%'+query.name+'%','%'+query.phone+'%','%'+query.email+'%','%'+query.ref+'%',query.status], (err,results)=>{
+                  ['%'+query.name+'%','%'+phoneFormatted+'%','%'+query.email+'%','%'+query.ref+'%',dt], (err,results)=>{
                     if(err) {
                       throw err;
                     }

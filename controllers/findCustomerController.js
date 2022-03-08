@@ -203,19 +203,19 @@ let postFindCustomers = async (req,res) => {
               } else {
                 // Any field having value
                 var d,dt;
-                if(status=='true') {d=new Date();dt=d.toISOString().split('T')[0]}
+                if(query.status=='true') {d=new Date();dt=d.toISOString().split('T')[0]}
                 else dt = '3000-12-31';
 
-                let refSearch = ref;
-                if(ref!=''){
+                let refSearch = query.ref;
+                if(query.ref!=''){
                   var refNumber = new phoneNumber(ref,'VN');
                   if(refNumber.isValid( ) && refNumber.isMobile( ) && refNumber.canBeInternationallyDialled( ))  refSearch = refNumber.getNumber( 'e164' ).replace('+','');
                 }
 
                 // Check phone valid
                 let phoneFormatted = '';
-                if(phone!=''){
-                  var pn = new phoneNumber(phone,'VN');
+                if(query.phone!=''){
+                  var pn = new phoneNumber(query.phone,'VN');
                   if(pn.isValid( ) && pn.isMobile( ) && pn.canBeInternationallyDialled( ))  phoneFormatted = pn.getNumber( 'e164' );
                 }
                 pool.query(

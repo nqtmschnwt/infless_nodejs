@@ -41,7 +41,7 @@ let getSetup = async (req,res) => {
     )
     INSERT INTO user_role (user_id, role_id)
       VALUES((SELECT id FROM new_user),2)`,
-    [name,phoneFormatted,email,password,ref],
+    [name,phoneFormatted,email,password],
     (err, results) => {
       if(err) {
         throw err

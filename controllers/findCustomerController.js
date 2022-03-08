@@ -56,7 +56,7 @@ let postFindCustomers = async (req,res) => {
         if(!name && !phone && !email && !ref && status=='false'){
           // All fields are empty
           pool.query(
-            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.phongthan,us.ddk FROM users u
+            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl FROM users u
             INNER JOIN ref_info r ON u.id=r.user_id
             INNER JOIN expiry e ON u.id=e.user_id
             INNER JOIN user_services us on u.id=us.user_id
@@ -91,7 +91,7 @@ let postFindCustomers = async (req,res) => {
           }
 
           pool.query(
-            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.phongthan,us.ddk FROM users u
+            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl FROM users u
             INNER JOIN ref_info r ON u.id=r.user_id
             INNER JOIN expiry e ON u.id=e.user_id
             INNER JOIN user_services us on u.id=us.user_id
@@ -185,7 +185,7 @@ let postFindCustomers = async (req,res) => {
               query.status = req.body.queryStatus;
               if(!query.name && !query.phone && !query.email && !query.ref){
                 pool.query(
-                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.phongthan,us.ddk,us.sl FROM users u
+                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl FROM users u
                   INNER JOIN ref_info r ON u.id=r.user_id
                   INNER JOIN expiry e ON u.id=e.user_id
                   INNER JOIN user_services us on u.id=us.user_id

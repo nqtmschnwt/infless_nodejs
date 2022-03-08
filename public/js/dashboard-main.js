@@ -109,6 +109,27 @@ socket.on('vol21', function(data){
               }
             }
           }
+          if (parseFloat(data.price)<parseFloat(dk[i]._sl_price)*1.02 && parseFloat(data.price)>=parseFloat(dk[i]._sl_price)){
+            if(document.getElementById("dk"+dk[i].id)== null)
+            {
+              document.getElementById("ddk-noti").classList.add("ddk-noti-active");
+              if(document.getElementById(data.ticker+"-danger-noti")== null)
+              {
+                clientDK.innerHTML += '<div id="'+ data.ticker +'-danger-noti" class="alert fade alert-simple alert-danger alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show">'+
+                  '<i class="start-icon fa fa-info-circle faa-tada animated"></i>'+
+                  '<strong class="font__weight-semibold">'+ data.ticker +'</strong>: sắp chạm cắt lỗ.'+
+                '</div>';
+                playSound("trade");
+
+                if(!document.getElementById("vol21DK").classList.contains("ddk-noti-active")) {
+                  document.getElementById("ddk-noti").classList.add("ddk-noti-active");
+                }
+              }
+              // Change backgroundColor
+              if(document.getElementById(dk[i]._ticker+"-phongthan-"+dk[i].id)!=null)
+                document.getElementById(dk[i]._ticker+"-phongthan-"+dk[i].id).style.backgroundColor='#ff000066';
+            }
+          }
           break;
         }
     }
@@ -351,7 +372,7 @@ socket.on('SL', function(data){
         bangCatLo.innerHTML="<i class='text-secondary'>Danh sách đang trống</i>";
     } else {
       console.log("sl: ", data);
-      let bangCatLoBegin = "<table><tr>"+
+      let bangCatLoBegin = "<table style='width:100%'><tr>"+
         "<th class='text-center'>Thời gian</th>"+
         "<th class='text-center'>Mã</th>"+
         "<th class='text-center'>Giá cắt lỗ</th></tr>";

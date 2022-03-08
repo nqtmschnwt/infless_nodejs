@@ -73,6 +73,10 @@
                   <th>Email</th>
                   <th>Mã giới thiệu</th>
                   <th>Ngày hết hạn</th>
+                  <th>Copy trade</th>
+                  <th>Phong thần</th>
+                  <th>Bảng điều kiện</th>
+                  <th>Bảng cắt lỗ</th>
                   <th></th>
                 </tr>
                 <% for(var i=0; i < data.length; i++) { %>
@@ -83,9 +87,10 @@
                     <td id="email-<%= data[i].id %>"><%= data[i].email %></td>
                     <td id="ref-<%= data[i].id %>"><%= data[i].ref_id.replace('+84','0') %></td>
                     <td id="expire-<%= data[i].id %>"><%= dateFormat(data[i].expire_date) %></td>
-                    <td id="phongthan-<%= data[i].id %>" style="display:none"><%= data[i].phongthan %></td>
-                    <td id="ddk-<%= data[i].id %>" style="display:none"><%= data[i].ddk %></td>
-                    <td id="sl-<%= data[i].id %>" style="display:none"><%= data[i].sl %></td>
+                    <td id="copytrade-<%= data[i].id %>" <% if(data[i].copytrade) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].copytrade %></td>
+                    <td id="phongthan-<%= data[i].id %>" <% if(data[i].phongthan) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].phongthan %></td>
+                    <td id="ddk-<%= data[i].id %>" <% if(data[i].ddk) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].ddk %></td>
+                    <td id="sl-<%= data[i].id %>" <% if(data[i].sl) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].sl %></td>
                     <td class="text-center">
                       <button class="border-0 btn-transition btn btn-outline-success clientButton" id="clientInfo-<%= data[i].id %>"></button>
                     </td>

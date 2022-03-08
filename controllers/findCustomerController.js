@@ -200,6 +200,23 @@ let postFindCustomers = async (req,res) => {
                     return res.render('findCustomers', {menu:menuData,user,data:data,query});
                   }
                 )
+              } else {
+                pool.query(
+                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl FROM users u
+                  INNER JOIN ref_info r ON u.id=r.user_id
+                  INNER JOIN expiry e ON u.id=e.user_id
+                  INNER JOIN user_services us on u.id=us.user_id
+                  INNER JOIN user_role ur on u.id=ur.user_id
+                  WHERE ur.role_id=1 AND u.name LIKE $1 AND u.phone LIKE $2 AND u.email LIKE $3 AND r.ref_id LIKE $4 AND e.expire_date<=$5
+                  ORDER BY u.id ASC`,
+                  ['%'+query.name+'%','%'+query.phone+'%','%'+query.email+'%','%'+query.ref+'%',query.status], (err,results)=>{
+                    if(err) {
+                      throw err;
+                    }
+                    let data = results.rows;
+                    return res.render('findCustomers', {menu:menuData,user,data:data,query});
+                  }
+                )
               }
             }
           }

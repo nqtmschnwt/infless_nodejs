@@ -8,10 +8,11 @@ let getAppHomePage = (req,res) => {
   }
   console.log("User logged in",user.id);
   console.log("User info:", user);
-  if(user.role_id==2 || user.role_id==3) {
+  /*if(user.role_id==2 || user.role_id==3) {
     // Admin
     return res.redirect('/manager');
   } else {
+    */
     // Customer
     let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/userMenu.json'));
     // Get services settings:
@@ -47,7 +48,7 @@ let getAppHomePage = (req,res) => {
       }
     );
 
-  }
+  /*}*/
 
 }
 

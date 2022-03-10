@@ -92,7 +92,7 @@ let getPTPage = (req,res) => {
             if(cb.warning_show) cbDisplay = 'block';
             canhbao={display:cbDisplay,msg:cb.warning_msg};
           }
-          
+
           let lichsucanhbao = results.rows;
           return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao});
         }
@@ -237,7 +237,7 @@ let postTradePage = (req,res) => {
                   fund_nav = results.rows[0].fund_nav;
                 }
                 pool.query(
-                  `SELECT * FROM trade_orders ORDER BY id ASC;`, (err,results)=> {
+                  `SELECT * FROM trade_orders ORDER BY order_time ASC;`, (err,results)=> {
                     if(err) {
                       console.log('Error: ',err);
                     }

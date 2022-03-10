@@ -30,7 +30,7 @@ let getAppHomePage = (req,res) => {
         }
         pool.query(
           `SELECT * FROM trade_orders
-          WHERE order_time > (current_date - INTERVAL '1 year') ORDER BY id ASC;`, (err,results) => {
+          WHERE order_time > (current_date - INTERVAL '1 year') ORDER BY order_time ASC;`, (err,results) => {
             if(err) {
               console.log('Error: ',err);
             }

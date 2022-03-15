@@ -1,5 +1,12 @@
 var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
 
+var usr = document.getElementById('user_phone').innerHTML;
+window.onload = function() {
+  socket.emit('kick', {
+      phone: usr
+  });
+};
+
 var ddk = document.getElementById('ddk'),
 ddkTable = document.getElementById('ddk-table'),
 clientDK = document.getElementById('vol21DK');
@@ -42,6 +49,11 @@ document.getElementById("loading").style.display="none";
   //socket.emit('vol21Reset', {'DateTime':dt});
   document.getElementById('sidebar').click();
 };*/
+
+
+socket.on('clientResponse', function(data) {
+  console.log(data);
+});
 
 let dk = [];
 let dbkl = [];
@@ -139,10 +151,10 @@ socket.on('vol21', function(data){
 
 // Kick
 socket.on('kick', function(data){
-  var kickWhom = data.usrnm;
+  var kickWhom = data.phone;
   if (kickWhom == usr) {
     console.log("You are kicked!");
-    location.href = '<?php home_url() ?>/copy-trade-logout/';
+    location.href = '/logout';
   }
 });
 
@@ -204,7 +216,7 @@ var output = document.getElementById('output');
 var modalOutput = document.getElementById('modal-msg');
 var myNav = +document.getElementById('mynav').innerHTML.replace(/\,/g, '');
 var modal = document.getElementById("myModal");
-var usr = document.getElementById("user").innerHTML;
+
 
 // Generate favicon badge
 var favicon = new Favico({

@@ -54,8 +54,9 @@ function initialize(passport){
     )
   );
 
-  passport.serializeUser((user, done)=> done(null, user.id));
+  passport.serializeUser((user, done)=> done(null, user.id));   // Xác thực xong trả lại user. Sau đó sẽ deserialize user để lấy thông tin của user đó
   passport.deserializeUser((id,done)=>{
+    // Lưu thông tin usertoken
     pool.query(
       `SELECT u.id,u.name,u.phone,u.email,u.password,au.active,e.expire_date,rf.ref_id,ur.role_id,rs.role_name,s.copytrade,s.phongthan,s.ddk,s.sl,n.total_nav
       FROM users u

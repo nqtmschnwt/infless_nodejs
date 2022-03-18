@@ -73,6 +73,7 @@
                   <th>Email</th>
                   <th>Mã giới thiệu</th>
                   <th>Ngày hết hạn</th>
+                  <th>NAV</th>
                   <th>Copy trade</th>
                   <th>Phong thần</th>
                   <th>Bảng điều kiện</th>
@@ -87,6 +88,7 @@
                     <td id="email-<%= data[i].id %>"><%= data[i].email %></td>
                     <td id="ref-<%= data[i].id %>"><%= data[i].ref_id.replace('+84','0') %></td>
                     <td id="expire-<%= data[i].id %>"><%= dateFormat(data[i].expire_date) %></td>
+                    <td id="nav-<%= data[i].id %>"><%= (data[i].total_nav * 1000000000).toLocaleString('en-US') %></td>
                     <td id="copytrade-<%= data[i].id %>" <% if(data[i].copytrade) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].copytrade %></td>
                     <td id="phongthan-<%= data[i].id %>" <% if(data[i].phongthan) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].phongthan %></td>
                     <td id="ddk-<%= data[i].id %>" <% if(data[i].ddk) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].ddk %></td>

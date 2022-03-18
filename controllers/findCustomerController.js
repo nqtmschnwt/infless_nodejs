@@ -61,7 +61,7 @@ let postFindCustomers = async (req,res) => {
             INNER JOIN expiry e ON u.id=e.user_id
             INNER JOIN user_services us on u.id=us.user_id
             INNER JOIN user_role ur on u.id=ur.user_id
-            INNER JOIN (SELECT * FROM users u LEFT OUTER JOIN user_nav n on u.id=n.user_id ORDER BY n.id DESC LIMIT 1) nav ON u.id = nav.user_id
+            INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
             WHERE ur.role_id=1
             ORDER BY u.id ASC`,
             (err,results) => {
@@ -97,7 +97,7 @@ let postFindCustomers = async (req,res) => {
             INNER JOIN expiry e ON u.id=e.user_id
             INNER JOIN user_services us on u.id=us.user_id
             INNER JOIN user_role ur on u.id=ur.user_id
-            INNER JOIN (SELECT * FROM users u LEFT OUTER JOIN user_nav n on u.id=n.user_id ORDER BY n.id DESC LIMIT 1) nav ON u.id = nav.user_id
+            INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
             WHERE ur.role_id=1 AND u.name LIKE $1 AND u.phone LIKE $2 AND u.email LIKE $3 AND r.ref_id LIKE $4 AND e.expire_date<=$5
             ORDER BY u.id ASC`,
             ['%'+name+'%','%'+phoneFormatted+'%','%'+email+'%','%'+refSearch+'%',dt], (err,results)=>{
@@ -192,7 +192,7 @@ let postFindCustomers = async (req,res) => {
                   INNER JOIN expiry e ON u.id=e.user_id
                   INNER JOIN user_services us on u.id=us.user_id
                   INNER JOIN user_role ur on u.id=ur.user_id
-                  INNER JOIN (SELECT * FROM users u LEFT OUTER JOIN user_nav n on u.id=n.user_id ORDER BY n.id DESC LIMIT 1) nav ON u.id = nav.user_id
+                  INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
                   WHERE ur.role_id=1
                   ORDER BY u.id ASC`,
                   (err,results) => {
@@ -227,7 +227,7 @@ let postFindCustomers = async (req,res) => {
                   INNER JOIN expiry e ON u.id=e.user_id
                   INNER JOIN user_services us on u.id=us.user_id
                   INNER JOIN user_role ur on u.id=ur.user_id
-                  INNER JOIN (SELECT * FROM users u LEFT OUTER JOIN user_nav n on u.id=n.user_id ORDER BY n.id DESC LIMIT 1) nav ON u.id = nav.user_id
+                  INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
                   WHERE ur.role_id=1 AND u.name LIKE $1 AND u.phone LIKE $2 AND u.email LIKE $3 AND r.ref_id LIKE $4 AND e.expire_date<=$5
                   ORDER BY u.id ASC`,
                   ['%'+query.name+'%','%'+phoneFormatted+'%','%'+query.email+'%','%'+query.ref+'%',dt], (err,results)=>{

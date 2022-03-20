@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+
+    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
+
+
+  </head>
+  <body>
+    <div id="container">
+        <h3>Firebase Phone Number Auth. Demo</h3>
+        <div id="loading">Loading...</div>
+        <div id="loaded" class="hidden">
+            <div id="main">
+                <div id="user-signed-in" class="hidden">
+                    <div id="user-info">
+                        <div id="photo-container">
+                            <img id="photo">
+                        </div>
+                        <div id="name"></div>
+                        <div id="email"></div>
+                        <div id="phone"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <p>
+                        <button id="sign-out">Sign Out</button>
+                        <button id="delete-account">Delete account</button>
+                    </p>
+                </div>
+                <div id="user-signed-out" class="hidden">
+                    <h4>You are signed out.</h4>
+                    <div id="firebaseui-spa">
+                        <h3>Single Page App mode:</h3>
+                        <div id="firebaseui-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+      console.log('connect to firebase');
+
+      // Initialize Firebase
+      var firebaseConfig = {
+          apiKey: "AIzaSyA55RLyd-DL6oF50Ijb6f8TY5ev9LcnV-A",
+          authDomain: "fundmntsystem.firebaseapp.com",
+          projectId: "fundmntsystem",
+          storageBucket: "fundmntsystem.appspot.com",
+          messagingSenderId: "907222202776",
+          appId: "1:907222202776:web:5c7cf5d2e49f6c7e1393ed"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      var uiConfig = {
+           'callbacks': {
+                  // Called when the user has been successfully signed in.
+                  'signInSuccessWithAuthResult': function(user, credential, redirectUrl) {
+
+                      handleSignedInUser(user);
+
+                      // window.location.assign(`/test`);
+                      //window.location.href = redirectUrl;
+                      // Do not redirect.
+                      return false;
+                  }
+              },
+          signInOptions: [
+            // Leave the lines as is for the providers you want to offer your users.
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          ],
+          // tosUrl and privacyPolicyUrl accept either url string or a callback
+          // function.
+          // Terms of service url/callback.
+          tosUrl: 'https://www.google.com',
+          // Privacy policy url/callback.
+          privacyPolicyUrl: function() {
+            window.location.assign('https://www.google.com');
+          }
+        }
+
+
+
+
+      // Initialize the FirebaseUI Widget using Firebase.
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+      /**
+       * Displays the UI for a signed in user.
+       * @param {!firebase.User} user
+       */
+      var handleSignedInUser = function(user) {
+
+          document.getElementById('user-signed-in').style.display = 'block';
+          document.getElementById('user-signed-out').style.display = 'none';
+          document.getElementById('name').textContent = user.displayName;
+          document.getElementById('email').textContent = user.email;
+          document.getElementById('phone').textContent = user.phoneNumber;
+          if (user.photoURL) {
+              document.getElementById('photo').src = user.photoURL;
+              document.getElementById('photo').style.display = 'block';
+          } else {
+              document.getElementById('photo').style.display = 'none';
+          }
+      };
+
+
+      /**
+       * Displays the UI for a signed out user.
+       */
+      var handleSignedOutUser = function() {
+          document.getElementById('user-signed-in').style.display = 'none';
+          document.getElementById('user-signed-out').style.display = 'block';
+          ui.start('#firebaseui-container', uiConfig);
+      };
+
+      // Listen to change in auth state so it displays the correct UI for when
+      // the user is signed in or not.
+
+      firebase.auth().onAuthStateChanged(function(user) {
+          console.log('user>>>>', user)
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('loaded').style.display = 'block';
+          user ? handleSignedInUser(user) : handleSignedOutUser();
+      });
+
+      /**
+       * Deletes the user's account.
+       */
+      var deleteAccount = function() {
+          firebase.auth().currentUser.delete().catch(function(error) {
+              if (error.code == 'auth/requires-recent-login') {
+                  // The user's credential is too old. She needs to sign in again.
+                  firebase.auth().signOut().then(function() {
+                      // The timeout allows the message to be displayed after the UI has
+                      // changed to the signed out state.
+                      setTimeout(function() {
+                          alert('Please sign in again to delete your account.');
+                      }, 1);
+                  });
+              }
+          });
+      };
+
+      /**
+       * Initializes the app.
+       */
+      var initApp = function() {
+          document.getElementById('sign-out').addEventListener('click', function() {
+              firebase.auth().signOut();
+          });
+          document.getElementById('delete-account').addEventListener('click', function() {
+                  deleteAccount();
+          });
+      };
+
+      window.addEventListener('load', initApp);
+    </script>
+  </body>
+</html>

@@ -8,6 +8,7 @@ const managerController = require('../controllers/managerController');
 const changePasswordController = require('../controllers/changePasswordController');
 const newCustomerController = require('../controllers/newCustomerController');
 const findCustomerController = require('../controllers/findCustomerController');
+const testController = require('../controllers/testController');
 const app = express();
 const rateLimit = require('express-rate-limit');
 const contextPath = '/inflessweb';
@@ -65,6 +66,8 @@ let initWebRoutes = (app) => {
       // Find customer page
       router.get("/find-customers", findCustomerController.getFindCustomers);
       router.post("/find-customers", findCustomerController.postFindCustomers);
+      // Dev test page
+      router.get("/devtest", testController.getTestPage);
 
 
   // Request with json body

@@ -10,7 +10,6 @@ const helmet = require('helmet');
 const requestIp = require('request-ip');
 const bodyParser = require("body-parser");
 
-
 const { pool } = require('./config/dbConfig');
 
 app.use(bodyParser.json());

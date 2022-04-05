@@ -122,10 +122,7 @@
       <% } %>
 
       <% if(user.personal_sltp==true) { %>
-        <% console.log("USER:", user);
-           console.log("pSLTP:", personalsltp);
-        %>
-        <%- //include('personalsltp/personal_sltp.ejs',{user,personalsltp}); %>
+        <%- include('personalsltp/personal_sltp.ejs',{user,personalsltp}); %>
       <% } %>
 
       <div class="col-lg-6">

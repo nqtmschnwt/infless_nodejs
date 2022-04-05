@@ -68,6 +68,7 @@ let initWebRoutes = (app) => {
       router.post("/find-customers", findCustomerController.postFindCustomers);
       // Dev test page
       router.get("/devtest", testController.getTestPage);
+      router.post("/devtest", testController.postTestPage);
 
 
   // Request with json body

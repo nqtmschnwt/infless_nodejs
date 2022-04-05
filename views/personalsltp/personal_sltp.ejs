@@ -1,0 +1,312 @@
+<div class="col-lg-6">
+  <!--Personal SLTP begin-->
+  <div class="block">
+    <div class="row title">
+      <ul class="personalTab">
+        <li id="personalTab1" class="btn btn-danger" onclick="showPersonal(1)">Danh mục cá nhân</li>
+        <li id="personalTab2" class="btn btn-secondary" onclick="showPersonal(2)">Cắt lỗ</li>
+        <li id="personalTab3" class="btn btn-secondary" onclick="showPersonal(3)">Chốt lời</li>
+      </ul>
+    </div>
+    <div id='personalContent' class="block-content" style="height:305px;overflow: auto;">
+      <% let pSLTP = JSON.parse(personalsltp.sltp);
+        let pSLTPh = JSON.parse(personalsltp.history);
+        let pSL=[];
+        let pTP=[];
+        if (pSLTP.length >0 ) { %>
+          <div id="danhmucrieng">
+            <table class="personalContentTable" id="">
+              <tr>
+                <th class="text-center">id</th>
+                <th class="text-center">Mã</th>
+                <th class="text-center">Giá cắt lỗ</th>
+                <th class="text-center">Giá chốt lời</th>
+                <th></th>
+              </tr>
+
+
+              <% for(var i=0; i<pSLTP.length; i++) { %>
+                <tr id="personal-<%- pSLTP[i].ticker %>">
+                  <td class="text-center" id="personal-<%- user.id %>-<%- i %>-id"><%- i %></td>
+                  <td class="text-center" id="personal-<%- user.id %>-<%- i %>-ticker"><%- pSLTP[i].ticker %></td>
+                  <td class="text-center" id="personal-<%- user.id %>-<%- i %>-sl"><%- pSLTP[i].sl %></td>
+                  <td class="text-center" id="personal-<%- user.id %>-<%- i %>-tp"><%- pSLTP[i].tp %></td>
+                  <td class="text-center" style="width:100px">
+                    <button class="border-0 btn-transition btn btn-outline-success clientButton" id="" onclick="editPersonalSLTP(<%- user.id %>,<%- i %>)"></button>
+                    <button class="border-0 btn-transition btn btn-outline-danger personalDelButton" id="" onclick="delPersonalSLTP(<%- user.id %>,<%- i %>)"></button>
+                  </td>
+                </tr>
+              <% } %>
+            </table></div>
+
+      <% } else { %>
+        <div id="danhmucrieng"><p class="text-secondary" id="danhmucrieng">Danh mục cá nhân đang trống.</p></div>
+      <% } %>
+
+      <% if (pSLTPh!=null && pSLTPh.length >0 ) {
+
+        for (var i=0;i<pSLTPh.length;i++) {
+          if(pSLTPh[i].type=="SL") pSL.push(pSLTPh[i]);
+          if(pSLTPh[i].type=="TP") pTP.push(pSLTPh[i]);
+        }
+      }
+      %>
+      <div id="catlorieng" style="display:none">
+        <% if(pSL.length>0) { %>
+          <table class="personalContentTable" id="">
+            <tr>
+              <th class="text-center" style="display:none">id</th>
+              <th class="text-center">Mã</th>
+              <th class="text-center">Giá cắt lỗ</th>
+              <th class="text-center">Thời gian</th>
+            </tr>
+          <% for (var i=0; i<pSL.length;i++) { %>
+            <tr>
+              <td class="text-center" style="display:none"><%- i %></td>
+              <td class="text-center"><%- pSL[i].ticker %></td>
+              <td class="text-center"><%- pSL[i].price %></td>
+              <td class="text-center"><%- pSL[i].date %></td>
+            </tr>
+          <% } %>
+          </table>
+        <% } else { %>
+          <div id="catlorieng" style="display:none"><p class="text-secondary" id="catlorieng" style="display:none">Danh sách cắt lỗ của cá nhân đang trống.</p></div>
+        <% } %>
+        </div>
+
+        <div id="chotloirieng" style="display:none">
+          <% if(pSL.length>0) { %>
+            <table class="personalContentTable" id="">
+              <tr>
+                <th class="text-center" style="display:none">id</th>
+                <th class="text-center">Mã</th>
+                <th class="text-center">Giá chốt lời</th>
+                <th class="text-center">Thời gian</th>
+              </tr>
+            <% for (var i=0; i<pTP.length;i++) { %>
+              <tr>
+                <td class="text-center" style="display:none"><%- i %></td>
+                <td class="text-center"><%- pTP[i].ticker %></td>
+                <td class="text-center"><%- pTP[i].price %></td>
+                <td class="text-center"><%- pTP[i].date %></td>
+              </tr>
+            <% } %>
+            </table>
+          <% } else { %>
+            <div id="chotloirieng" style="display:none"><p class="text-secondary" id="chotloirieng" style="display:none">Danh sách chốt lời của cá nhân đang trống.</p></div>
+          <% } %>
+        </div>
+
+
+
+    </div>
+    <div class="block-footer">
+      <div id="personalAdd" class="btn btn-secondary">+ Thêm mã mới</div>
+    </div>
+  </div>
+  <!--Personal SLTP end-->
+</div>
+
+<div class="overlay overlay-dark" id="client-form-wrapper" style="display: none;">
+  <div id="personal-add-form" style="display: none;">
+    <form action="/apphome" method="post">
+      <div class="modal-content welcome-content client-form-content">
+        <div class="modal-header d-flex justify-content-center">
+          <h3 class="heading">Thêm mã mới</h3>
+        </div>
+        <div class="modal-body">
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-12 form-group">
+                  <input type="text" id="personal-add-id-input" style="display:none" name="uid" placeholder="" value="<%- user.id %>" readonly>
+                  <label>Mã</label>
+                  <input type="text" id="personal-add-ticker-input" class="form-control" name="personalTicker" placeholder="">
+                </div>
+                <div class="col-12 form-group">
+                  <label>Giá cắt lỗ</label>
+                  <input type="text" id="personal-add-sl-input" class="form-control" name="personalSL" placeholder="">
+                </div>
+                <div class="col-12 form-group">
+                  <label>Giá chốt lời</label>
+                  <input type="text" id="personal-add-tp-input" class="form-control" name="personalTP" placeholder="">
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <input type="submit" class="btn btn-success" name="personalAdd" value="Thêm mã">
+          <span id="client-form-close" class="btn btn-danger" onclick="closePersonalForm()">Đóng</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div id="personal-edit-form" style="display: none;">
+    <form action="/apphome" method="post">
+      <div class="modal-content welcome-content client-form-content">
+        <div class="modal-header d-flex justify-content-center">
+          <h3 class="heading">Thay đổi giá cắt lỗ, chốt lời</h3>
+        </div>
+        <div class="modal-body">
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-12 form-group">
+                  <input type="text" id="personal-edit-id-input" style="display:none" name="uid" placeholder="" readonly>
+                  <label>Mã</label>
+                  <input type="text" id="personal-edit-ticker-input" class="form-control" name="personalTicker" placeholder="" readonly>
+                </div>
+                <div class="col-12 form-group">
+                  <label>Giá cắt lỗ</label>
+                  <input type="text" id="personal-edit-sl-input" class="form-control" name="personalSL" placeholder="">
+                </div>
+                <div class="col-12 form-group">
+                  <label>Giá chốt lời</label>
+                  <input type="text" id="personal-edit-tp-input" class="form-control" name="personalTP" placeholder="">
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <input type="submit" class="btn btn-success" name="personalChange" value="Thay đổi">
+          <span id="client-form-close" class="btn btn-danger" onclick="closePersonalForm()">Đóng</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div id="personal-del-form" style="display: none;">
+    <form action="/apphome" method="post">
+      <div class="modal-content welcome-content client-form-content">
+        <div class="modal-header d-flex justify-content-center">
+          <h3 class="heading">Xóa mã theo dõi</h3>
+        </div>
+        <div class="modal-body">
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-12 form-group">
+                  <input type="text" id="personal-del-id-input" style="display:none" name="uid" placeholder="" readonly>
+                  <label>Mã</label>
+                  <input type="text" id="personal-del-ticker-input" class="form-control" name="personalTicker" placeholder="" readonly>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <input type="submit" class="btn btn-success" name="personalDel" value="Xóa">
+          <span id="client-form-close" class="btn btn-danger" onclick="closePersonalForm()">Đóng</span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  let uid = <%- user.id %>;
+  <% if(personalsltp.sltp!=null) { %>
+    let pSLTP = <%- personalsltp.sltp %>;
+  <% } else { %>
+    let pSLTP = [];
+  <% } %>
+  <% if(personalsltp.history!=null) { %>
+    let pSLTPh = <%- personalsltp.history %>;
+  <% } else { %>
+    let pSLTPh = [];
+  <% } %>
+  function fillPersonalEdit(uid,id) {
+    let personalEditTicker = document.getElementById('personal-' + uid + '-' + id + '-ticker').innerHTML;
+    let personalEditSL = document.getElementById('personal-' + uid + '-'  + id + '-sl').innerHTML;
+    let personalEditTP = document.getElementById('personal-' + uid + '-'  + id + '-tp').innerHTML;
+    document.getElementById('personal-edit-id-input').value = uid;
+    document.getElementById('personal-edit-ticker-input').value = personalEditTicker;
+    document.getElementById('personal-edit-sl-input').value = personalEditSL;
+    document.getElementById('personal-edit-tp-input').value = personalEditTP;
+  }
+
+  function fillPersonalDel(uid,id) {
+    let personalDelTicker = document.getElementById('personal-' + uid + '-' + id + '-ticker').innerHTML;
+    document.getElementById('personal-del-id-input').value = uid;
+    document.getElementById('personal-del-ticker-input').value = personalDelTicker;
+  }
+
+  function editPersonalSLTP(uid,id) {
+    document.getElementById('client-form-wrapper').style.display='block';
+    fillPersonalEdit(uid,id);
+    document.getElementById('personal-add-form').style.display='none';
+    document.getElementById('personal-edit-form').style.display='block';
+    document.getElementById('personal-del-form').style.display='none';
+  }
+
+  function delPersonalSLTP(uid,id) {
+    document.getElementById('client-form-wrapper').style.display='block';
+    fillPersonalDel(uid,id);
+    document.getElementById('personal-add-form').style.display='none';
+    document.getElementById('personal-edit-form').style.display='none';
+    document.getElementById('personal-del-form').style.display='block';
+  }
+
+  function showPersonal(i) {
+    let danhmucrieng = document.getElementById('danhmucrieng');
+    let catlorieng = document.getElementById('catlorieng');
+    let chotloirieng = document.getElementById('chotloirieng');
+    let personalTab1 = document.getElementById('personalTab1');
+    let personalTab2 = document.getElementById('personalTab2');
+    let personalTab3 = document.getElementById('personalTab3');
+    if(i==1) {
+      if(danhmucrieng!=null)
+        danhmucrieng.style.display="block";
+      if(catlorieng!=null)
+        catlorieng.style.display="none";
+      if(chotloirieng!=null)
+        chotloirieng.style.display="none";
+      personalTab1.classList.add("btn-danger");
+      personalTab2.classList.remove("btn-danger");
+      personalTab3.classList.remove("btn-danger");
+      personalTab1.classList.remove("btn-secondary");
+      personalTab2.classList.add("btn-secondary");
+      personalTab3.classList.add("btn-secondary");
+    }
+    if(i==2) {
+      if(danhmucrieng!=null)
+        danhmucrieng.style.display="none";
+      if(catlorieng!=null)
+        catlorieng.style.display="block";
+      if(chotloirieng!=null)
+        chotloirieng.style.display="none";
+      personalTab1.classList.remove("btn-danger");
+      personalTab2.classList.add("btn-danger");
+      personalTab3.classList.remove("btn-danger");
+      personalTab1.classList.add("btn-secondary");
+      personalTab2.classList.remove("btn-secondary");
+      personalTab3.classList.add("btn-secondary");
+    }
+    if(i==3) {
+      if(danhmucrieng!=null)
+        danhmucrieng.style.display="none";
+      if(catlorieng!=null)
+        catlorieng.style.display="none";
+      if(chotloirieng!=null)
+        chotloirieng.style.display="block";
+      personalTab1.classList.remove("btn-danger");
+      personalTab2.classList.remove("btn-danger");
+      personalTab3.classList.add("btn-danger");
+      personalTab1.classList.add("btn-secondary");
+      personalTab2.classList.add("btn-secondary");
+      personalTab3.classList.remove("btn-secondary");
+    }
+  }
+
+  document.getElementById('personalAdd').addEventListener('click', function(){
+    document.getElementById('client-form-wrapper').style.display='block';
+    document.getElementById('personal-add-form').style.display='block';
+    document.getElementById('personal-edit-form').style.display='none';
+    document.getElementById('personal-del-form').style.display='none';
+  });
+
+  function closePersonalForm(){
+    document.getElementById('client-form-wrapper').style.display='none';
+  };
+</script>

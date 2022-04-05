@@ -78,6 +78,7 @@
                   <th>Phong thần</th>
                   <th>Bảng điều kiện</th>
                   <th>Bảng cắt lỗ</th>
+                  <th>Danh mục cá nhân</th>
                   <th></th>
                 </tr>
                 <% for(var i=0; i < data.length; i++) { %>
@@ -93,6 +94,7 @@
                     <td id="phongthan-<%= data[i].id %>" <% if(data[i].phongthan) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].phongthan %></td>
                     <td id="ddk-<%= data[i].id %>" <% if(data[i].ddk) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].ddk %></td>
                     <td id="sl-<%= data[i].id %>" <% if(data[i].sl) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].sl %></td>
+                    <td id="personalsltp-<%= data[i].id %>" <% if(data[i].personal_sltp) { %> class="text-success" <% } else { %> class="text-danger" <% } %>><%= data[i].personal_sltp %></td>
                     <td class="text-center">
                       <button class="border-0 btn-transition btn btn-outline-success clientButton" id="clientInfo-<%= data[i].id %>"></button>
                     </td>
@@ -129,7 +131,7 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-lg-4 col-12 form-group">
-                        <input type="text" id="id-input" style="display:none" name="id" placeholder=""/>
+                        <input type="text" id="id-input" style="display:none" name="id" placeholder="" readonly/>
                         <label>Họ và tên</label>
                         <input type="text" id="name-input" class="form-control" name="name" placeholder=""/>
                       </div>
@@ -179,11 +181,21 @@
                           <option value="false">Không</option>
                         </select>
                       </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Sử dụng Danh mục cá nhân</label>
+                        <select id="personalsltp-input" class="form-control" name="personalSLTPChange">
+                          <option value="true">Có</option>
+                          <option value="false">Không</option>
+                        </select>
+                      </div>
                       <% if(user.role_id == 2) { %>
                         <div class="col-lg-4 col-12 form-group">
                           <label>Cấp quyền</label>
                           <select id="" class="form-control" name="role_id">
                             <option value="1" selected>Khách hàng</option>
+                            <% if(user.role_id==2) {%>
+                              <option value="2">Admin</option>
+                            <% } %>
                             <option value="3">Quản lý</option>
                           </select>
                         </div>

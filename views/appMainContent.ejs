@@ -121,6 +121,9 @@
       </div>
       <% } %>
 
+      <% if(user.personal_sltp==true) { %>
+        <%- include('personalsltp/personal_sltp.ejs',{user,personalsltp}); %>
+      <% } %>
 
       <div class="col-lg-6">
         <% let clientNav = user.total_nav * 1000000000;%>
@@ -158,21 +161,7 @@
       <div class="col-lg-6">
         <div class="block" style="">
           <div class="title">Lịch sử lệnh</div>
-          <div id="records" class="block-content" style="height:350px;overflow: auto;">
-            <!--table id="hieu-qua" style="margin:30px auto;width:98%;text-align:right">
-              <tr>
-                <th>id</th>
-                <th class="text-center">Thời gian</th>
-                <th>Lệnh</th>
-                <th>Mã</th>
-                <th>Khối lượng</th>
-                <th>Tỷ trọng</th>
-                <th>Giá</th>
-                <th>Giá vốn TB</th>
-                <th>Lãi/lỗ</th>
-              </tr>
-            </table-->
-          </div>
+          <div id="records" class="block-content" style="height:350px;overflow: auto;"></div>
         </div>
 
       </div>

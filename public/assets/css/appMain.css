@@ -36,8 +36,8 @@ font-size: 2em;
 color: #fff;
 }
 .welcome-content {
-animation-name: bounceIn;
-animation-duration: 450ms;
+animation-name: fadeIn;
+animation-duration: 200ms;
 animation-timing-function: linear;
 animation-fill-mode: forwards;
 }
@@ -394,3 +394,11 @@ margin-top: 15px;
   transform: scale(1) translate3d(0,0,0);
 }
 }
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+   }
+ }

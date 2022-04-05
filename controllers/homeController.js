@@ -40,9 +40,17 @@ let getAppHomePage = (req,res) => {
               fund_nav = results.rows[results.rows.length - 1].fund_nav;
             }
             let trades = results.rows;
-            //console.log(cb);
-            //console.log(canhbao);
-            return res.render('appHomePage', {menu:menuData,user,trades:trades,fund_nav,canhbao});
+            pool.query(
+              `SELECT last_change,sltp,history FROM user_personal_sltp WHERE user_id=$1;`, [user.id], (err,results) => {
+                if(err) {
+                  console.log('Error: ',err);
+                }
+                let personalsltp = results.rows[0];
+                console.log('personal: ', personalsltp);
+                return res.render('appHomePage', {menu:menuData,user,trades:trades,fund_nav,canhbao,personalsltp});
+              }
+            )
+
           }
         )
       }
@@ -54,6 +62,8 @@ let getAppHomePage = (req,res) => {
 
 let postAppHomePage = (req,res) => {
   let user=req.user;
+  //console.log(req.headers);
+  //console.log(req.body);
   if(user!=undefined){
     if(req.body.client_nav_submit){
       let nav = parseFloat(req.body.clientnav.replace(/,/g, ''))/1000000000;
@@ -88,6 +98,239 @@ let postAppHomePage = (req,res) => {
       )
       return res.redirect('/apphome');
     }
+    if(req.body.personalAdd){
+      try {
+        //console.log(req.body);
+        let uid = parseInt(req.body.uid);
+        let input = {
+          ticker: req.body.personalTicker,
+          sl: parseFloat(req.body.personalSL),
+          tp: parseFloat(req.body.personalTP)
+        };
+        pool.query(
+          `SELECT last_change,sltp FROM user_personal_sltp WHERE user_id=$1 ORDER BY user_id DESC LIMIT 1;`, [uid], (err,results) => {
+            if(err) {
+              console.log('Error: ', err);
+            } else {
+              var d = new Date();
+              if (results.rows.length == 0) {
+                console.log('No data, start adding');
+                // Finish fetching, start adding
+                let portfolio = [];
+                portfolio.push(input);
+                pool.query(
+                  `INSERT INTO user_personal_sltp(user_id,last_change,sltp) VALUES ($1,$2,$3);`,
+                  [uid,d,JSON.stringify(portfolio)], (err,results) => {
+                    if(err) {
+                      console.log('Error: ', err);
+                    } else {
+                      return res.redirect('/apphome');
+                    }
+                  }
+                )
+
+              } else {
+                let currentSLTP = JSON.parse(results.rows[0].sltp);
+                console.log('Has data: ', currentSLTP);
+
+                // Finish fetching, start adding
+                let updatedTickers = 0;
+                for (var i=0; i< currentSLTP.length; i++) {
+                  if(currentSLTP[i].ticker == input.ticker) {
+                    currentSLTP[i].sl = input.sl;
+                    currentSLTP[i].tp = input.tp;
+                    updatedTickers++;
+                  }
+                }
+                if (updatedTickers==0)
+                  currentSLTP.push(input);
+
+                pool.query(
+                  `UPDATE user_personal_sltp SET last_change=$2,sltp=$3 WHERE user_id=$1;`,
+                  [uid,d,JSON.stringify(currentSLTP)], (err,results) => {
+                    if(err) {
+                      console.log('Error: ', err);
+                    } else {
+                      return res.redirect('/apphome');
+                    }
+                  }
+                )
+
+              }
+            }
+          }
+        )
+      }
+      catch(err) {
+        console.log(err);
+      }
+
+    }
+    if(req.body.personalChange){
+      try {
+        let uid = parseInt(req.body.uid);
+        let input = {
+          ticker: req.body.personalTicker,
+          sl: parseFloat(req.body.personalSL),
+          tp: parseFloat(req.body.personalTP)
+        };
+        pool.query(
+          `SELECT last_change,sltp FROM user_personal_sltp WHERE user_id=$1 ORDER BY user_id DESC LIMIT 1;`, [uid], (err,results) => {
+            if(err) {
+              console.log('Error: ', err);
+            } else {
+              var d = new Date();
+              if (results.rows.length > 0) {
+                let currentSLTP = JSON.parse(results.rows[0].sltp);
+                console.log('Has data: ', currentSLTP);
+
+                // Finish fetching, start adding
+                let updatedTickers = 0;
+                for (var i=0; i< currentSLTP.length; i++) {
+                  if(currentSLTP[i].ticker == input.ticker) {
+                    currentSLTP[i].sl = input.sl;
+                    currentSLTP[i].tp = input.tp;
+                    updatedTickers++;
+                  }
+                }
+                if (updatedTickers>0) {
+                  pool.query(
+                    `UPDATE user_personal_sltp SET last_change=$2,sltp=$3 WHERE user_id=$1;`,
+                    [uid,d,JSON.stringify(currentSLTP)], (err,results) => {
+                      if(err) {
+                        console.log('Error: ', err);
+                      } else {
+                        return res.redirect('/apphome');
+                      }
+                    }
+                  )
+                } else {
+                  return res.redirect('/apphome');
+                }
+              }
+            }
+          }
+        )
+
+      }
+      catch(err) {
+        console.log(err);
+      }
+    }
+    if(req.body.personalDel){
+      try {
+        let uid = parseInt(req.body.uid);
+        let ticker = req.body.personalTicker;
+        pool.query(
+          `SELECT last_change,sltp FROM user_personal_sltp WHERE user_id=$1 ORDER BY user_id DESC LIMIT 1;`, [uid], (err,results) => {
+            if(err) {
+              console.log('Error: ', err);
+            } else {
+              var d = new Date();
+              if (results.rows.length > 0) {
+                let currentSLTP = JSON.parse(results.rows[0].sltp);
+                console.log('Has data: ', currentSLTP);
+
+                // Finish fetching, start deleting
+                for (var i=0; i< currentSLTP.length; i++) {
+                  if(currentSLTP[i].ticker == ticker) {
+                    currentSLTP.splice(i, 1);
+                    break;
+                  }
+                }
+
+                pool.query(
+                  `UPDATE user_personal_sltp SET last_change=$2,sltp=$3 WHERE user_id=$1;`,
+                  [uid,d,JSON.stringify(currentSLTP)], (err,results) => {
+                    if(err) {
+                      console.log('Error: ', err);
+                    } else {
+                      return res.redirect('/apphome');
+                    }
+                  }
+                )
+
+              }
+            }
+          }
+        )
+
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    if(req.headers.reqcontent=="pSLTP") {
+      console.log('Update personal SLTP');
+      let uid = req.body.i;
+      let ticker = req.body.ticker;
+      let type = req.body.type;
+      let price = req.body.price;
+      let date = req.body.date;
+      pool.query(
+        `SELECT last_change,sltp,history FROM user_personal_sltp WHERE user_id=$1 ORDER BY user_id DESC LIMIT 1;`,[uid], (err,results) => {
+          if(err) {
+            console.log('Error: ', err);
+          } else {
+            if (results.rows.length > 0) {
+              let currentSLTP = JSON.parse(results.rows[0].sltp);
+              let currentH = JSON.parse(results.rows[0].history);
+
+              if(currentSLTP==null) currentSLTP=[];
+              if(currentH==null) currentH=[];
+
+              if(currentSLTP.length>0) {
+                for (var i=0; i<currentSLTP.length; i++) {
+                  if(currentSLTP[i].ticker==ticker) {
+                    currentSLTP.splice(i, 1);
+                    break;
+                  }
+                }
+                if(currentH.length>0){
+                  let hCount=0;
+                  for(var i=0;i<currentH.length;i++){
+                    if(currentH[i].ticker==ticker && currentH[i].date==date) {
+                      hCount++;
+                      break;
+                    }
+                  }
+                  if(hCount==0) {
+                    currentH.push({
+                      ticker: ticker,
+                      type: type,
+                      price: price,
+                      date: date
+                    });
+                  }
+                } else {
+                  currentH.push({
+                    ticker: ticker,
+                    type: type,
+                    price: price,
+                    date: date
+                  });
+                }
+              }
+              console.log(uid,currentSLTP,currentH);
+              pool.query(
+                `UPDATE user_personal_sltp SET sltp=$2,history=$3 WHERE user_id=$1`,
+                [uid,JSON.stringify(currentSLTP),JSON.stringify(currentH)],
+                (err,results) => {
+                  if(err) {
+                    console.log('Error: ', err);
+                  } else {
+                    console.log("Update personal SLTP done");
+                  }
+                }
+              )
+            } else {
+              console.log('No data for this user');
+            }
+          }
+        }
+      )
+    }
+
   } else {
     return res.redirect('/login');
   }

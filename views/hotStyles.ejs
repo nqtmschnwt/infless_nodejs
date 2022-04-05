@@ -50,6 +50,30 @@
     font-family: fontAwesome;
     content: "\f040";
   }
+  button.personalDelButton::before {
+    font-family: fontAwesome;
+    content: "\f1f8";
+  }
+
+  .personalTab {
+    color: #999;
+    padding: 0px 15px;
+    margin: 0px;
+  }
+
+  .personalTab li {
+    display: inline-block;
+  }
+
+  .personalContentTable {
+    width: 100%;
+  }
+
+  #personal-add-form, #personal-edit-form, #personal-del-form {
+    width: 80%;
+    margin: 50px auto;
+  }
+
   #client-form {
     position: fixed;
     top: 70px;
@@ -254,8 +278,8 @@
     color: #fff;
   }
   .welcome-content {
-    animation-name: bounceIn;
-    animation-duration: 450ms;
+    animation: fadeIn ease 0.2s;
+    animation-iteration-count: 1;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
   }
@@ -361,4 +385,13 @@
       transform: scale(1) translate3d(0,0,0);
     }
   }
+
+  @keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+     }
+   }
 </style>

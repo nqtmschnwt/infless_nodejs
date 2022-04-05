@@ -2,12 +2,25 @@ const fetch = require('node-fetch');
 
 let getTestPage = (req,res) => {
   //testFunc();
-  return res.render('devtest');
+  let authToken = req.body.authToken;
+  console.log("get");
+  console.log(authToken);
+  return res.render('devtest',{authToken:"none"});
 }
 
-function testFunc() {
+let postTestPage = (req,res) => {
+  //testFunc();
+  let authToken = req.body.authToken;
+  console.log("post");
+  console.log(authToken);
+  testFunc(authToken);
+  //return res.render('devtest',{authToken:authToken});
+  return res.send("Hoan thanh");
+}
+
+function testFunc(authToken) {
   const getCustomerTokenBody = {
-    authToken: 'Firebase token here',
+    authToken: authToken,
     channel: "FireBase",
     otp: "",
     password: "",
@@ -15,11 +28,13 @@ function testFunc() {
     username: ""
   };
 
+  console.log(getCustomerTokenBody);
+
   //POST request with body equal on data in JSON format
   fetch('http://sc.tintinsoft.online:4006/webserver/verifyuser/v1', {
     method: 'POST',
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      'Content-Type': 'application/json',
       "appToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUVFNBUEkiLCJhcHBpZCI6MiwiY2xpZW50aWQiOjEsInBsYW5pZCI6Mn0.e-SzmLVwIcppvWokxnH8iw9wyIHWGt1UpRHvnvb6K-E",
       "authUrl": "",
       "checksum": "",
@@ -41,4 +56,5 @@ function testFunc() {
 
 module.exports = {
   getTestPage:getTestPage,
+  postTestPage:postTestPage,
 }

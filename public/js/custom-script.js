@@ -188,6 +188,7 @@ function clientInfoFill(id){
   let phongthan = document.getElementById('phongthan-'+id).innerHTML;
   let ddk = document.getElementById('ddk-'+id).innerHTML;
   let sl = document.getElementById('sl-'+id).innerHTML;
+  let personalsltp = document.getElementById('personalsltp-'+id).innerHTML;
 
   console.log(expireDate);
 
@@ -200,6 +201,7 @@ function clientInfoFill(id){
   document.getElementById('phongthan-input').value = phongthan;
   document.getElementById('ddk-input').value = ddk;
   document.getElementById('sl-input').value = sl;
+  document.getElementById('personalsltp-input').value = personalsltp;
 }
 
 const clientFormCloseBtn = document.getElementById('client-form-close');

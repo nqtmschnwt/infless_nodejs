@@ -58,7 +58,7 @@ function initialize(passport){
   passport.deserializeUser((id,done)=>{
     // Lưu thông tin usertoken
     pool.query(
-      `SELECT u.id,u.name,u.phone,u.email,u.password,au.active,e.expire_date,rf.ref_id,ur.role_id,rs.role_name,s.copytrade,s.phongthan,s.ddk,s.sl,n.total_nav,n.nav_date
+      `SELECT u.id,u.name,u.phone,u.email,u.password,au.active,e.expire_date,rf.ref_id,ur.role_id,rs.role_name,s.copytrade,s.phongthan,s.ddk,s.sl,s.personal_sltp,n.total_nav,n.nav_date
       FROM users u
       INNER JOIN active_users au ON u.id=au.user_id
       INNER JOIN ref_info rf ON u.id=rf.user_id

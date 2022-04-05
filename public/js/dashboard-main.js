@@ -147,6 +147,148 @@ socket.on('vol21', function(data){
     }
   }
 
+  // Personal portfolio
+
+  if(pSLTP!=undefined && pSLTP!=null) {
+    //console.log(pSLTP);
+    for(var i=0; i<pSLTP.length; i++) {
+      if(pSLTP[i].ticker==data['ticker']) {
+        console.log(data['ticker'], i, data['price']<pSLTP[i].sl, data['price']>pSLTP[i].tp);
+        let d = new Date();
+        dt = addZero(d.getDate()) + "/" + addZero(d.getMonth()+1) + "/" + d.getFullYear();
+        //console.log(data['price'],pSLTP[i].sl,data['price']<pSLTP[i].sl);
+        if(data['price']<pSLTP[i].sl) {
+          if(document.getElementById("personal-"+data['ticker'])!=null) {
+            //document.getElementById("personal-"+data['ticker']).style.display="none";
+            let hCount = 0;
+            for(var j=0; j<pSLTPh.length; j++) {
+              if(pSLTPh[j].ticker == data['ticker'] && pSLTPh[j].date == dt) {
+                hCount++;
+              }
+            }
+            if(hCount==0) {
+              let newH = {
+                i: uid,
+                ticker:pSLTP[i].ticker,
+                type:"SL",
+                price:pSLTP[i].sl,
+                date:dt
+              }
+              pSLTPh.push(newH);
+              //console.log(newH);
+              fetch("/apphome", {
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json',
+                  'reqcontent': "pSLTP"
+                },
+                body: JSON.stringify(newH)
+              }).then(res => {
+                console.log("Request complete! response:", res);
+              });
+            }
+            pSLTP.splice(i, 1);
+            //console.log(pSLTP);
+            //console.log(pSLTPh);
+          }
+        }
+
+        else if(data['price']>pSLTP[i].tp) {
+          if(document.getElementById("personal-"+data['ticker'])!=null) {
+            //document.getElementById("personal-"+data['ticker']).style.display="none";
+            let hCount = 0;
+            for(var j=0; j<pSLTPh.length; j++) {
+              if(pSLTPh[j].ticker == data['ticker'] && pSLTPh[j].date == dt) {
+                hCount++;
+              }
+            }
+            if(hCount==0) {
+              let newH = {
+                i: uid,
+                ticker:pSLTP[i].ticker,
+                type:"TP",
+                price:pSLTP[i].tp,
+                date:dt
+              }
+              pSLTPh.push(newH);
+              //console.log(newH);
+              fetch("/apphome", {
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json',
+                  'reqcontent': "pSLTP"
+                },
+                body: JSON.stringify(newH)
+              }).then(res => {
+                console.log("Request complete! response:", res);
+              });
+            }
+            pSLTP.splice(i, 1);
+            //console.log(pSLTP);
+            //console.log(pSLTPh);
+          }
+        }
+
+        break;
+      }
+    }
+
+    // Render new personal portfolio
+    let danhMucRiengRender = "";
+    let catLoRiengRender = "";
+    let chotLoiRiengRender = "";
+    if (pSLTP.length >0 ) {
+      danhMucRiengRender += '<table class="personalContentTable" id=""><tr><th class="text-center" style="display:none">id</th><th class="text-center">Mã</th><th class="text-center">Giá cắt lỗ</th><th class="text-center">Giá chốt lời</th><th></th></tr>';
+
+      for(var i=0; i<pSLTP.length; i++) {
+        danhMucRiengRender += '<tr id="personal-'+pSLTP[i].ticker+'"><td class="text-center" id="personal-'+uid+'-'+i+'-id" style="display:none">'+i+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-ticker">'+pSLTP[i].ticker+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-sl">'+pSLTP[i].sl+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-tp">'+pSLTP[i].tp+'</td><td class="text-center" style="width:100px"><button class="border-0 btn-transition btn btn-outline-success clientButton" id="" onclick="editPersonalSLTP('+uid+','+i+')"></button><button class="border-0 btn-transition btn btn-outline-danger personalDelButton" id="" onclick="delPersonalSLTP('+uid+','+i+')"></button></td></tr>';
+      }
+      danhMucRiengRender += '</table>';
+
+    } else {
+      danhMucRiengRender += '<p class="text-secondary" id="">Danh mục cá nhân đang trống.</p>';
+    }
+
+    if (pSLTPh.length >0 ) {
+      let pSL = [];
+      let pTP = [];
+      for(var i=0; i<pSLTPh.length; i++) {
+        if(pSLTPh[i].type=="SL") pSL.push(pSLTPh[i]);
+        if(pSLTPh[i].type=="TP") pTP.push(pSLTPh[i]);
+      }
+
+      // personal SL table
+      if (pSL.length >0 ) {
+        catLoRiengRender += '<table class="personalContentTable" id=""><tr><th class="text-center" style="display:none">id</th><th class="text-center">Mã</th><th class="text-center">Giá cắt lỗ</th><th class="text-center">Thời gian</th></tr>';
+
+        for(var i=0; i<pSL.length; i++) {
+          catLoRiengRender += '<tr id="personal-'+pSL[i].ticker+'"><td class="text-center" id="personal-'+uid+'-'+i+'-id" style="display:none">'+i+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-ticker">'+pSL[i].ticker+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-sl">'+pSL[i].price+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-tp">'+pSL[i].date+'</td></tr>';
+        }
+        catLoRiengRender += '</table>';
+
+      } else {
+        catLoRiengRender += '<p class="text-secondary" id="" style="display:none">Danh sách cắt lỗ của cá nhân đang trống.</p>';
+      }
+
+      // personal TP table
+      if (pTP.length >0 ) {
+        chotLoiRiengRender += '<table class="personalContentTable" id=""><tr><th class="text-center" style="display:none">id</th><th class="text-center">Mã</th><th class="text-center">Giá chốt lời</th><th class="text-center">Thời gian</th></tr>';
+
+        for(var i=0; i<pTP.length; i++) {
+          chotLoiRiengRender += '<tr id="personal-'+pTP[i].ticker+'"><td class="text-center" id="personal-'+uid+'-'+i+'-id" style="display:none">'+i+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-ticker">'+pTP[i].ticker+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-sl">'+pTP[i].price+'</td><td class="text-center" id="personal-'+uid+'-'+i+'-tp">'+pTP[i].date+'</td></tr>';
+        }
+        chotLoiRiengRender += '</table>';
+
+      } else {
+        chotLoiRiengRender += '<p class="text-secondary" id="" style="display:none">Danh sách chốt lời của cá nhân đang trống.</p>';
+      }
+    }
+
+    document.getElementById("danhmucrieng").innerHTML =  danhMucRiengRender;
+    document.getElementById("catlorieng").innerHTML =  catLoRiengRender;
+    document.getElementById("chotloirieng").innerHTML =  chotLoiRiengRender;
+  }
+
 });
 
 // Kick

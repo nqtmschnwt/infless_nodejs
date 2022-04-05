@@ -122,7 +122,8 @@
       <% } %>
 
       <% if(user.personal_sltp==true) { %>
-        <%- include('personalsltp/personal_sltp.ejs',{user,personalsltp}); %>
+        <p style="display:none"><%- JSON.parse(personalsltp) %></p>
+        <%- //include('personalsltp/personal_sltp.ejs',{user,personalsltp}); %>
       <% } %>
 
       <div class="col-lg-6">

@@ -44,10 +44,17 @@ let getAppHomePage = (req,res) => {
               `SELECT last_change,sltp,history FROM user_personal_sltp WHERE user_id=$1;`, [user.id], (err,results) => {
                 if(err) {
                   console.log('Error: ',err);
+                } else {
+                  let personalsltp = {
+                    last_change: "",
+                    sltp: "[]",
+                    history: "[]"
+                  }
+                  if (results.rows.length>0) personalsltp = results.rows[0];
+                  console.log('personal: ', personalsltp);
+                  return res.render('appHomePage', {menu:menuData,user,trades:trades,fund_nav,canhbao,personalsltp});
                 }
-                let personalsltp = results.rows[0];
-                console.log('personal: ', personalsltp);
-                return res.render('appHomePage', {menu:menuData,user,trades:trades,fund_nav,canhbao,personalsltp});
+
               }
             )
 

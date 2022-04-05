@@ -110,7 +110,7 @@ let postAppHomePage = (req,res) => {
         //console.log(req.body);
         let uid = parseInt(req.body.uid);
         let input = {
-          ticker: req.body.personalTicker,
+          ticker: req.body.personalTicker.toUpperCase(),
           sl: parseFloat(req.body.personalSL),
           tp: parseFloat(req.body.personalTP)
         };
@@ -177,7 +177,7 @@ let postAppHomePage = (req,res) => {
       try {
         let uid = parseInt(req.body.uid);
         let input = {
-          ticker: req.body.personalTicker,
+          ticker: req.body.personalTicker.toUpperCase(),
           sl: parseFloat(req.body.personalSL),
           tp: parseFloat(req.body.personalTP)
         };
@@ -227,7 +227,7 @@ let postAppHomePage = (req,res) => {
     if(req.body.personalDel){
       try {
         let uid = parseInt(req.body.uid);
-        let ticker = req.body.personalTicker;
+        let ticker = req.body.personalTicker.toUpperCase();
         pool.query(
           `SELECT last_change,sltp FROM user_personal_sltp WHERE user_id=$1 ORDER BY user_id DESC LIMIT 1;`, [uid], (err,results) => {
             if(err) {
@@ -270,7 +270,7 @@ let postAppHomePage = (req,res) => {
     if(req.headers.reqcontent=="pSLTP") {
       console.log('Update personal SLTP');
       let uid = req.body.i;
-      let ticker = req.body.ticker;
+      let ticker = req.body.ticker.toUpperCase();
       let type = req.body.type;
       let price = req.body.price;
       let date = req.body.date;

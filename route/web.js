@@ -51,6 +51,8 @@ let initWebRoutes = (app) => {
       // Trading page
       router.get("/trade-admin", managerController.getTradePage);
       router.post("/trade-admin", managerController.postTradePage);
+      // Scanlist page
+      router.get("/scan-list", managerController.getScanListPage);
       // Phong than page
       router.get("/pt-admin", managerController.getPTPage);
       router.post("/pt-admin", managerController.postPTPage);

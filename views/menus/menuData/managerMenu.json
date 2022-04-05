@@ -29,6 +29,10 @@
       {
         "title":"Tool Phong thần",
         "link":"/pt-admin"
+      },
+      {
+        "title":"Danh mục scan",
+        "link":"/scan-list"
       }
     ]
   },

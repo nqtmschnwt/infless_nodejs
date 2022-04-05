@@ -264,6 +264,30 @@ let postTradePage = (req,res) => {
   }
 }
 
+let getScanListPage = (req,res) => {
+  let user=req.user;
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      pool.query(
+        `SELECT sltp FROM user_personal_sltp;`, (err,results) => {
+          if(err) {
+            console.log('Error: ',err);
+          } else {
+            let scanlist = results.rows;
+            let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+            return res.render('scanlist',{menu:menuData,user,scanlist});
+          }
+        }
+      )
+    } else {
+      return res.redirect('/home');
+    }
+  } else {
+    return res.redirect('/login');
+  }
+}
+
 module.exports = {
   getManagerPage:getManagerPage,
   getDownloadSetupPage:getDownloadSetupPage,
@@ -272,4 +296,5 @@ module.exports = {
   postPTPage: postPTPage,
   getTradePage: getTradePage,
   postTradePage: postTradePage,
+  getScanListPage: getScanListPage,
 }

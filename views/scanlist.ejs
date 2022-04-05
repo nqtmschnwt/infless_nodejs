@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <style>
+    .console {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      height: 550px;
+      width: 100%;
+      overflow: auto;
+      padding: 20px;
+      overscroll-behavior-y: contain;
+      scroll-snap-type: y proximity;
+    }
+  </style>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">List cổ phiếu của khách</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="block">
+                <p class="text-warning">** Danh sách KHÔNG cập nhật realtime. Cần refresh lại trang để cập nhật.</p>
+                <div class="console" id="scanlist"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+
+<script>
+  let scanlist = <%- JSON.stringify(scanlist) %>;
+  let scanlistDiv = document.getElementById('scanlist');
+  if(scanlist.length==0) scanlistDiv.innerHTML = 'Danh sách đang trống';
+  else {
+    let newScanlist = [];
+    for(var i=0; i<scanlist.length;i++) {
+      let pSLTP = JSON.parse(scanlist[i].sltp);
+      if(pSLTP.length>0){
+        for(var j=0;j<pSLTP.length;j++) {
+          if(!newScanlist.includes(pSLTP[j].ticker)) newScanlist.push(pSLTP[j].ticker);
+        }
+      }
+    }
+    if(newScanlist.length==0) scanlistDiv.innerHTML = 'Danh sách đang trống';
+    else {
+      scanlistDiv.innerHTML = "";
+      for(var i=0;i<newScanlist.length;i++) {
+        scanlistDiv.innerHTML += "<p>"+newScanlist[i]+"</p>"
+      }
+    }
+  }
+</script>
+
+</html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<script src="js/vendor/filesaver.js"></script>
 <body>
   <%- include('hotStyles.ejs') %>
   <style>
@@ -12,6 +13,7 @@
       width: 100%;
       overflow: auto;
       padding: 20px;
+      margin-top: 10px;
       overscroll-behavior-y: contain;
       scroll-snap-type: y proximity;
     }
@@ -40,6 +42,7 @@
             <div class="col-12">
               <div class="block">
                 <p class="text-warning">** Danh sách KHÔNG cập nhật realtime. Cần refresh lại trang để cập nhật.</p>
+                <div class="btn btn-warning" id="downloadBtn">Tải file</div>
                 <div class="console" id="scanlist"></div>
               </div>
             </div>
@@ -76,6 +79,13 @@
       }
     }
   }
+
+  let downloadBtn = document.getElementById('downloadBtn');
+  downloadBtn.addEventListener('click', function() {
+    let fileContent = scanlistDiv.innerHTML.split('<p>').join('').split('</p>').join('\r\n');
+    var blob = new Blob([fileContent], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "scanlist.txt");
+  });
 </script>
 
 </html>

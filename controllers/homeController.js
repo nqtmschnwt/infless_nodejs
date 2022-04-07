@@ -70,10 +70,11 @@ let getAppHomePage = (req,res) => {
 let postAppHomePage = (req,res) => {
   let user=req.user;
   //console.log(req.headers);
-  //console.log(req.body);
+  console.log(req.body);
   if(user!=undefined){
     if(req.body.client_nav_submit){
       let nav = parseFloat(req.body.clientnav.replace(/,/g, ''))/1000000000;
+      console.log("new nav: ",nav);
       let d = new Date().toISOString().substring(0,10);
       pool.query(
         `SELECT COUNT(*) FROM user_nav WHERE user_id=$1 AND nav_date=$2`,[parseInt(user.id),d],(err,results) => {

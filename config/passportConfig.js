@@ -67,7 +67,7 @@ function initialize(passport){
       INNER JOIN user_services s ON u.id=s.user_id
       INNER JOIN expiry e ON u.id=e.user_id
       INNER JOIN user_nav n ON u.id=n.user_id
-      WHERE u.id=$1 ORDER BY nav_date DESC LIMIT 1;`,
+      WHERE u.id=$1 AND nav_date IS NOT NULL ORDER BY nav_date DESC LIMIT 1;`,
       [id],
       async (err, results)=>{
         if(err){

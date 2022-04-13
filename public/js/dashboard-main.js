@@ -190,6 +190,18 @@ socket.on('vol21', function(data){
             pSLTP.splice(i, 1);
             //console.log(pSLTP);
             //console.log(pSLTPh);
+            document.getElementById("ddk-noti").classList.add("ddk-noti-active");
+
+              clientDK.innerHTML += '<div class="alert fade alert-simple alert-danger alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show">'+
+                '<i class="start-icon fa fa-info-circle faa-tada animated"></i>'+
+                '<strong class="font__weight-semibold">'+ data.ticker +'</strong>: cắt lỗ.'+
+              '</div>';
+              playSound("trade");
+
+              if(!document.getElementById("vol21DK").classList.contains("ddk-noti-active")) {
+                document.getElementById("ddk-noti").classList.add("ddk-noti-active");
+              }
+
           }
         }
 
@@ -226,6 +238,17 @@ socket.on('vol21', function(data){
             pSLTP.splice(i, 1);
             //console.log(pSLTP);
             //console.log(pSLTPh);
+            document.getElementById("ddk-noti").classList.add("ddk-noti-active");
+
+              clientDK.innerHTML += '<div class="alert fade alert-simple alert-success alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show">'+
+                '<i class="start-icon fa fa-info-circle faa-tada animated"></i>'+
+                '<strong class="font__weight-semibold">'+ data.ticker +'</strong>: chốt lời.'+
+              '</div>';
+              playSound("trade");
+
+              if(!document.getElementById("vol21DK").classList.contains("ddk-noti-active")) {
+                document.getElementById("ddk-noti").classList.add("ddk-noti-active");
+              }
           }
         }
 

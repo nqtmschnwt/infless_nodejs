@@ -9,6 +9,7 @@ const changePasswordController = require('../controllers/changePasswordControlle
 const newCustomerController = require('../controllers/newCustomerController');
 const findCustomerController = require('../controllers/findCustomerController');
 const testController = require('../controllers/testController');
+const pfController = require('../controllers/pfController');
 const app = express();
 const rateLimit = require('express-rate-limit');
 const contextPath = '/inflessweb';
@@ -71,6 +72,10 @@ let initWebRoutes = (app) => {
       // Dev test page
       router.get("/devtest", testController.getTestPage);
       router.post("/devtest", testController.postTestPage);
+      // Portfolio control
+      router.get("/pf-control", pfController.getPfPage);
+      router.post("/pf-control", pfController.postPfPage);
+      router.get("/portfolio-:id", pfController.getPfInfo);
 
 
   // Request with json body

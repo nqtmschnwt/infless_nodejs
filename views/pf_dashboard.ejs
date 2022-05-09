@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Quản lý danh mục</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="block">
+          <div class="mb-3">
+            <div class="btn btn-danger pfformbtn" id="form-1-btn" onclick="pfFormActive(1)">Tìm theo thông tin TK</div>
+            <div class="btn btn-secondary pfformbtn" id="form-2-btn" onclick="pfFormActive(2)">Tìm theo NAV</div>
+            <div class="btn btn-secondary pfformbtn" id="form-3-btn" onclick="pfFormActive(3)">Tìm theo Mã</div>
+          </div>
+
+          <form action="" method="post" id="form-1" class='pfform'>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Họ và tên</label>
+                  <input type="text" class="form-control" name="name" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Điện thoại</label>
+                  <input type="text" class="form-control" name="phone" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Email</label>
+                  <input type="text" class="form-control" name="email" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Mã giới thiệu</label>
+                  <input type="text" class="form-control" name="ref" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Số TK</label>
+                  <input type="text" class="form-control" name="acc" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Công ty CK</label>
+                  <input type="text" class="form-control" name="company" placeholder=""/>
+                </div>
+                <div class="col-12 form-group">
+                  <input type="submit" class="btn btn-secondary" name="form_1_find" value="Tìm kiếm khách có danh mục"/>
+                  <input type="submit" class="btn btn-secondary" name="findnone" value="Khách chưa có danh mục"/>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <form action="" method="post" id="form-2"  class='pfform' style="display:none">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-4 col-12 form-group">
+                  <label>NAV nhỏ nhất</label>
+                  <input type="text" class="form-control" name="minnav" placeholder=""/>
+                </div>
+                <div class="col-lg-4 col-12 form-group">
+                  <label>NAV lớn nhất</label>
+                  <input type="text" class="form-control" name="maxnav" placeholder=""/>
+                </div>
+                <div class="col-12 form-group">
+                  <input type="submit" class="btn btn-secondary" name="form_2_find" value="Tìm kiếm khách có danh mục"/>
+                  <input type="submit" class="btn btn-secondary" name="findnone" value="Khách chưa có danh mục"/>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <form action="" method="post" id="form-3"  class='pfform' style="display:none">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-4 col-12 form-group">
+                  <label>Mã CK</label>
+                  <input type="text" class="form-control" name="ticker" placeholder=""/>
+                </div>
+                <div class="col-12 form-group">
+                  <input type="submit" class="btn btn-secondary" name="form_3_find" value="Tìm kiếm khách có danh mục"/>
+                  <input type="submit" class="btn btn-secondary" name="findnone" value="Khách chưa có danh mục"/>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </section>
+
+      <section>
+        <% if(data.type=="blank") { %>
+          <h4 class="text-center">Danh sách khách chưa tạo danh mục</h4>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <table style="width:100%" id="clientTable">
+                  <tr>
+                    <th>ID</th>
+                    <th>Họ và tên</th>
+                    <th>Điện thoại</th>
+                    <th>Email</th>
+                    <th>Tạo danh mục</th>
+                  </tr>
+                  <% for(var i=0;i<data.data.length;i++) { %>
+                    <tr>
+                      <td><%- data.data[i].id %></td>
+                      <td><%- data.data[i].name %></td>
+                      <td><%- data.data[i].phone %></td>
+                      <td><%- data.data[i].email %></td>
+                      <td><div class="btn btn-success" onclick="addToBlankPf('<%- data.data[i].id %>','<%- data.data[i].name %>','<%- data.data[i].phone %>','<%- data.data[i].email %>')">+</div></td>
+                    </tr>
+                  <% } %>
+                </table>
+              </div>
+            </div>
+          </div>
+        <% } %>
+
+        <% if(data.type=="form1" || data.type=="form2" || data.type=="form3") { %>
+          <h4 class="text-center">Kết quả tìm kiếm</h4>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <table style="width:100%" id="clientTable">
+                  <tr>
+                    <th>ID</th>
+                    <th style="display:none"></th>
+                    <th>Họ và tên</th>
+                    <th>Điện thoại</th>
+                    <th>Email</th>
+                    <th>Số TK</th>
+                    <th>Công ty</th>
+                    <th></th>
+                  </tr>
+                  <% for(var i=0;i<data.data.length;i++) { %>
+                    <tr>
+                      <td><%- data.data[i].id %></td>
+                      <td style="display:none"><%- data.data[i].portfolio_id %></td>
+                      <td><%- data.data[i].name %></td>
+                      <td><%- data.data[i].phone %></td>
+                      <td><%- data.data[i].email %></td>
+                      <td><%- data.data[i].acc %></td>
+                      <td><%- data.data[i].company %></td>
+                      <td>
+                        <div class="btn btn-success" onclick="updatePf('<%- data.data[i].id %>','<%- data.data[i].portfolio_id %>','<%- data.data[i].name %>','<%- data.data[i].phone %>','<%- data.data[i].email %>','<%- data.data[i].acc %>','<%- data.data[i].company %>')">Cập nhật</div>
+                        <a class="btn btn-warning" href="/portfolio-<%- data.data[i].portfolio_id %>"  target="_blank">Xem chi tiết</a>
+                      </td>
+                    </tr>
+                  <% } %>
+                </table>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </section>
+
+      <div class="overlaypf overlay-dark" id="createpf-form-wrapper" style="display:none">
+        <div id="client-form">
+          <form id="createpf-form" action="" name="createpf_form" onsubmit="return validatecreatePfForm()"  method="post">
+            <div class="modal-content welcome-content client-form-content">
+              <div class="modal-header d-flex justify-content-center">
+                <h3 class="heading">Tạo danh mục mới</h3>
+              </div>
+              <div class="modal-body">
+
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-4 col-12 form-group">
+                        <input type="text" id="id-input" style="display:none" name="id" placeholder="" readonly/>
+                        <label>Họ và tên</label>
+                        <input type="text" id="name-input" class="form-control" name="name" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Điện thoại</label>
+                        <input type="text" id="phone-input" class="form-control" name="phone" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Email</label>
+                        <input type="text" id="email-input" class="form-control" name="email" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Số TK</label>
+                        <input type="text" id="acc-input" class="form-control" name="acc" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Công ty CK</label>
+                        <select id="" class="form-control" name="company">
+                          <option value="tcbs">TCBS</option>
+                          <option value="AIS">AIS</option>
+                          <option value="PINETREE">PINETREE</option>
+                          <option value="APS">APS</option>
+                        </select>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Giá trị TS ròng</label>
+                        <input type="text" id="tsrong-input" class="form-control" name="tsrong" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Giá trị TS thị trường</label>
+                        <input type="text" id="tstt-input" class="form-control" name="tstt" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Tiền mặt còn lại</label>
+                        <input type="text" id="cash-input" class="form-control" name="cash" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Vay</label>
+                        <input type="text" id="debt-input" class="form-control" name="debt" placeholder=""/>
+                      </div>
+                      <div class="col-12" id="pf-ticker-input">
+
+                      </div>
+                      <div class="col-12 form-group">
+                        <div class="btn btn-success" onclick="addPfTicker('add')">+ Thêm mã</div>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class="modal-footer d-flex justify-content-center">
+                <input type="submit" class="btn btn-success" name="createPf" value="OK"/>
+                <span id="pf-form-close" class="btn btn-danger">Đóng</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="overlaypf overlay-dark" id="editpf-form-wrapper" style="display:none">
+        <div id="client-form">
+          <form id="editpf-form" action="" name="editpf_form" onsubmit="return validateEditPfForm()"  method="post">
+            <div class="modal-content welcome-content client-form-content">
+              <div class="modal-header d-flex justify-content-center">
+                <h3 class="heading">Tạo danh mục mới</h3>
+              </div>
+              <div class="modal-body">
+
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-4 col-12 form-group">
+                        <input type="text" id="editid-input" style="display:none" name="id" placeholder="" readonly/>
+                        <input type="text" id="editpfid-input" style="display:none" name="pfid" placeholder="" readonly/>
+                        <input type="text" id="editq-input" style="display:none" name="q" placeholder="" readonly/>
+                        <label>Họ và tên</label>
+                        <input type="text" id="editname-input" class="form-control" name="name" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Điện thoại</label>
+                        <input type="text" id="editphone-input" class="form-control" name="phone" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Email</label>
+                        <input type="text" id="editemail-input" class="form-control" name="email" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Số TK</label>
+                        <input type="text" id="editacc-input" class="form-control" name="acc" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Công ty CK</label>
+                        <input type="text" id="editcompany-input" class="form-control" name="company" placeholder="" readonly/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Giá trị TS ròng</label>
+                        <input type="text" id="edittsrong-input" class="form-control" name="tsrong" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Giá trị TS thị trường</label>
+                        <input type="text" id="edittstt-input" class="form-control" name="tstt" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Tiền mặt còn lại</label>
+                        <input type="text" id="editcash-input" class="form-control" name="cash" placeholder=""/>
+                      </div>
+                      <div class="col-lg-4 col-12 form-group">
+                        <label>Vay</label>
+                        <input type="text" id="editdebt-input" class="form-control" name="debt" placeholder=""/>
+                      </div>
+                      <div class="col-12" id="editpf-ticker-input">
+
+                      </div>
+                      <div class="col-12 form-group">
+                        <div class="btn btn-success" onclick="addPfTicker('edit')">+ Thêm mã</div>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class="modal-footer d-flex justify-content-center">
+                <input type="submit" class="btn btn-success" name="updatePf" value="OK"/>
+                <span id="editpf-form-close" class="btn btn-danger">Đóng</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+<script>
+  let query='<%- JSON.stringify(query) %>';
+  console.log(query);
+  function pfFormActive(n) {
+    let allpfform = document.getElementsByClassName('pfform');
+    let allpfformbtn = document.getElementsByClassName('pfformbtn');
+    for(var i=0;i<allpfform.length;i++){
+      allpfform[i].style.display="none";
+    }
+    document.getElementById('form-'+n).style.display="block";
+    for(var i=0;i<allpfformbtn.length;i++){
+      allpfformbtn[i].classList.remove("btn-danger");
+      allpfformbtn[i].classList.add("btn-secondary");
+    }
+    document.getElementById('form-'+n+'-btn').classList.remove("btn-secondary");
+    document.getElementById('form-'+n+'-btn').classList.add("btn-danger");
+  }
+
+  function validatecreatePfForm() {
+    let inputAmount = document.getElementById('createpf-form').getElementsByTagName('input').length;
+    let tsrong = document.forms["createpf_form"]["tsrong"].value;
+    let tstt = document.forms["createpf_form"]["tstt"].value;
+    let cash = document.forms["createpf_form"]["cash"].value;
+    let debt = document.forms["createpf_form"]["debt"].value;
+    let errors=[];
+
+    if (tsrong == "") errors.push("Giá trị TS ròng không được để trống");
+    if (tstt == "") errors.push("Giá trị TS thị trường không được để trống");
+    if (cash == "") errors.push("Tiền mặt còn lại không được để trống");
+    if (debt == "") errors.push("Giá trị vay không được để trống");
+
+
+    if(inputAmount>10) {
+      let tickerAmount = (inputAmount-10)/4;
+
+      for(var i=0; i<tickerAmount;i++) {
+        if(document.forms["createpf_form"]["pfticker_"+i].value != "") {
+          let volValue = document.forms["createpf_form"]["pfvol_"+i].value;
+          let buypriceValue = document.forms["createpf_form"]["pfbuyprice_"+i].value;
+          let currentpriceValue = document.forms["createpf_form"]["pfcurrentprice_"+i].value;
+
+          let ii = i+1;
+          if (volValue == "") errors.push("Mã thứ "+ii+" khối lượng không được để trống");
+          if (buypriceValue == "") errors.push("Mã thứ "+ii+" giá mua không được để trống");
+          if (currentpriceValue == "") errors.push("Mã thứ "+ii+" giá hiện tại không được để trống");
+          if (typeof(parseFloat(volValue)/1000000000) != "number") errors.push("Mã thứ "+ii+" khối lượng không hợp lệ");
+          if (typeof(parseFloat(buypriceValue)/1000000000) != "number") errors.push("Mã thứ "+ii+" giá mua không hợp lệ");
+          if (typeof(parseFloat(currentpriceValue)/1000000000) != "number") errors.push("Mã thứ "+ii+" giá hiện tại không hợp lệ");
+        }
+      }
+    }
+
+    if(errors.length>0) {
+      for(var i=0;i<errors.length;i++) {
+        alert(errors[i]);
+      }
+      return false;
+    }
+  }
+
+  function addToBlankPf(id,name,phone,email) {
+    console.log([id,name,phone,email]);
+    document.getElementById('createpf-form-wrapper').style.display="block";
+    document.getElementById('id-input').value = id;
+    document.getElementById('name-input').value = name;
+    document.getElementById('phone-input').value = phone;
+    document.getElementById('email-input').value = email;
+  }
+
+  function updatePf(id,pfid,name,phone,email,acc,company) {
+    console.log([id,name,phone,email,acc,company]);
+    document.getElementById('editpf-form-wrapper').style.display="block";
+    document.getElementById('editid-input').value = id;
+    document.getElementById('editpfid-input').value = pfid;
+    document.getElementById('editq-input').value = query;
+    document.getElementById('editname-input').value = name;
+    document.getElementById('editphone-input').value = phone;
+    document.getElementById('editemail-input').value = email;
+    document.getElementById('editacc-input').value = acc;
+    document.getElementById('editcompany-input').value = company;
+  }
+
+  function addPfTicker(x) {
+    let lbl = '<div><div class="row"><div class="col-2 lbl">Mã</div><div class="col-3 lbl">KL (cổ phiếu)</div><div class="col-3 lbl">Giá mua (đồng)</div><div class="col-3 lbl">Giá hiện tại (đồng)</div></div></div>';
+    let l = document.getElementsByClassName("inp").length;
+
+    let type = '';
+    if(x=='edit') type='edit';
+
+    let inpdiv = document.createElement("div");
+    inpdiv.id = type+"inp-" + l;
+    inpdiv.classList.add('inp');
+    let inprow = document.createElement("div");
+    inprow.classList.add('row');
+    let inptickerdiv = document.createElement("div");
+    inptickerdiv.classList.add('col-2','form-group');
+    let inpticker = document.createElement("input");
+    inpticker.type = "text";
+    inpticker.name = "pfticker_" + l;
+    inpticker.id = type+"pfticker-" + l;
+    inpticker.classList.add('form-control');
+    let inpvoldiv = document.createElement("div");
+    inpvoldiv.classList.add('col-3','form-group');
+    let inpvol = document.createElement("input");
+    inpvol.type = "text";
+    inpvol.name = "pfvol_" + l;
+    inpvol.id = type+"pfvol-" + l;
+    inpvol.classList.add('form-control');
+    let inpbuypricediv = document.createElement("div");
+    inpbuypricediv.classList.add('col-3','form-group');
+    let inpbuyprice = document.createElement("input");
+    inpbuyprice.type = "text";
+    inpbuyprice.name = "pfbuyprice_" + l;
+    inpbuyprice.id = type+"pfbuyprice-" + l;
+    inpbuyprice.classList.add('form-control');
+    let inpcurrentpricediv = document.createElement("div");
+    inpcurrentpricediv.classList.add('col-3','form-group');
+    let inpcurrentprice = document.createElement("input");
+    inpcurrentprice.type = "text";
+    inpcurrentprice.name = "pfcurrentprice_" + l;
+    inpcurrentprice.id = type+"pfcurrentprice-" + l;
+    inpcurrentprice.classList.add('form-control');
+    let inpcanceldiv = document.createElement("div");
+    inpcanceldiv.classList.add('col-1');
+    let inpcancel = document.createElement("div");
+    inpcancel.innerHTML = 'X';
+    inpcancel.classList.add('btn','btn-danger');
+    inpcancel.setAttribute("onclick", "cancelpfticker('"+type+"',"+l+")");
+
+    if(document.getElementsByClassName("lbl").length==0)
+      document.getElementById(type+'pf-ticker-input').innerHTML += lbl;
+    inpdiv.appendChild(inprow);
+    inprow.appendChild(inptickerdiv);
+    inprow.appendChild(inpvoldiv);
+    inprow.appendChild(inpbuypricediv);
+    inprow.appendChild(inpcurrentpricediv);
+    inprow.appendChild(inpcanceldiv);
+
+    inptickerdiv.appendChild(inpticker);
+    inpvoldiv.appendChild(inpvol);
+    inpbuypricediv.appendChild(inpbuyprice);
+    inpcurrentpricediv.appendChild(inpcurrentprice);
+    inpcanceldiv.appendChild(inpcancel);
+
+    document.getElementById(type+'pf-ticker-input').appendChild(inpdiv);
+  }
+
+  function cancelpfticker(t,n) {
+    document.getElementById(t+'inp-'+n).style.display="none";
+    document.getElementById(t+'pfticker-'+n).value="";
+    document.getElementById(t+'pfvol-'+n).value="";
+    document.getElementById(t+'pfbuyprice-'+n).value="";
+    document.getElementById(t+'pfcurrentprice-'+n).value="";
+  }
+
+  document.getElementById('pf-form-close').addEventListener('click',function() {
+    document.getElementById('createpf-form-wrapper').style.display="none";
+    document.getElementById('createpf-form').reset();
+    document.getElementById('pf-ticker-input').innerHTML='';
+  });
+
+  document.getElementById('editpf-form-close').addEventListener('click',function() {
+    document.getElementById('editpf-form-wrapper').style.display="none";
+    document.getElementById('editpf-form').reset();
+    document.getElementById('editpf-ticker-input').innerHTML='';
+  });
+</script>
+</html>

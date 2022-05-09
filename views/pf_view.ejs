@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Chi tiết danh mục: <%- portfolioInfo.name %> - <%- portfolioInfo.acc %> - <%- portfolioInfo.company %></h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="block">
+                <div class="title">
+                  Biến động giá trị tài khoản
+                </div>
+                <div class="block-content" id="navrecords">
+                  <div style="position:relative;margin-top:30px;">
+                    <div id="chartContainer1" style="height: 400px; width: 100%;">
+
+                    </div>
+                    <div id="canvasTrialHide"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-lg-6">
+              <div class="block">
+                <div class="title">
+                  Tỷ trọng danh mục
+                </div>
+                <div class="block-content" id="portfoliorecords">
+                  <div style="position:relative;margin-top:30px;">
+                    <div id="chartContainer2" style="height: 400px; width: 100%;">
+
+                    </div>
+                    <div id="canvasTrialHide"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="block">
+                <div class="title">
+                  Chi tiết danh mục
+                </div>
+                <div class="block-content">
+                  <% let portfolioNow = JSON.parse(portfolioCurrent.portfolio); %>
+                  <% if(portfolioNow.length>0) { %>
+                    <table style="margin-top:30px;width:100%">
+                      <tr>
+                        <th>STT</th>
+                        <th>Mã</th>
+                        <th>Khối lượng</th>
+                        <th>Giá mua</th>
+                        <th>Giá hiện tại</th>
+                        <th>Lãi/lỗ (%)</th>
+                        <th>Lãi/lỗ (thành tiền)</th>
+                      </tr>
+                      <% for(var i=0;i<portfolioNow.length;i++) { %>
+                        <%
+                          let prf = portfolioNow[i].currentprice - portfolioNow[i].buyprice;
+                          let pct = (prf/portfolioNow[i].buyprice*100).toFixed(2)
+                          let prfColor = "white";
+                          if(prf<0) prfColor = "danger";
+                          if(prf>0) prfColor = "success";
+                        %>
+                        <tr>
+                          <td><%- i %></td>
+                          <td><%- portfolioNow[i].ticker %></td>
+                          <td><%- portfolioNow[i].vol.toLocaleString('en') %></td>
+                          <td><%- (portfolioNow[i].buyprice * 1000).toLocaleString('en') %></td>
+                          <td><%- (portfolioNow[i].currentprice * 1000).toLocaleString('en') %></td>
+                          <td class="text-<%- prfColor %>"><%- pct.toLocaleString('en') %></td>
+                          <td class="text-<%- prfColor %>"><%- (prf*portfolioNow[i].vol).toLocaleString('en') %></td>
+                        </tr>
+                      <% } %>
+                    </table>
+                  <% } else { %>
+                    <p class="text-secondary">Danh mục hiện tại không có mã nào</p>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+
+      </section>
+
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+  let portfolioCurrent = <%- JSON.stringify(portfolioCurrent) %>;
+  portfolioCurrent.portfolio = JSON.parse(portfolioCurrent.portfolio);
+
+  let navData = <%- JSON.stringify(navdata) %>;
+  console.log(navData);
+
+  let netValue=[];
+  let portfolioValue=[];
+  let cashValue=[];
+  let debtValue=[];
+
+  if(navData.length==0){
+    netValue=[{ x: new Date(), y: 0 }];
+    portfolioValue=[{ x: new Date(), y: 0 }];
+    cashValue=[{ x: new Date(), y: 0 }];
+    debtValue=[{ x: new Date(), y: 0 }];
+  } else {
+    for(var i=0;i<navData.length;i++) {
+      netValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].net_value});
+      portfolioValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
+      cashValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
+      debtValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
+    }
+  }
+
+  window.onload = function() {
+
+    var chart1 = new CanvasJS.Chart("chartContainer1",
+        {
+            animationEnabled: true,
+            backgroundColor: "rgba(0,0,0,0)",
+            axisX: {
+                valueFormatString: "DD/MM/YYYY",
+                labelFontColor: "white",
+            },
+            axisY: {
+                includeZero: false
+            },
+            axisY2: {
+              title: "tỷ đồng",
+              titleFontColor: "white",
+              labelFontColor: "white"
+            },
+            legend: {
+              fontColor: "white"
+            },
+            data: [{
+          		type:"line",
+              axisYType: "secondary",
+          		name: "Giá trị TS ròng",
+          		showInLegend: true,
+          		markerSize: 0,
+          		yValueFormatString: "#.##",
+          		dataPoints: netValue
+          	},
+          	{
+          		type: "line",
+          		axisYType: "secondary",
+          		name: "Giá trị TS thị trường",
+          		showInLegend: true,
+          		markerSize: 0,
+          		yValueFormatString: "#.##",
+          		dataPoints: portfolioValue
+          	},
+          	{
+          		type: "line",
+          		axisYType: "secondary",
+          		name: "Giá trị tiền mặt",
+          		showInLegend: true,
+          		markerSize: 0,
+          		yValueFormatString: "#.##",
+          		dataPoints: cashValue
+          	},
+          	{
+          		type: "line",
+          		axisYType: "secondary",
+          		name: "Giá trị Vay",
+          		showInLegend: true,
+          		markerSize: 0,
+          		yValueFormatString: "#.##",
+          		dataPoints: debtValue
+          	}]
+        });
+    chart1.render();
+
+    let chart2Data = [];
+    if (portfolioCurrent.portfolio.length==0) {
+      chart2Data = [{y:100, label: "Tiền mặt"}];
+    } else {
+      let p = [];
+      if(portfolioCurrent.cash_value==null)
+        portfolioCurrent.cash_value=0;
+      let totalNav = 0;
+      totalNav+=portfolioCurrent.cash_value;
+      p.push(["Tiền mặt",portfolioCurrent.cash_value]);
+      for(var i=0;i<portfolioCurrent.portfolio.length;i++){
+        let tickerValue = portfolioCurrent.portfolio[i].vol*portfolioCurrent.portfolio[i].currentprice/1000000;
+        totalNav+=tickerValue;
+        p.push([portfolioCurrent.portfolio[i].ticker,tickerValue]);
+      }
+
+      for(var i=0;i<p.length;i++) {
+        chart2Data.push({y:p[i][1]/totalNav,label:p[i][0]});
+      }
+    }
+    var chart2 = new CanvasJS.Chart("chartContainer2", {
+    	animationEnabled: true,
+
+      backgroundColor: "rgba(0,0,0,0)",
+    	data: [{
+    		type: "pie",
+    		startAngle: 240,
+    		yValueFormatString: "##0.00\"%\"",
+    		indexLabel: "{label} {y}",
+        indexLabelFontColor: "white",
+    		dataPoints: chart2Data
+    	}]
+    });
+    chart2.render();
+
+}
+</script>
+</html>

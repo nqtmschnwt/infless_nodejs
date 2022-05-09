@@ -10,11 +10,15 @@
     "child":[
       {
         "title":"Duyệt khách mới",
-        "link":"new-customers"
+        "link":"/new-customers"
       },
       {
         "title":"Tra cứu khách",
         "link":"/find-customers"
+      },
+      {
+        "title":"Quản lý danh mục",
+        "link":"/pf-control"
       }
     ]
   },

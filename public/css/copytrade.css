@@ -6039,16 +6039,18 @@ pre code {
 }
 
 .modal-header {
-  background: #2d3035;
-  border:0 !important;
+  background: #272a2e;
+  /*border:0 !important;*/
   border-radius: 0 !important;
+  border-color:#272a2e;
 }
 
 .modal-body {padding: 2px 16px;}
 
 .modal-footer {
-  background-color: #2d3035;
-  border:0 !important;
+  background-color: #272a2e;
+  /*border:0 !important;*/
+  border-color:#272a2e;
 }
 
 #modal-msg {

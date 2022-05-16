@@ -66,13 +66,13 @@
                   <% if(portfolioNow.length>0) { %>
                     <table style="margin-top:30px;width:100%">
                       <tr>
-                        <th>STT</th>
-                        <th>Mã</th>
-                        <th>Khối lượng</th>
-                        <th>Giá mua</th>
-                        <th>Giá hiện tại</th>
-                        <th>Lãi/lỗ (%)</th>
-                        <th>Lãi/lỗ (thành tiền)</th>
+                        <th class="text-right">STT</th>
+                        <th class="text-right">Mã</th>
+                        <th class="text-right">Khối lượng</th>
+                        <th class="text-right">Giá mua</th>
+                        <th class="text-right">Giá hiện tại</th>
+                        <th class="text-right">Lãi/lỗ (%)</th>
+                        <th class="text-right">Lãi/lỗ (thành tiền)</th>
                       </tr>
                       <% for(var i=0;i<portfolioNow.length;i++) { %>
                         <%
@@ -83,13 +83,13 @@
                           if(prf>0) prfColor = "success";
                         %>
                         <tr>
-                          <td><%- i %></td>
-                          <td><%- portfolioNow[i].ticker %></td>
-                          <td><%- portfolioNow[i].vol.toLocaleString('en') %></td>
-                          <td><%- (portfolioNow[i].buyprice * 1000).toLocaleString('en') %></td>
-                          <td><%- (portfolioNow[i].currentprice * 1000).toLocaleString('en') %></td>
-                          <td class="text-<%- prfColor %>"><%- pct.toLocaleString('en') %></td>
-                          <td class="text-<%- prfColor %>"><%- (prf*portfolioNow[i].vol).toLocaleString('en') %></td>
+                          <td class="text-right"><%- i %></td>
+                          <td class="text-right"><%- portfolioNow[i].ticker %></td>
+                          <td class="text-right"><%- portfolioNow[i].vol.toLocaleString('en') %></td>
+                          <td class="text-right"><%- (portfolioNow[i].buyprice * 1000).toLocaleString('en') %></td>
+                          <td class="text-right"><%- (portfolioNow[i].currentprice * 1000).toLocaleString('en') %></td>
+                          <td class="text-<%- prfColor %> text-right"><%- pct.toLocaleString('en') %></td>
+                          <td class="text-<%- prfColor %> text-right"><%- (prf*portfolioNow[i].vol*1000).toLocaleString('en') %></td>
                         </tr>
                       <% } %>
                     </table>
@@ -141,6 +141,11 @@
     }
   }
 
+  console.log(netValue);
+  console.log(portfolioValue);
+  console.log(cashValue);
+  console.log(debtValue);
+
   window.onload = function() {
 
     var chart1 = new CanvasJS.Chart("chartContainer1",
@@ -167,7 +172,7 @@
               axisYType: "secondary",
           		name: "Giá trị TS ròng",
           		showInLegend: true,
-          		markerSize: 0,
+          		markerSize: 10,
           		yValueFormatString: "#.##",
           		dataPoints: netValue
           	},
@@ -176,7 +181,7 @@
           		axisYType: "secondary",
           		name: "Giá trị TS thị trường",
           		showInLegend: true,
-          		markerSize: 0,
+          		markerSize: 10,
           		yValueFormatString: "#.##",
           		dataPoints: portfolioValue
           	},
@@ -185,7 +190,7 @@
           		axisYType: "secondary",
           		name: "Giá trị tiền mặt",
           		showInLegend: true,
-          		markerSize: 0,
+          		markerSize: 10,
           		yValueFormatString: "#.##",
           		dataPoints: cashValue
           	},
@@ -194,7 +199,7 @@
           		axisYType: "secondary",
           		name: "Giá trị Vay",
           		showInLegend: true,
-          		markerSize: 0,
+          		markerSize: 10,
           		yValueFormatString: "#.##",
           		dataPoints: debtValue
           	}]
@@ -218,7 +223,7 @@
       }
 
       for(var i=0;i<p.length;i++) {
-        chart2Data.push({y:p[i][1]/totalNav,label:p[i][0]});
+        chart2Data.push({y:p[i][1]/totalNav*100,label:p[i][0]});
       }
     }
     var chart2 = new CanvasJS.Chart("chartContainer2", {

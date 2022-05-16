@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Cập nhật danh mục khách hàng</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row" id="fetch-results">
+
+          </div>
+        </div>
+      </section>
+
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+  let data = <%- JSON.stringify(data.values) %>;
+  //console.log(data);
+
+  let data2 = [];
+  let pointer=0;
+  for(var i=0; i<data.length;i++) {
+    if(data[i][0]=='SỐ TK') {
+      let phone = '';
+
+      if(data[i].length==12) phone=data[i][11];
+      else phone='';
+
+      let tsrong = 0;
+      let cash = 0;
+      let debt = 0;
+      if(!isNaN(parseFloat(data[i][7].replace(/,/g, '')))) tsrong = parseFloat(data[i][7].replace(/,/g, ''))/1000000000;
+      if(!isNaN(parseFloat(data[i][9].replace(/,/g, '')))) cash = parseFloat(data[i][9].replace(/,/g, ''))/1000000000;
+      data2.push({
+        acc:data[i][1],
+        company:data[i][2].toUpperCase(),
+        phone:phone,
+        net_value:tsrong,
+        portfolio_value: 0,
+        cash_value:cash,
+        debt:debt,
+        portfolio:[]
+        });
+    } else if (data[i][0]=='HỌ VÀ TÊN') {
+      let tstt = 0;
+      if(!isNaN(parseFloat(data[i][7].replace(/,/g, '')))) tstt = parseFloat(data[i][7].replace(/,/g, ''))/1000000000;
+      data2[data2.length-1].portfolio_value = tstt;
+      if(data[i].length==12)
+        data2[data2.length-1].email = data[i][11].toLowerCase();
+      else
+        data2[data2.length-1].email = '';
+      data2[data2.length-1].name = data[i][1];
+    } else if (data[i][0]=='Chi tiết giao dịch' && data[i].length==10) {
+      let debt = 0;
+      if(!isNaN(parseFloat(data[i][9].replace(/,/g, '')))) debt = parseFloat(data[i][9].replace(/,/g, ''))/1000000000;
+      if(!debt) debt=0;
+      data2[data2.length-1].debt = debt;
+    } else if (data[i][0]=='Mã') {
+      pointer = i;
+    } else if (data[i][0]!='' && data[i][0].length<10 && i>pointer) {
+      let buyprice = 0;
+      let currentprice = 0;
+      if(parseFloat(data[i][2].replace(/,/g, ''))) buyprice = parseFloat(data[i][2].replace(/,/g, ''));
+      if(parseFloat(data[i][3].replace(/,/g, ''))) currentprice = parseFloat(data[i][3].replace(/,/g, ''));
+      data2[data2.length-1].portfolio.push({
+        ticker:data[i][0],
+        vol:parseInt(data[i][1].replace(/,/g, '')),
+        buyprice:buyprice,
+        currentprice:currentprice,
+      });
+    }
+  }
+
+  console.log(data2);
+  for(var i=0;i<data2.length;i++) {
+    fetch("/pf-update", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data2[i])
+    }).then(res => res.json())
+      .then(res => {
+        let fr = document.getElementById('fetch-results');
+        let frcol = document.createElement("div");
+        frcol.classList.add('col-12');
+        let frblock = document.createElement("div");
+        frblock.classList.add('block');
+        let frblockcontent = document.createElement("div");
+        frblockcontent.classList.add('block-content');
+        let frName = document.createElement("p");
+        frName.innerHTML = 'Họ và tên: ' + res.inputParams.name;
+        let frPhone = document.createElement("p");
+        frPhone.innerHTML = 'Điện thoại: ' + res.inputParams.phone;
+        let frEmail = document.createElement("p");
+        frEmail.innerHTML = 'Email: ' + res.inputParams.email;
+        let frAcc = document.createElement("p");
+        frAcc.innerHTML = 'Số TK: ' + res.inputParams.acc;
+        let frCompany = document.createElement("p");
+        frCompany.innerHTML = 'Công ty: ' + res.inputParams.company;
+        let frMsg = document.createElement("p");
+
+        frMsg.innerHTML = res.message;
+        fr.appendChild(frcol);
+        frcol.appendChild(frblock);
+        frblock.appendChild(frblockcontent);
+        frblockcontent.appendChild(frMsg);
+        frblockcontent.appendChild(frName);
+        frblockcontent.appendChild(frPhone);
+        frblockcontent.appendChild(frEmail);
+        frblockcontent.appendChild(frAcc);
+        frblockcontent.appendChild(frCompany);
+
+
+        switch(res.errorCode) {
+          case 0:
+            frMsg.classList.remove("text-danger");
+            frMsg.classList.add('text-success');
+            break;
+          case 1:
+            frMsg.classList.remove("text-success");
+            frMsg.classList.add('text-danger');
+            break;
+          default:
+            console.log(res);
+        }
+      })
+      .catch(err => console.log(err));
+  }
+</script>
+</html>

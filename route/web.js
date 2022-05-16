@@ -76,6 +76,8 @@ let initWebRoutes = (app) => {
       router.get("/pf-control", pfController.getPfPage);
       router.post("/pf-control", pfController.postPfPage);
       router.get("/portfolio-:id", pfController.getPfInfo);
+      router.get("/pf-update", pfController.getPfUpdate);
+      router.post("/pf-update", pfController.postPfUpdate);
 
 
   // Request with json body

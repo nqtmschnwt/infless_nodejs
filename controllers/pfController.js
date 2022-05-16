@@ -1,5 +1,8 @@
 const fs = require('fs');
 const { pool } = require('../config/dbConfig');
+const { google } = require('googleapis');
+const phoneNumber = require( 'awesome-phonenumber' );
+
 
 let getPfPage = (req,res) => {
   let user=req.user;
@@ -198,7 +201,7 @@ let postPfPage = (req,res) => {
                   ORDER BY u.id ASC`,
                   ['%'+query.name+'%','%'+phoneFormatted+'%','%'+query.email+'%','%'+refSearch+'%','%'+query.acc+'%','%'+query.company+'%'], (err,results)=>{
                     if(err) {
-                      throw err;
+                      console.log(err);
                     }
                     let data = results.rows;
                     let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -215,7 +218,7 @@ let postPfPage = (req,res) => {
                   ORDER BY u.id ASC`,
                   [query.minnav,query.maxnav], (err,results)=>{
                     if(err) {
-                      throw err;
+                      console.log(err);
                     }
                     let data = results.rows;
                     let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -232,7 +235,7 @@ let postPfPage = (req,res) => {
                   ORDER BY u.id ASC`,
                   ['%'+query.ticker.toUpperCase()+'%'], (err,results)=>{
                     if(err) {
-                      throw err;
+                      console.log(err);
                     }
                     let data = results.rows;
                     let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -280,7 +283,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC;`,
             (err,results) => {
               if(err) {
-                throw err;
+                console.log(err);
               }
               let data = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -310,7 +313,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC`,
             ['%'+name+'%','%'+phoneFormatted+'%','%'+email+'%','%'+refSearch+'%','%'+acc+'%','%'+company+'%'], (err,results)=>{
               if(err) {
-                throw err;
+                console.log(err);
               }
               let data = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -347,7 +350,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC;`,
             (err,results) => {
               if(err) {
-                throw err;
+                console.log(err);
               }
               let data = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -364,7 +367,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC`,
             [minnav,maxnav], (err,results)=>{
               if(err) {
-                throw err;
+                console.log(err);
               }
               let data = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -392,7 +395,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC;`,
             (err,results) => {
               if(err) {
-                throw err;
+                console.log(err);
               }
               let data = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -409,7 +412,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC`,
             ['%'+ticker.toUpperCase()+'%'], (err,results)=>{
               if(err) {
-                throw err;
+                console.log(err);
               }
               let data = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -443,7 +446,7 @@ let getPfInfo = (req,res) => {
         INNER JOIN portfolios pf ON u.id = pf.user_id WHERE pf.portfolio_id=$1;`,
         [pfid], (err,results) => {
           if(err) {
-            throw err;
+            console.log(err);
           } else {
             let portfolioInfo = {name:"Error",acc:"Portfolio",company:"Not found"};
             if (results.rows.length > 0)
@@ -457,14 +460,14 @@ let getPfInfo = (req,res) => {
               [pfid,dformat],
               (err,results) => {
                 if(err) {
-                  throw err;
+                  console.log(err);
                 } else {
                   let navdata = results.rows;
                   pool.query(
                     `SELECT cash_value,portfolio FROM user_portfolio WHERE portfolio_id=$1 AND latest='True';`,
                     [pfid],(err,results) => {
                       if(err) {
-                        throw err;
+                        console.log(err);
                       } else {
                         let portfolioCurrent = {cash:0,portfolio:[]};
                         if (results.rows.length > 0)
@@ -492,8 +495,245 @@ let getPfInfo = (req,res) => {
   }
 }
 
+let getPfUpdate = async (req,res) => {
+  let user=req.user;
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      const auth = new google.auth.GoogleAuth({
+        keyFile: './sample_query/sheetkey.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+      });
+      // Create client instance for auth
+      const client = await auth.getClient();
+      // Instance of GG sheets api
+      const googleSheets = google.sheets({version:"v4",auth:client});
+
+      const spreadsheetId = '1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg';
+
+      // Get metadata about spreadsheets
+      const metaData = await googleSheets.spreadsheets.get({
+        auth,
+        spreadsheetId
+      })
+
+      // Read rows from spreadsheet
+      const getRows = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'GDKH!A:L'
+      })
+
+      let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+      return res.render('pf_update', {menu:menuData,user,data:getRows.data});
+
+      //let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+      //return res.render('pf_update', {menu:menuData,user});
+
+    } else {
+      return res.redirect('/home');
+    }
+  } else {
+    return res.redirect('/login');
+  }
+}
+
+let postPfUpdate = (req,res) => {
+  console.log(req.body);
+
+  let phone = req.body.phone;
+  let email = req.body.email.toLowerCase();
+  let name = req.body.name;
+  let acc = req.body.acc;
+  let company = req.body.company;
+
+  // Check phone valid
+  let phoneFormatted = '';
+  if(phone!=''){
+    var pn = new phoneNumber(phone,'VN');
+    if(pn.isValid( ) && pn.isMobile( ) && pn.canBeInternationallyDialled( ))  phoneFormatted = pn.getNumber( 'e164' );
+  }
+
+  if(phone=='' && email=='') {
+    // Both phone and email are blank
+    return res.send({
+          status: 200,
+          message: "Account not found.",
+          errorCode: 1,
+          inputParams: {
+            name: name,
+            phone: phone,
+            email: email,
+            acc: acc,
+            company: company
+          }
+        });
+  } else {
+    pool.query(
+      //`SELECT * FROM users u
+      //INNER JOIN portfolios pf ON u.id = pf.user_id WHERE u.phone LIKE $1 AND LOWER(u.email) LIKE $2;`,
+      `SELECT * FROM users WHERE phone LIKE $1 AND LOWER(email) LIKE $2;`,
+      [phoneFormatted,'%'+email+'%'], (err,results) => {
+        if(err) {
+          console.log(err);
+        } else {
+          if(results.rows.length>0) {
+            // Client found
+            let uid = results.rows[0].id;
+            pool.query(
+              `SELECT * FROM portfolios WHERE user_id=$1 AND acc LIKE $2 AND company LIKE $3;`,
+              [uid,acc,company], (err,results) => {
+                if(err) {
+                  console.log(err);
+                } else {
+                  if(results.rows.length>0) {
+                    // User has portfolio
+                    console.log(name+' has portfolio');
+                    let d = new Date();
+                    let dformat = [d.getFullYear(),d.getMonth()+1,d.getDate()].join('-');
+                    let pfid = results.rows[0].portfolio_id;
+                    pool.query(
+                      `SELECT COUNT(*) FROM user_portfolio WHERE portfolio_id=$1 AND portfolio_date=$2;`,
+                      [pfid,dformat],
+                      (err,results) => {
+                        if(err) {
+                          console.log(err);
+                        } else {
+                          if(parseInt(results.rows[0].count)==0) {
+                            // Creating new portfolio
+
+                            pool.query(
+                              `WITH update_pf AS(
+                                UPDATE user_portfolio SET latest='false' WHERE portfolio_id=$1 AND portfolio_date!=$2
+                              )
+                              INSERT INTO user_portfolio(portfolio_date, latest, portfolio_id, portfolio_value, net_value, cash_value, debt_value, portfolio)
+                              VALUES($2,'true',$1,$3,$4,$5,$6,$7);`,
+                              [pfid,dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
+                              (err,results) => {
+                                if(err) {
+                                  console.log(err);
+                                } else {
+                                  console.log('OK');
+                                  return res.send({
+                                        status: 200,
+                                        message: "Account updated.",
+                                        errorCode: 0,
+                                        inputParams: {
+                                          name: name,
+                                          phone: phone,
+                                          email: email,
+                                          acc: acc,
+                                          company: company
+                                        }
+                                      });
+                                }
+                              }
+                            )
+                          } else {
+                            // That day already has data -> do update
+                            pool.query(
+                              `WITH update_pf AS(
+                                UPDATE user_portfolio SET latest='false' WHERE portfolio_id=$1 AND portfolio_date!=$2
+                              )
+                              UPDATE user_portfolio SET
+                              latest = 'true',
+                              portfolio_value=$3,
+                              net_value=$4,
+                              cash_value=$5,
+                              debt_value=$6,
+                              portfolio=$7
+                              WHERE portfolio_id=$1 AND portfolio_date = $2;`,
+                              [pfid,dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
+                              (err,results) => {
+                                if(err) {
+                                  console.log(err);
+                                } else {
+                                  console.log('OK');
+                                  return res.send({
+                                        status: 200,
+                                        message: "Account updated.",
+                                        errorCode: 0,
+                                        inputParams: {
+                                          name: name,
+                                          phone: phone,
+                                          email: email,
+                                          acc: acc,
+                                          company: company
+                                        }
+                                      });
+                                }
+                              }
+                            )
+                          }
+
+                        }
+                      }
+                    )
+                  } else {
+                    // Client doesn't have portfolio
+                    console.log(name+' does not have portfolio');
+                    let d = new Date();
+                    let dformat = [d.getFullYear(),d.getMonth()+1,d.getDate()].join('-');
+                    pool.query(
+                      `WITH new_pf AS(
+                        INSERT INTO portfolios(user_id, acc, company) VALUES ($1, $2, $3) RETURNING portfolio_id
+                      )
+                      INSERT INTO user_portfolio(portfolio_date, latest, portfolio_id, portfolio_value, net_value, cash_value, debt_value, portfolio)
+                      VALUES($4,'true',(SELECT portfolio_id FROM new_pf),$5,$6,$7,$8,$9);`,
+                      [uid,req.body.acc.toUpperCase(),req.body.company.toUpperCase(),dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
+                      (err,results) => {
+                        if(err) {
+                          console.log(err);
+                        } else {
+                          console.log('OK');
+                          return res.send({
+                                status: 200,
+                                message: "Account created.",
+                                errorCode: 0,
+                                inputParams: {
+                                  name: name,
+                                  phone: phone,
+                                  email: email,
+                                  acc: acc,
+                                  company: company
+                                }
+                              });
+                        }
+                      }
+                    )
+                  }
+                }
+              }
+            )
+
+          } else {
+            return res.send({
+                  status: 200,
+                  message: "Account not found.",
+                  errorCode: 1,
+                  inputParams: {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    acc: acc,
+                    company: company
+                  }
+                });
+          }
+        }
+      }
+    )
+  }
+
+
+
+
+}
+
 module.exports = {
   getPfPage:getPfPage,
   postPfPage:postPfPage,
   getPfInfo:getPfInfo,
+  getPfUpdate:getPfUpdate,
+  postPfUpdate:postPfUpdate,
 }

@@ -57,7 +57,7 @@
             console.log('Token: ', token);
             console.log('===================');
 
-            let data = {authToken: token};
+            let data = {authToken: token}; // Firebase token
 
             fetch("/devtest", {
               method: "POST",
@@ -65,7 +65,7 @@
               body: JSON.stringify(data)
             }).then(res => res.json())
               .then(res => console.log(res))
-              .catch(err => console.log(err)); 
+              .catch(err => console.log(err));
           }
           // The signed-in user info.
           var user = result.user;

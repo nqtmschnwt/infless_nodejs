@@ -185,7 +185,7 @@ let getTradePage = (req,res) => {
           if(err) {
             console.log('Error: ',err);
           }
-          var fund_nav = '1';
+          var fund_nav = '10';
           if(results.rows.length>0) {
             fund_nav = results.rows[0].fund_nav;
           }

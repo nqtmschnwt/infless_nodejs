@@ -20,14 +20,31 @@ let postTestPage = (req,res) => {
       });
 }
 
+function addZero(n) {
+  if (n<10) return('0'+n);
+  else return(''+n);
+}
+
 function testFunc(authToken) {
-  const getAuthCodeBody = {
-    authToken: authToken,
-    channel: "FireBase",
-    otp: "",
-    password: "",
-    transID: "",
-    username: ""
+  let d = new Date();
+  let requestID = "inflessVerifyUser"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
+
+  let getAuthCodeBody = {
+    header: {
+      appToken: "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUVFNBUEkiLCJhcHBpZCI6MiwiY2xpZW50aWQiOjEsInBsYW5pZCI6Mn0.e-SzmLVwIcppvWokxnH8iw9wyIHWGt1UpRHvnvb6K-E",
+      authUrl: "",
+      checksum: "",
+      custToken: "",
+      requestID: requestID
+    },
+    body: {
+      authToken: authToken,
+      channel: "FireBase",
+      otp: "",
+      password: "",
+      transID: "",
+      username: ""
+    }
   };
 
   console.log(getAuthCodeBody);
@@ -36,12 +53,7 @@ function testFunc(authToken) {
   fetch('http://sc.tintinsoft.online:4006/webserver/verifyuser/v1', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       "appToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUVFNBUEkiLCJhcHBpZCI6MiwiY2xpZW50aWQiOjEsInBsYW5pZCI6Mn0.e-SzmLVwIcppvWokxnH8iw9wyIHWGt1UpRHvnvb6K-E",
-      "authUrl": "",
-      "checksum": "",
-      "custToken": "",
-      "requestID": "",
     },
     body: JSON.stringify(getAuthCodeBody),
   })

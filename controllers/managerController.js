@@ -247,6 +247,8 @@ let postTradePage = (req,res) => {
         console.log(body);
         let d = new Date();
         let dformat = [d.getFullYear(),d.getMonth()+1,d.getDate()].join('-')+' '+[d.getHours(),d.getMinutes(),d.getSeconds()].join(':');
+
+        let ticker = body.ticker.replace(/\s/g,'');
         pool.query(
           `INSERT INTO trade_orders(order_time, order_direction, order_type, ticker, vol, price, pct, fund_nav)
           VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,

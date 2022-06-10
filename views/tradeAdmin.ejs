@@ -366,6 +366,7 @@
 
   // UPDATE prices
   for(var i=0; i<portfolio.length; i++){
+    if (i>0) portfolio[i].ticker = portfolio[i].ticker.replace(/\s/g,'');
     for(var j=0; j<prices.length; j++) {
       if(portfolio[i].ticker == prices[j][0]) {
         portfolio[i].price = parseFloat(prices[j][2]);

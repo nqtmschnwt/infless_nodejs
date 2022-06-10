@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { pool } = require('../config/dbConfig');
+const { google } = require('googleapis');
 
 let getManagerPage = (req,res) => {
   let user=req.user;
@@ -175,17 +176,44 @@ let postPTPage = (req,res) => {
   }
 }
 
-let getTradePage = (req,res) => {
+let getTradePage = async (req,res) => {
   let user=req.user;
   if(user!=undefined){
     if(user.role_id==2 || user.role_id==3)
     {
+      const auth = new google.auth.GoogleAuth({
+        keyFile: './sample_query/sheetkey.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+      });
+      // Create client instance for auth
+      const client = await auth.getClient();
+      // Instance of GG sheets api
+      const googleSheets = google.sheets({version:"v4",auth:client});
+
+      const spreadsheetId = '1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg';
+
+      // Get metadata about spreadsheets
+      const metaData = await googleSheets.spreadsheets.get({
+        auth,
+        spreadsheetId
+      })
+
+      // Read rows from spreadsheet
+      const getRows = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'Price!A:C'
+      })
+
+      let prices = getRows.data.values;
+
       pool.query(
         `SELECT fund_nav FROM trade_orders ORDER BY id ASC LIMIT 1;`, (err,results) => {
           if(err) {
             console.log('Error: ',err);
           }
-          var fund_nav = '10';
+          var initCap = 10;
+          var fund_nav = ''+initCap;
           if(results.rows.length>0) {
             fund_nav = results.rows[0].fund_nav;
           }
@@ -196,7 +224,7 @@ let getTradePage = (req,res) => {
               }
               let trades = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-              return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav});
+              return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,prices});
             }
           )
         }

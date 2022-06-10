@@ -109,6 +109,19 @@
             </div>
           </div>
 
+          <div class="row" id="currentPfRow" style="display:none">
+            <div class="col-12">
+              <div class="block">
+                <div class="title">
+                  Chi tiết danh mục
+                </div>
+                <div class="block-content" id="currentPf">
+
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-12">
               <div class="block">
@@ -121,6 +134,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -188,9 +202,11 @@
     }
 </script>
 <script>
+  var prices = <%- JSON.stringify(prices) %>;
   var portfolio = [{ticker:'Tiền mặt',amount:<%- fund_nav*1000 %>,equity:<%- fund_nav %>,price:0.001}];  //ticker,amount,equity,price
   var records = [];  //time,direction,ticker,vol,pct,price,avg_cost,profit
   var trades = <%- JSON.stringify(trades) %>;
+  var initCap = 10;
 
   console.log(JSON.stringify(portfolio));
   for(var i=0; i<trades.length; i++){
@@ -348,6 +364,30 @@
     console.log(JSON.stringify(portfolio));
   }
 
+  // UPDATE prices
+  for(var i=0; i<portfolio.length; i++){
+    for(var j=0; j<prices.length; j++) {
+      if(portfolio[i].ticker == prices[j][0]) {
+        portfolio[i].price = parseFloat(prices[j][2]);
+      }
+    }
+  }
+
+  if(portfolio.length>0) {
+    let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th></tr>';
+    for(var i=1; i<portfolio.length; i++) {
+      let color = '';
+      let buyPrice = portfolio[i].equity / portfolio[i].amount;
+      if(portfolio[i].price > buyPrice) color='text-success';
+      if(portfolio[i].price < buyPrice) color='text-danger';
+      let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100
+      pfTableContent += '<tr><td>' + portfolio[i].ticker + '</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ buyPrice.toFixed(2) +'</td><td>' + portfolio[i].price + '</td><td>' + (portfolio[i].amount * portfolio[i].price * 1000000000).toLocaleString('en') + '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
+    }
+    pfTableContent += '</table>';
+    document.getElementById('currentPf').innerHTML=pfTableContent;
+    document.getElementById('currentPfRow').style.display='block';
+  }
+
   //console.log(portfolio);
   //console.log(records);
 
@@ -358,11 +398,11 @@
         profitStyle='';
     if(records[i].pct>0) pctDisplay=records[i].pct.toFixed(2)+'%';
     if(records[i].profit>0) {
-      profitDisplay=records[i].profit.toFixed(2)+'%';
+      profitDisplay=records[i].profit.toFixed(2)+' %';
       profitStyle='text-success';
     }
     if(records[i].profit<0) {
-      profitDisplay=records[i].profit.toFixed(2)+'%';
+      profitDisplay=records[i].profit.toFixed(2)+' %';
       profitStyle='text-danger';
     }
     var m = new Date(records[i].time);
@@ -381,7 +421,7 @@
   let portfolioChartData=[];
   if(portfolio.length<=1){
     portfolioChartData=[{y:100,label:'Tiền mặt'}];
-    totalCap=10;
+    totalCap=initCap;
   } else {
     for(var i=0;i<portfolio.length;i++){
       totalCap+=portfolio[i].amount * portfolio[i].price;

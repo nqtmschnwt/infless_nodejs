@@ -9,9 +9,13 @@ const passport = require('passport');
 const helmet = require('helmet');
 const requestIp = require('request-ip');
 const bodyParser = require("body-parser");
+const cors = require('cors');
 
 const { pool } = require('./config/dbConfig');
 
+app.use(cors({
+    origin: '*'
+}));
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({

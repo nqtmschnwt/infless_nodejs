@@ -12,7 +12,7 @@
 
   </head>
   <body>
-    <p>Your authToken is: <%- authToken %></p>
+    <p>Your authToken is: <span id="idToken"><%- authToken %></span></p>
     <button id="sign-in">Sign In</button>
 
     <script type="module">
@@ -39,45 +39,10 @@
       var provider = new firebase.auth.GoogleAuthProvider();
 
       document.getElementById("sign-in").addEventListener("click", function() {
-        firebase.auth()
-        .signInWithPopup(provider)
-        .then((result) => {
-          /** @type {firebase.auth.OAuthCredential} */
-          var credential = result.credential;
-
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          // ...
-          console.log('Success!!! ');
-          console.log('Token: ', token);
-          console.log('User: ',user);
-          console.log('===================');
-
-          let data = {authToken: token}; // Firebase token
-
-          fetch("/devtest", {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-          }).then(res => res.json())
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-        }).catch((error) => {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
+        firebase.auth().signInWithRedirect(provider);
       });
 
-
-      /*// Sign in from redirect
+      // Sign in from redirect
       firebase.auth()
         .getRedirectResult()
         .then((result) => {
@@ -89,21 +54,30 @@
             var token = credential.accessToken;
             // ...
             console.log('Success!!! ');
-            console.log('Token: ', token);
             console.log('===================');
+            // The signed-in user info.
+            /*var user = result.user;
+            user.getIdToken().then(function(idToken) {
+              console.log(idToken);
+              document.getElementById('idToken').innerHTML = idToken;
+            });*/
 
-            let data = {authToken: token}; // Firebase token
+          }
+
+          firebase.auth().currentUser.getIdToken().then(function(idToken) {
+            console.log(idToken);
+            document.getElementById('idToken').innerHTML = idToken;
+            let data = {authToken: idToken};
 
             fetch("/devtest", {
               method: "POST",
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify(data)
-            }).then(res => res.json())
-              .then(res => console.log(res))
-              .catch(err => console.log(err));
-          }
-          // The signed-in user info.
-          var user = result.user;
+            }).then(res => {
+              console.log("Request complete! response:", res);
+            });
+          });
+
         }).catch((error) => {
           // Handle Errors here.
           var errorCode = error.code;
@@ -114,9 +88,20 @@
           var credential = error.credential;
           // ...
           console.log('ERROR: ', errorCode, errorMessage);
-        });*/
+        });
 
 
+          /*
+          let data = {authToken: idToken};
+
+          fetch("/devtest", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+          }).then(res => {
+            console.log("Request complete! response:", res);
+          });
+          */
 
     </script>
   </body>

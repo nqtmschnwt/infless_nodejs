@@ -63,7 +63,7 @@
           if(trades[i].ticker.toUpperCase()==fundpf[j].ticker){
             tickerFound++;
             fundpf[j].buyprice = (fundpf[j].buyprice * fundpf[j].vol + trades[i].price * trades[i].vol) / (fundpf[j].vol + trades[i].vol);
-            fundpf[j].vol = fundpf[j].vol + trades[i].vol;
+            fundpf[j].vol += trades[i].vol;
             moneyOut += trades[i].vol * trades[i].price;
           }
         }

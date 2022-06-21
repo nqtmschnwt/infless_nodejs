@@ -18,6 +18,47 @@ let getManagerPage = (req,res) => {
 
 }
 
+let postManagerPage = (req,res) => {
+  let cmd = req.body.cmd;
+  if(cmd=='create-fundpf') {
+    pool.query(
+      `SELECT COUNT(*) FROM portfolios WHERE user_id=0;`, (err,results) => {
+        if(err)
+          console.log('Error: ', err);
+        else {
+          let count = results.rows[0].count;
+          if(count==0){
+            // CREATE fund portfolio
+            pool.query(
+              `INSERT INTO portfolios(user_id,acc,company) VALUES ($1,$2,$3);`,
+              [0,0,''], (err,results) => {
+                if(err) {
+                  return res.send({
+                        status: 200,
+                        message: 'Error creating portfolio.',
+                      });
+                } else {
+                  return res.send({
+                        status: 200,
+                        message: 'Portfolio created successfully.',
+                      });
+                }
+              }
+            )
+          } else {
+            return res.send({
+                  status: 200,
+                  message: 'Fund portfolio already created.',
+                });
+          }
+
+        }
+      }
+    )
+  }
+
+}
+
 let getDownloadSetupPage = (req,res) => {
   let user=req.user;
   if(user!=undefined){
@@ -223,8 +264,28 @@ let getTradePage = async (req,res) => {
                 console.log('Error: ',err);
               }
               let trades = results.rows;
-              let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-              return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,prices});
+              // get portfolio records
+              let currentdate = new Date();
+              let last6months = new Date(currentdate.setMonth(currentdate.getMonth()-6));
+              let dformat6 = [last6months.getFullYear(),last6months.getMonth()+1,last6months.getDate()].join('-');
+              pool.query(
+                `SELECT upf.portfolio_date, upf.latest, upf.portfolio_value, upf.net_value, upf.cash_value, upf.debt_value FROM user_portfolio upf
+                INNER JOIN portfolios pf
+                ON upf.portfolio_id = pf.portfolio_id
+                WHERE pf.user_id=0 AND upf.portfolio_date>$1
+                ORDER BY upf.portfolio_date ASC;`,
+                [dformat6],
+                (err,results) => {
+                  if(err) {
+                    console.log(err);
+                  } else {
+                    let navdata = results.rows;
+                    let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+                    return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices});
+                  }
+                }
+              )
+
             }
           )
         }
@@ -272,8 +333,29 @@ let postTradePage = (req,res) => {
                       console.log('Error: ',err);
                     }
                     let trades = results.rows;
-                    let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-                    return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav});
+
+                    // get portfolio records
+                    let currentdate = new Date();
+                    let last6months = new Date(currentdate.setMonth(currentdate.getMonth()-6));
+                    let dformat6 = [last6months.getFullYear(),last6months.getMonth()+1,last6months.getDate()].join('-');
+                    pool.query(
+                      `SELECT upf.portfolio_date, upf.latest, upf.portfolio_value, upf.net_value, upf.cash_value, upf.debt_value FROM user_portfolio upf
+                      INNER JOIN portfolios pf
+                      ON upf.portfolio_id = pf.portfolio_id
+                      WHERE pf.user_id=0 AND upf.portfolio_date>$1
+                      ORDER BY upf.portfolio_date ASC;`,
+                      [dformat6],
+                      (err,results) => {
+                        if(err) {
+                          console.log(err);
+                        } else {
+                          let navdata = results.rows;
+                          let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+                          return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata});
+                        }
+                      }
+                    )
+
                   }
                 )
               }
@@ -320,6 +402,7 @@ let getScanListPage = (req,res) => {
 
 module.exports = {
   getManagerPage:getManagerPage,
+  postManagerPage:postManagerPage,
   getDownloadSetupPage:getDownloadSetupPage,
   postDownloadSetupPage:postDownloadSetupPage,
   getPTPage: getPTPage,

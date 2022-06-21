@@ -49,6 +49,7 @@ let initWebRoutes = (app) => {
       router.post("/register", registerController.postRegisterPage);
       // Admin page
       router.get("/manager", managerController.getManagerPage);
+      router.post("/manager", managerController.postManagerPage);
       // Trading page
       router.get("/trade-admin", managerController.getTradePage);
       router.post("/trade-admin", managerController.postTradePage);

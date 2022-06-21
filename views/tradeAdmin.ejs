@@ -135,6 +135,25 @@
             </div>
           </div>
 
+          <div class="row">
+            <div class="col-12">
+              <div class="block" style="height: -webkit-calc(100% - 30px); height:calc(100% - 30px);">
+                <div class="title">
+                  Biến động NAV
+                </div>
+                <div class="block-content">
+                  <div style="position:relative;margin-top:30px;">
+                    <div id="chartContainer1" style="height: 370px; width: 100%;">
+
+                    </div>
+                    <div id="canvasTrialHide"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -443,6 +462,7 @@
   document.getElementById('fund_cash_input').value = (portfolio[0].equity*1000000000).toLocaleString('en');
 
 
+
 </script>
 
 <script>
@@ -468,6 +488,93 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	}]
 });
 chart.render();
+
+console.log('----------------------------------');
+console.log('Nav data:');
+let navData = <%- JSON.stringify(navdata) %>;
+console.log(navData);
+
+let netValue=[];
+let portfolioValue=[];
+let cashValue=[];
+let debtValue=[];
+
+if(navData.length==0){
+  netValue=[{ x: new Date(), y: 0 }];
+  portfolioValue=[{ x: new Date(), y: 0 }];
+  cashValue=[{ x: new Date(), y: 0 }];
+  debtValue=[{ x: new Date(), y: 0 }];
+} else {
+  for(var i=0;i<navData.length;i++) {
+    netValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].net_value});
+    portfolioValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
+    cashValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
+    debtValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
+  }
+}
+
+console.log(netValue);
+console.log(portfolioValue);
+console.log(cashValue);
+console.log(debtValue);
+
+var chart1 = new CanvasJS.Chart("chartContainer1",
+    {
+        animationEnabled: true,
+        backgroundColor: "rgba(0,0,0,0)",
+        axisX: {
+            valueFormatString: "DD/MM/YYYY",
+            labelFontColor: "white",
+        },
+        axisY: {
+            includeZero: false
+        },
+        axisY2: {
+          title: "tỷ đồng",
+          titleFontColor: "white",
+          labelFontColor: "white"
+        },
+        legend: {
+          fontColor: "white"
+        },
+        data: [{
+          type:"line",
+          axisYType: "secondary",
+          name: "Giá trị TS ròng",
+          showInLegend: true,
+          markerSize: 10,
+          yValueFormatString: "0.00",
+          dataPoints: netValue
+        },
+        {
+          type: "line",
+          axisYType: "secondary",
+          name: "Giá trị chứng khoán",
+          showInLegend: true,
+          markerSize: 10,
+          yValueFormatString: "0.00",
+          dataPoints: portfolioValue
+        },
+        {
+          type: "line",
+          axisYType: "secondary",
+          name: "Giá trị tiền mặt",
+          showInLegend: true,
+          markerSize: 10,
+          yValueFormatString: "0.00",
+          dataPoints: cashValue
+        },
+        {
+          type: "line",
+          axisYType: "secondary",
+          name: "Giá trị Vay",
+          showInLegend: true,
+          markerSize: 10,
+          yValueFormatString: "0.00",
+          dataPoints: debtValue
+        }]
+    });
+chart1.render();
 
 }
 </script>

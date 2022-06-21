@@ -38,6 +38,101 @@
 <script src="/js/custom-script.js"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
+  // UPDATE FUND'S PF
+  var prices = <%- JSON.stringify(prices) %>;
+
+  var records = [];  //time,direction,ticker,vol,pct,price,avg_cost,profit
+  var trades = <%- JSON.stringify(trades) %>;
+  var initCap = 10;
+  var portfolio = [{ticker:'Tiền mặt',amount:initCap*1000,equity:initCap,price:0.001}];  //ticker,amount,equity,price
+
+  let fundpf = [];
+  let moneyIn = 0;
+  let moneyOut = 0;
+  for(var i=0; i<trades.length; i++){
+    if(trades[i].order_direction=='buy'){
+      // Buy order
+      if(fundpf.length==0){
+        // Portfolio is empty
+        fundpf.push({ticker:trades[i].ticker.toUpperCase(),vol:trades[i].vol,buyprice:trades[i].price, currentprice:0});  // {ticker: 'PXS', vol: 64000, buyprice: 9.503, currentprice: 4.43}
+        moneyOut += trades[i].vol * trades[i].price;
+      } else {
+        // Portfolio has stocks in it
+        let tickerFound=0;
+        for(var j=0; j<fundpf.length; j++){
+          if(trades[i].ticker.toUpperCase()==fundpf[j].ticker){
+            tickerFound++;
+            fundpf[j].buyprice = (fundpf[j].buyprice * fundpf[j].vol + trades[i].price * trades[i].vol) / (fundpf[j].vol + trades[i].vol);
+            fundpf[j].vol = fundpf[j].vol + trades[i].vol;
+            moneyOut += trades[i].vol * trades[i].price;
+          }
+        }
+        if(tickerFound==0){
+          // Add ticker to portfolio
+          fundpf.push({ticker:trades[i].ticker.toUpperCase(),vol:trades[i].vol,buyprice:trades[i].price, currentprice:0});
+          moneyOut += trades[i].vol * trades[i].price;
+        }
+      }
+    } else {
+      // Sell order
+      if(fundpf.length>0){
+        for(var j=0; j<fundpf.length; j++){
+          if(trades[i].ticker.toUpperCase()==fundpf[j].ticker){
+            // This ticker is in portfolio
+            if(trades[i].pct==null){
+              if(trades[i].vol >= fundpf[j].vol) {
+                fundpf[j].vol = 0;
+                moneyIn += trades[i].vol * trades[i].price;
+              } else {
+                fundpf[j].vol -= trades[i].vol;
+                moneyIn += trades[i].vol * trades[i].price;
+              }
+            } else {
+              let sellAmount = trades[i].pct*portfolio[j].amount/100;
+              if(sellAmount >= fundpf[j].vol) {
+                fundpf[j].vol = 0;
+                moneyIn += trades[i].vol * trades[i].price;
+              } else {
+                fundpf[j].vol -= trades[i].vol;
+                moneyIn += trades[i].vol * trades[i].price;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  let pfCash = initCap + moneyIn - moneyOut;
+  let pfValue = 0;
+  // Update price
+  for(var i=0; i<fundpf.length; i++) {
+    for(var j=0; j<prices.length; j++) {
+      if(fundpf[i].ticker == prices[j][0]) {
+        fundpf[i].currentprice = parseFloat(prices[j][2]);
+        pfValue += fundpf[i].currentprice * fundpf[i].vol;
+      }
+    }
+    fundpf[i].vol *= 1000000;
+  }
+  console.log("fund's pf: ");
+  console.log(fundpf);
+  console.log("fund's cash: ", pfCash);
+  console.log("fund's value: ", pfValue);
+
+
+  // Create Pf object then push to data2 array
+  // Result: {ticker: 'PXS', vol: 64000, buyprice: 9.503, currentprice: 4.43}
+  // Source: [{"ticker":"Tiền mặt","amount":8616,"equity":8.616,"price":0.001},{"ticker":"BSR","amount":0.01,"equity":0.273,"price":32.2},{"ticker":"GMD","amount":0.02,"equity":1.16,"price":58}]
+
+
+  /*for (var i=0; i<portfolio.length; i++) {
+    if(portfolio[i].ticker != 'Tiền mặt') {
+      // Console.log('do smth here')
+    }
+  }*/
+
+  // UPDATE CLIENTS PF
   let data = <%- JSON.stringify(data.values) %>;
   //console.log(data);
 
@@ -95,6 +190,19 @@
     }
   }
 
+  // Add fundpf to data2
+  data2.push({
+    acc: "0",
+    cash_value: pfCash,
+    company: "",
+    debt: 0,
+    email: "",
+    name: "",
+    net_value: pfValue + pfCash,
+    phone: "",
+    portfolio: fundpf,
+    portfolio_value: pfValue
+  });
   console.log(data2);
   for(var i=0;i<data2.length;i++) {
     fetch("/pf-update", {

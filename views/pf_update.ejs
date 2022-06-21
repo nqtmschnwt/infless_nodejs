@@ -88,7 +88,7 @@
                 moneyIn += trades[i].vol * trades[i].price;
               }
             } else {
-              let sellAmount = trades[i].pct*portfolio[j].amount/100;
+              let sellAmount = trades[i].pct*fundpf[j].vol/100;
               if(sellAmount >= fundpf[j].vol) {
                 fundpf[j].vol = 0;
                 moneyIn += trades[i].vol * trades[i].price;

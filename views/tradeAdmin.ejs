@@ -413,7 +413,7 @@
   //console.log(portfolio);
   //console.log(records);
 
-  let recordTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>id</th><th>Thời gian</th><th>Lệnh</th><th>Mã</th><th>Khối lượng</th><th>Tỷ trọng bán</th><th>Giá</th><th>Giá vốn TB</th><th>Lãi/lỗ</th></tr>';
+  let recordTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th style="display:none">id</th><th>Thời gian</th><th>Lệnh</th><th>Mã</th><th>Khối lượng</th><th>Tỷ trọng bán</th><th>Giá</th><th>Giá vốn TB</th><th>Lãi/lỗ</th></tr>';
   for(var i=records.length-1; i>=0; i--){
     var pctDisplay='',
         profitDisplay='',
@@ -429,7 +429,7 @@
     }
     var m = new Date(records[i].time);
     var dt = addZero(m.getDate()) +"/"+ addZero(m.getMonth()+1) +"/"+ m.getFullYear()  + " " + addZero(m.getHours()) + ":" + addZero(m.getMinutes()) + ":" + addZero(m.getSeconds());
-    recordTableContent+='<tr><td>'+records[i].id+'</td><td>'+dt+'</td><td>'+records[i].direction+'</td><td>'+records[i].ticker+'</td><td>'+(records[i].vol*1000000).toLocaleString('en')+'</td><td>'+pctDisplay+'</td><td>'+records[i].price+'</td><td>'+records[i].avg_cost.toFixed(2)+'</td><td class="'+profitStyle+'">'+profitDisplay+'</td></tr>';
+    recordTableContent+='<tr><td  style="display:none">'+records[i].id+'</td><td>'+dt+'</td><td>'+records[i].direction+'</td><td>'+records[i].ticker+'</td><td>'+(records[i].vol*1000000).toLocaleString('en')+'</td><td>'+pctDisplay+'</td><td>'+records[i].price+'</td><td>'+records[i].avg_cost.toFixed(2)+'</td><td class="'+profitStyle+'">'+profitDisplay+'</td></tr>';
   }
   recordTableContent+='</table>';
 

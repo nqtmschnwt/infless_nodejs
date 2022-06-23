@@ -394,14 +394,16 @@
   }
 
   if(portfolio.length>0) {
-    let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th></tr>';
+    let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị mua</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th><th>Lãi/lỗ (%)</th></tr>';
     for(var i=1; i<portfolio.length; i++) {
       let color = '';
       let buyPrice = portfolio[i].equity / portfolio[i].amount;
       if(portfolio[i].price > buyPrice) color='text-success';
       if(portfolio[i].price < buyPrice) color='text-danger';
-      let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100
-      pfTableContent += '<tr><td>' + portfolio[i].ticker + '</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ buyPrice.toFixed(2) +'</td><td>' + portfolio[i].price + '</td><td>' + (portfolio[i].amount * portfolio[i].price * 1000000000).toLocaleString('en') + '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
+      let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
+      let buyValue = portfolio[i].amount * buyPrice.toFixed(2) * 1000000000;
+      let currentValue = portfolio[i].amount * portfolio[i].price * 1000000000;
+      pfTableContent += '<tr><td>' + portfolio[i].ticker + '</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ buyPrice.toFixed(2) +'</td><td>' + portfolio[i].price + '</td><td>' + buyValue.toLocaleString('en') + '</td><td>' + currentValue.toLocaleString('en') + '</td><td class="'+color+'">' + (currentValue - buyValue).toLocaleString('en') + '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
     }
     pfTableContent += '</table>';
     document.getElementById('currentPf').innerHTML=pfTableContent;
@@ -545,33 +547,6 @@ var chart1 = new CanvasJS.Chart("chartContainer1",
           markerSize: 10,
           yValueFormatString: "0.00",
           dataPoints: netValue
-        },
-        {
-          type: "line",
-          axisYType: "secondary",
-          name: "Giá trị chứng khoán",
-          showInLegend: true,
-          markerSize: 10,
-          yValueFormatString: "0.00",
-          dataPoints: portfolioValue
-        },
-        {
-          type: "line",
-          axisYType: "secondary",
-          name: "Giá trị tiền mặt",
-          showInLegend: true,
-          markerSize: 10,
-          yValueFormatString: "0.00",
-          dataPoints: cashValue
-        },
-        {
-          type: "line",
-          axisYType: "secondary",
-          name: "Giá trị Vay",
-          showInLegend: true,
-          markerSize: 10,
-          yValueFormatString: "0.00",
-          dataPoints: debtValue
         }]
     });
 chart1.render();

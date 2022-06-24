@@ -117,6 +117,39 @@
           <!-- DDK End-->
         </div>
         <% } %>
+        
+        <div class="col-lg-6">
+          <% let clientNav = user.total_nav * 1000000000;%>
+          <div class="block" id="clientNavDisplay" style="display:block">
+            <div class="title">NAV Copy</div>
+            <div class="number number-separator dashtext-3" id="mynav" style="font-size:2em;text-align:right;">
+              <%- parseFloat(clientNav).toLocaleString('en') %>
+            </div>
+            <div class="progress progress-template">
+              <div role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-3"></div>
+            </div>
+            <div id="nav-change" style="text-align:right;cursor: pointer;">Thay đổi</div>
+          </div>
+
+          <div class="block" id="clientNavForm" style="display:none">
+            <div class="title">
+              NAV Copy
+            </div>
+            <form action="apphome" method="post">
+              <input id="clientNavInput" type="text" name="clientnav" value="<%- parseFloat(clientNav).toLocaleString('en') %>" class="form-control number-separator" onfocus="this.value = this.value;">
+              <div style="text-align:center">
+                <input type="submit" name="client_nav_submit" value="Xác nhận" class="btn btn-outline-secondary" style="width:100px">
+                <button  id="nav-change-cancel" type="button" class="btn btn-outline-secondary" style="width:100px">Hủy</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="block" style="">
+            <div class="title">Lệnh trong ngày</div>
+            <div id="intraday" class="block-content"  id="output" style="height:200px;overflow:auto">
+            </div>
+          </div>
+        </div>
 
       <% if(user.sl) { %>
       <div class="col-lg-6">
@@ -139,38 +172,7 @@
         <%- include('personalsltp/personal_sltp.ejs',{user,personalsltp}); %>
       <% } %>
 
-      <div class="col-lg-6">
-        <% let clientNav = user.total_nav * 1000000000;%>
-        <div class="block" id="clientNavDisplay" style="display:block">
-          <div class="title">NAV Copy</div>
-          <div class="number number-separator dashtext-3" id="mynav" style="font-size:2em;text-align:right;">
-            <%- parseFloat(clientNav).toLocaleString('en') %>
-          </div>
-          <div class="progress progress-template">
-            <div role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-3"></div>
-          </div>
-          <div id="nav-change" style="text-align:right;cursor: pointer;">Thay đổi</div>
-        </div>
 
-        <div class="block" id="clientNavForm" style="display:none">
-          <div class="title">
-            NAV Copy
-          </div>
-          <form action="apphome" method="post">
-            <input id="clientNavInput" type="text" name="clientnav" value="<%- parseFloat(clientNav).toLocaleString('en') %>" class="form-control number-separator" onfocus="this.value = this.value;">
-            <div style="text-align:center">
-              <input type="submit" name="client_nav_submit" value="Xác nhận" class="btn btn-outline-secondary" style="width:100px">
-              <button  id="nav-change-cancel" type="button" class="btn btn-outline-secondary" style="width:100px">Hủy</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="block" style="">
-          <div class="title">Lệnh trong ngày</div>
-          <div id="intraday" class="block-content"  id="output" style="height:200px;overflow:auto">
-          </div>
-        </div>
-      </div>
 
       <div class="col-lg-6">
         <div class="block" style="">

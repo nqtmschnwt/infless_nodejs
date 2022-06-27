@@ -508,10 +508,10 @@ if(navData.length==0){
   debtValue=[{ x: new Date(), y: 0 }];
 } else {
   for(var i=0;i<navData.length;i++) {
-    netValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].net_value});
-    portfolioValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
-    cashValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
-    debtValue.push({x: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
+    netValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].net_value});
+    portfolioValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
+    cashValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
+    debtValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
   }
 }
 
@@ -525,9 +525,10 @@ var chart1 = new CanvasJS.Chart("chartContainer1",
         animationEnabled: true,
         backgroundColor: "rgba(0,0,0,0)",
         axisX: {
-            valueFormatString: "DD/MM/YYYY",
-            labelFontColor: "white",
-            type: 'date'
+          labelFormatter: function (e) {
+    				return CanvasJS.formatDate( e.label, "DD/MM/YYYY");
+    			},
+          labelFontColor: "white"
         },
         axisY: {
             includeZero: false
@@ -540,6 +541,16 @@ var chart1 = new CanvasJS.Chart("chartContainer1",
         legend: {
           fontColor: "white"
         },
+        toolTip: {
+    			contentFormatter: function (e) {
+    				var content = " ";
+    				for (var i = 0; i < e.entries.length; i++) {
+    					content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y;
+    					content += "<br/>";
+    				}
+    				return content;
+    			}
+    		},
         data: [{
           type:"line",
           axisYType: "secondary",

@@ -140,6 +140,7 @@
   let pointer=0;
   for(var i=0; i<data.length;i++) {
     if(data[i][0]=='SỐ TK') {
+
       let phone = '';
 
       if(data[i].length==12) phone=data[i][11];
@@ -148,8 +149,27 @@
       let tsrong = 0;
       let cash = 0;
       let debt = 0;
-      if(!isNaN(parseFloat(data[i][7].replace(/,/g, '')))) tsrong = parseFloat(data[i][7].replace(/,/g, ''))/1000000000;
-      if(!isNaN(parseFloat(data[i][9].replace(/,/g, '')))) cash = parseFloat(data[i][9].replace(/,/g, ''))/1000000000;
+      try {
+        if(data[i].length>=7){
+          if(!isNaN(parseFloat(data[i][7].replace(/,/g, '')))) tsrong = parseFloat(data[i][7].replace(/,/g, ''))/1000000000;
+        }
+        else tsrong = 0;
+      }
+      catch(err) {
+        console.log(err);
+        console.log(i,data[i]);
+      }
+      try {
+        if(data[i].length>=9){
+          if(!isNaN(parseFloat(data[i][9].replace(/,/g, '')))) cash = parseFloat(data[i][9].replace(/,/g, ''))/1000000000;
+        }
+        else cash = 0;
+      }
+      catch(err) {
+        console.log(err);
+        console.log(i,data[i]);
+      }
+
       data2.push({
         acc:data[i][1],
         company:data[i][2].toUpperCase(),

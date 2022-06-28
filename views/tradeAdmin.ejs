@@ -405,6 +405,7 @@
       let receiving = 0;
       let buyPrice = 0;
       let buyValue = 0;
+      let prfPct = 0;
       for (var j=0; j<ontheway.length; j++) {
         if (portfolio[i].ticker == ontheway[j].ticker) {
           receiving += ontheway[j].amount;
@@ -421,7 +422,7 @@
         }
         if(portfolio[i].price > buyPrice) color='text-success';
         if(portfolio[i].price < buyPrice) color='text-danger';
-        let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
+        prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
       }
 
 

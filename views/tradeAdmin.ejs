@@ -416,7 +416,7 @@
           let rec_equity = ontheway[j].amount * ontheway[j].price;
           console.log(portfolio[i].ticker,portfolio[i].equity,rec_equity, portfolio[i].amount + ontheway[j].amount);
           buyPrice = (portfolio[i].equity  + rec_equity) / (portfolio[i].amount + ontheway[j].amount);
-          buyValue = portfolio[i].equity + rec_equity;
+          buyValue = (portfolio[i].equity + rec_equity) * 1000000000;
           //buyPrice = portfolio[i].equity / portfolio[i].amount;
         }
       }

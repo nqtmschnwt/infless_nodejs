@@ -419,11 +419,12 @@
           buyValue = (portfolio[i].equity + rec_equity) * 1000000000;
           //buyPrice = portfolio[i].equity / portfolio[i].amount;
         }
+        if(portfolio[i].price > buyPrice) color='text-success';
+        if(portfolio[i].price < buyPrice) color='text-danger';
+        let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
       }
 
-      if(portfolio[i].price > buyPrice) color='text-success';
-      if(portfolio[i].price < buyPrice) color='text-danger';
-      let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
+
 
       let currentValue = portfolio[i].amount * portfolio[i].price * 1000000000;
       pfTableContent += '<tr><td>' + portfolio[i].ticker + '</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ (receiving * 1000000).toLocaleString('en') +'</td><td>'+ buyPrice.toFixed(2) +'</td><td>' + portfolio[i].price + '</td><td>' + buyValue.toLocaleString('en') + '</td><td>' + currentValue.toLocaleString('en') + '</td><td class="'+color+'">' + (currentValue - buyValue).toLocaleString('en') + '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';

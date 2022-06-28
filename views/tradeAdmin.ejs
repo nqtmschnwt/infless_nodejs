@@ -394,7 +394,7 @@
   }
 
   let ontheway=[{
-    ticker: 'GEG',
+    ticker: 'GMD',
     amount: 0.0006,  // million shares
     price: 0
   }]
@@ -423,6 +423,8 @@
         if(portfolio[i].price > buyPrice) color='text-success';
         if(portfolio[i].price < buyPrice) color='text-danger';
         prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
+
+        console.log(portfolio[i].ticker,portfolio[i].price,buyPrice,color);
       }
 
 

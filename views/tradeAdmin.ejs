@@ -429,9 +429,6 @@
         console.log(portfolio[i].ticker,portfolio[i].price,buyPrice,color);
       }
 
-
-
-      let
       pfTableContent += '<tr><td>' + portfolio[i].ticker + '</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ (receiving * 1000000).toLocaleString('en') +'</td><td>'+ buyPrice.toFixed(2) +'</td><td>' + portfolio[i].price + '</td><td>' + buyValue.toLocaleString('en') + '</td><td>' + currentValue.toLocaleString('en') + '</td><td class="'+color+'">' + (currentValue - buyValue).toLocaleString('en') + '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
     }
     pfTableContent += '</table>';

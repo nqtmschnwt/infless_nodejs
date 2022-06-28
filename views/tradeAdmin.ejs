@@ -404,16 +404,19 @@
       let color = '';
       let receiving = 0;
       let buyPrice = 0;
+      let buyValue = 0;
       for (var j=0; j<ontheway.length; j++) {
         if (portfolio[i].ticker == ontheway[j].ticker) {
           receiving += ontheway[j].amount;
         }
         if(receiving==0) {
           buyPrice = portfolio[i].equity / portfolio[i].amount;
+          buyValue = portfolio[i].amount * buyPrice.toFixed(2) * 1000000000;
         } else {
           let rec_equity = ontheway[j].amount * ontheway[j].price;
           console.log(portfolio[i].ticker,portfolio[i].equity,rec_equity, portfolio[i].amount + ontheway[j].amount);
           buyPrice = (portfolio[i].equity  + rec_equity) / (portfolio[i].amount + ontheway[j].amount);
+          buyValue = portfolio[i].equity + rec_equity;
           //buyPrice = portfolio[i].equity / portfolio[i].amount;
         }
       }
@@ -421,7 +424,7 @@
       if(portfolio[i].price > buyPrice) color='text-success';
       if(portfolio[i].price < buyPrice) color='text-danger';
       let prfPct = (portfolio[i].price - buyPrice)/buyPrice * 100;
-      let buyValue = portfolio[i].amount * buyPrice.toFixed(2) * 1000000000;
+
       let currentValue = portfolio[i].amount * portfolio[i].price * 1000000000;
       pfTableContent += '<tr><td>' + portfolio[i].ticker + '</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ (portfolio[i].amount * 1000000).toLocaleString('en') +'</td><td>'+ (receiving * 1000000).toLocaleString('en') +'</td><td>'+ buyPrice.toFixed(2) +'</td><td>' + portfolio[i].price + '</td><td>' + buyValue.toLocaleString('en') + '</td><td>' + currentValue.toLocaleString('en') + '</td><td class="'+color+'">' + (currentValue - buyValue).toLocaleString('en') + '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
     }

@@ -246,7 +246,15 @@ let getTradePage = async (req,res) => {
         range: 'Price!A:C'
       })
 
+      // Read rows from spreadsheet
+      const getVnindex = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'vnindex!A:B'
+      })
+
       let prices = getRows.data.values;
+      let vnindex = getVnindex.data.values;
 
       pool.query(
         `SELECT fund_nav FROM trade_orders ORDER BY id ASC LIMIT 1;`, (err,results) => {
@@ -281,7 +289,7 @@ let getTradePage = async (req,res) => {
                   } else {
                     let navdata = results.rows;
                     let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-                    return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices});
+                    return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices,vnindex});
                   }
                 }
               )

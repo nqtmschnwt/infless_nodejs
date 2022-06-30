@@ -315,6 +315,10 @@
                 portfolio[0].amount=portfolio[0].equity/portfolio[0].price;
               } else {
                 let avg_cost = portfolio[j].equity/portfolio[j].amount;
+                // SHIT )(#%^_@#)
+                if(trades[i].ticker.toUpperCase() == 'GEG') {
+                  avg_cost = 23.113;
+                }
                 records.push({
                   id:trades[i].id,
                   time:trades[i].order_time,
@@ -489,7 +493,11 @@
   document.getElementById('fund_nav_input').value = (totalCap*1000000000).toLocaleString('en');
   document.getElementById('fund_cash_input').value = (portfolio[0].equity*1000000000).toLocaleString('en');
 
-
+  console.log('----------------------------------');
+  console.log('VNINDEX');
+  console.log('----------------------------------');
+  let vnindex = <%- JSON.stringify(vnindex) %>;
+  console.log(vnindex);
 
 </script>
 
@@ -571,7 +579,7 @@ var chart1 = new CanvasJS.Chart("chartContainer1",
     			contentFormatter: function (e) {
     				var content = " ";
     				for (var i = 0; i < e.entries.length; i++) {
-    					content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y;
+    					content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y.toFixed(2);
     					content += "<br/>";
     				}
     				return content;

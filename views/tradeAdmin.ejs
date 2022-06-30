@@ -154,6 +154,25 @@
             </div>
           </div>
 
+          <div class="row">
+            <div class="col-12">
+              <div class="block" style="height: -webkit-calc(100% - 30px); height:calc(100% - 30px);">
+                <div class="title">
+                  Hiệu quả đầu tư
+                </div>
+                <div class="block-content">
+                  <div style="position:relative;margin-top:30px;">
+                    <div id="chartContainer2" style="height: 370px; width: 100%;">
+
+                    </div>
+                    <div id="canvasTrialHide"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -493,12 +512,6 @@
   document.getElementById('fund_nav_input').value = (totalCap*1000000000).toLocaleString('en');
   document.getElementById('fund_cash_input').value = (portfolio[0].equity*1000000000).toLocaleString('en');
 
-  console.log('----------------------------------');
-  console.log('VNINDEX');
-  console.log('----------------------------------');
-  let vnindex = <%- JSON.stringify(vnindex) %>;
-  console.log(vnindex);
-
 </script>
 
 <script>
@@ -526,6 +539,12 @@ var chart = new CanvasJS.Chart("chartContainer", {
 chart.render();
 
 console.log('----------------------------------');
+console.log('VNINDEX');
+console.log('----------------------------------');
+let vnindex = <%- JSON.stringify(vnindex) %>;
+console.log(vnindex);
+
+console.log('----------------------------------');
 console.log('Nav data:');
 let navData = <%- JSON.stringify(navdata) %>;
 console.log(navData);
@@ -549,10 +568,44 @@ if(navData.length==0){
   }
 }
 
-console.log(netValue);
-console.log(portfolioValue);
-console.log(cashValue);
-console.log(debtValue);
+// Performance comparison
+let navCompare = [];
+for(var i=0; i<vnindex.length;i++) {
+  let parts = vnindex[i][0].split('/');
+  let compareDate = new Date(parts[2],parts[1]-1,parts[0]);
+  for (var j=0; j<netValue.length; j++) {
+    //console.log(compareDate,netValue[j].label, compareDate.getTime()==netValue[j].label.getTime());
+
+    if (netValue[j].label.getTime() == compareDate.getTime()) {
+      navCompare.push({
+        date: compareDate,
+        vnindex: parseFloat(vnindex[i][1]),
+        nav: netValue[j].y
+      });
+    }
+  }
+}
+
+let navChange = [];
+let vniChange = [];
+for(var i=0; i<navCompare.length;i++) {
+  navChange.push({
+    label: navCompare[i].date,
+    y: ((navCompare[i].nav - navCompare[0].nav)/navCompare[0].nav*100)
+  });
+  vniChange.push({
+    label: navCompare[i].date,
+    y: ((navCompare[i].vnindex - navCompare[0].vnindex)/navCompare[0].vnindex*100)
+  });
+}
+
+console.log(navChange);
+console.log(vniChange);
+console.log(navCompare);
+//console.log(netValue);
+//console.log(portfolioValue);
+//console.log(cashValue);
+//console.log(debtValue);
 
 var chart1 = new CanvasJS.Chart("chartContainer1",
     {
@@ -596,6 +649,58 @@ var chart1 = new CanvasJS.Chart("chartContainer1",
         }]
     });
 chart1.render();
+
+var chart2 = new CanvasJS.Chart("chartContainer2",
+    {
+        animationEnabled: true,
+        backgroundColor: "rgba(0,0,0,0)",
+        axisX: {
+          labelFormatter: function (e) {
+    				return CanvasJS.formatDate( e.label, "DD/MM/YYYY");
+    			},
+          labelFontColor: "white"
+        },
+        axisY: {
+            includeZero: false
+        },
+        axisY2: {
+          title: "%",
+          titleFontColor: "white",
+          labelFontColor: "white"
+        },
+        legend: {
+          fontColor: "white"
+        },
+        toolTip: {
+    			contentFormatter: function (e) {
+    				var content = " ";
+    				for (var i = 0; i < e.entries.length; i++) {
+    					content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y.toFixed(2) + '%';
+    					content += "<br/>";
+    				}
+    				return content;
+    			}
+    		},
+        data: [{
+          type:"line",
+          axisYType: "secondary",
+          name: "NAV",
+          showInLegend: true,
+          markerSize: 10,
+          yValueFormatString: "0.00",
+          dataPoints: navChange
+        },
+        {
+          type: "line",
+          axisYType: "secondary",
+          name: "VNINDEX",
+          showInLegend: true,
+          markerSize: 10,
+          yValueFormatString: "0.00",
+          dataPoints: vniChange
+        }]
+    });
+chart2.render();
 
 }
 </script>

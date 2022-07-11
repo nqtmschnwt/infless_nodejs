@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const url = 'http://sc.tintinsoft.online:4006';
 const apptoken = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUVFNBUEkiLCJhcHBpZCI6MiwiY2xpZW50aWQiOjEsInBsYW5pZCI6Mn0.e-SzmLVwIcppvWokxnH8iw9wyIHWGt1UpRHvnvb6K-E";
 
-let getTestPage = (req,res) => {
+/*let getTestPage = (req,res) => {
   //testFunc();
   let idToken = req.body.idToken;
   console.log("get");
@@ -19,22 +19,22 @@ let postTestPage = async (req,res) => {
   let cusToken = authCodeResults.body.custoken;
 
   // test send msg
-  /*let admPushMsgResults = await pushAdmMsg(cusToken);
+  let admPushMsgResults = await pushAdmMsg(cusToken);
   let admPushMsgErr = admPushMsgResults.header.errorcode;
   var pushMsgErrDesc;
   if(admPushMsgErr==0) {
     pushMsgErrDesc = 'Success';
   } else {
     pushMsgErrDesc = 'Error #' + admPushMsgErr + ': ' + admPushMsgResults.header.errordesc;
-  }*/
+  }
 
   return res.send({
         status: 200,
         message: "Done",
         cusToken: cusToken,
-        //pushMsg: pushMsgErrDesc
+        pushMsg: pushMsgErrDesc
       });
-}
+}*/
 
 function addZero(n) {
   if (n<10) return('0'+n);
@@ -103,7 +103,7 @@ function getCusToken(authCode) {
 }
 
 // push lệnh mới trong ngày
-function pushTrans(cusToken) {
+function pushTrans(cusToken,fundNav,orderDirection,orderType,pct,price,ticker,vol) {
   let d = new Date();
   let requestID = "inflessPushTrans"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
 
@@ -117,15 +117,15 @@ function pushTrans(cusToken) {
     },
     "body": {
       "fundId": "1",  // giá trị cố định
-      "fundNav": "string",
-      "orderDirection": "string",
-      "orderTime": "string",
-      "orderType": "string",
-      "pct": "string",
-      "price": "string",
-      "ticker": "string",
-      "transId": "string",
-      "vol": "string"
+      "fundNav": fundNav,
+      "orderDirection": orderDirection,
+      "orderTime": ""  + d.getFullYear() + "-" + addZero(d.getMonth()+1) + "-" + addZero(d.getDate()) + addZero(d.getHours()) + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getSeconds()),
+      "orderType": orderType,
+      "pct": pct,
+      "price": price,
+      "ticker": ticker,
+      "transId": ""  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds()),
+      "vol": vol
     }
   };
 
@@ -380,7 +380,7 @@ function inquirySL(cusToken) {
 }
 
 // push admin msg
-function pushAdmMsg(cusToken) {
+function pushAdmMsg(cusToken,cn,c1,c2,c3,c4,c5,speed,show,msg) {
   let d = new Date();
   let admMsgRequestID = "inflessPushAdmMsg"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
 
@@ -393,20 +393,21 @@ function pushAdmMsg(cusToken) {
       "requestID": admMsgRequestID
     },
     "body": {
-      "color1": "#ff00ff",
-      "color2": "#ff0000",
-      "color3": "#00ff00",
-      "color4": "#0000ff",
-      "color5": "#00ffff",
-      "colorNum": "5",
+      "color1": c1,
+      "color2": c2,
+      "color3": c3,
+      "color4": c4,
+      "color5": c5,
+      "colorNum": cn,
       "fundId": 1,
-      "speed": "100",
-      "warningId": "1",
-      "warningMsg": "test message",
-      "warningShow": "true",
-      "warningTime": "2022-07-03 00:00:00"
+      "speed": speed,
+      "warningId": ""  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds()), //"1",
+      "warningMsg": msg,
+      "warningShow": show,
+      "warningTime": d.getFullYear() + "-" + addZero(d.getMonth()+1) + "-" + addZero(d.getDate())  + " " + addZero(d.getHours())  + ":"  + addZero(d.getMinutes())  + ":"  + addZero(d.getSeconds())
     }
   };
+  //console.log(apiBody);
 
   return fetch(url + '/api/global/vn/inflessweb/pushadminmsg/v1', {
     method: 'POST',
@@ -447,8 +448,10 @@ function inquiryAdmMsg(cusToken) {
 }
 
 module.exports = {
-  getTestPage:getTestPage,
-  postTestPage:postTestPage,
+  verifyUser:verifyUser,
+  getCusToken:getCusToken,
+  pushTrans:pushTrans,
+  pushAdmMsg:pushAdmMsg,
 }
 
 /*

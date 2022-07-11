@@ -153,16 +153,24 @@
       tatcanhbao = document.getElementById('tatcanhbao'),
       echo = document.getElementById('echo');
 
+  // GET custoken from DB
+  let custoken = '<%- custoken %>';
+
   var m = new Date();
   var dt = m.getFullYear() +"-"+ addZero(m.getMonth()+1) +"-"+ addZero(m.getDate())  + " " + addZero(m.getHours()) + "-" + addZero(m.getMinutes()) + "-" + addZero(m.getSeconds());
+  let cmdContent = {
+    id:<%- user.id %>,
+    custoken: custoken
+  }
   socket.emit('vol21Admin', {
     'key':'tungdeptrai',
     'DateTime':dt,
     'cmd':{
       'cmdHeader':'connect',
-      'cmdContent':''
+      'cmdContent': JSON.stringify(cmdContent)
     }
   });
+
 
   function sendSysCmd(){
     socket.emit('vol21SysAdmin', {
@@ -249,6 +257,30 @@
       'color_num':canhbaoColNum.value,
       'speed':canhbaoSpeed.value
     });
+
+    fetch("/pushadmmsg", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        custoken:custoken,
+        cn:canhbaoColNum.value,
+        c1:canhbaoColor1.value,
+        c2:canhbaoColor2.value,
+        c3:canhbaoColor3.value,
+        c4:canhbaoColor4.value,
+        c5:canhbaoColor5.value,
+        speed:canhbaoSpeed.value,
+        show:true,
+        msg:canhbaoMsg.value
+      })
+    }).then(res => res.json())
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
   });
 
   tatcanhbao.addEventListener('click', function(){
@@ -388,5 +420,4 @@
 </script>
 <script src="/js/favico.min.js"></script>
 <script src="/js/custom-script.js"></script>
-
 </html>

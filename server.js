@@ -145,13 +145,15 @@ socket.on('DK',function(data){
                 if(results.rows[j]._passed==false){
                   let id = results.rows[j].id;
                   pool.query(
-                    `UPDATE dieukien SET _passed=true WHERE _ticker_id=$1;`,
-                    [id],(err,results)=>{
+                    `UPDATE dieukien SET _passed=true,_passed_time=$2 WHERE _ticker_id=$1;`,  // fixed on 2022-07-09: update _passed_time
+                    [id, passed_time],(err,results)=>{
                       if(err) {
                         console.log('Error: ', err);
                       } else console.log(ticker,' updated in dieukien.');
                     }
-                  )
+                  );
+                  // Push noti to api here
+
                 }// else console.log(ticker,' passed.');
               }
             } else {
@@ -170,7 +172,8 @@ socket.on('DK',function(data){
                     console.log('Error: ', err);
                   }// else console.log(ticker,' added to phongthan.');
                 }
-              )
+              );
+              // Push noti to api here
             }
           }
         }
@@ -204,13 +207,15 @@ socket.on('SL',function(data){
                 if(results.rows[j]._sl==false){
                   let id = results.rows[j].id;
                   pool.query(
-                    `UPDATE catlo SET _sl=true WHERE _ticker_id=$1;`,
-                    [id],(err,results)=>{
+                    `UPDATE catlo SET _sl=true,_sl_time=$2 WHERE _ticker_id=$1;`,  // fixed on 2022-07-09: update _sl_time
+                    [id,sl_time],(err,results)=>{
                       if(err) {
                         console.log('Error: ', err);
                       } else console.log(ticker,' updated in catlo.');
                     }
-                  )
+                  );
+                  // push noti
+
                 }// else console.log(ticker,' already SL.');
               }
             } else {
@@ -229,7 +234,8 @@ socket.on('SL',function(data){
                     console.log('Error: ', err);
                   }// else console.log(ticker,' added to phongthan.');
                 }
-              )
+              );
+              // push noti
             }
           }
         }

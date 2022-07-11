@@ -211,7 +211,8 @@
     //var socket = io('https://infless-copy-trade.herokuapp.com/', { transport : ['websocket'] }); //heroku
     var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
 
-
+    // GET custoken from DB
+    let custoken = '<%- custoken %>';
 
     //document.getElementById('fnav').value = fundnav.value;
     // Emit events
@@ -236,6 +237,28 @@
             pct: pct.value,
             price: price.value
         });
+
+        fetch("/pushtrans", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            custoken:custoken,
+            fundNav: fundnav.value.replace(/\,/g, ''),
+            orderDirection: order.value,
+            orderType: ordertype.value.toUpperCase(),
+            pct: pct.value,
+            price: price.value,
+            ticker: symbol.value.toUpperCase(),
+            vol: vol.value.replace(/\,/g, '')
+          })
+        }).then(res => res.json())
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
         alert("Lệnh đã được gửi!");
     }
 </script>
@@ -561,10 +584,15 @@ if(navData.length==0){
   debtValue=[{ x: new Date(), y: 0 }];
 } else {
   for(var i=0;i<navData.length;i++) {
-    netValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].net_value});
-    portfolioValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
-    cashValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
-    debtValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
+    try {
+      netValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].net_value});
+      portfolioValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
+      cashValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
+      debtValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
+    }
+    catch(err) {
+      console.log(i, err);
+    }
   }
 }
 

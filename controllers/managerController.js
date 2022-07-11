@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { pool } = require('../config/dbConfig');
 const { google } = require('googleapis');
+const api = require('../controllers/apiController');
 
 let getManagerPage = (req,res) => {
   let user=req.user;
@@ -118,6 +119,7 @@ let postDownloadSetupPage = (req,res) => {
 
 let getPTPage = (req,res) => {
   let user=req.user;
+  //console.log(user); custoken is added in frontend
   if(user!=undefined){
     if(user.role_id==2 || user.role_id==3)
     {
@@ -136,7 +138,19 @@ let getPTPage = (req,res) => {
           }
 
           let lichsucanhbao = results.rows;
-          return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao});
+          let custoken = '';
+          pool.query(
+            `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
+              if(err) console.log(err);
+              else {
+                if(results.rows.length!=0) {
+                  custoken = results.rows[0].custoken;
+                }
+                return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao,custoken});
+              }
+            }
+          )
+
         }
       );
     } else {
@@ -177,7 +191,18 @@ let postPTPage = (req,res) => {
                 if(cb.warning_show) cbDisplay = 'block';
                 let canhbao={display:cbDisplay,msg:cb.warning_msg};
                 let lichsucanhbao = results.rows;
-                return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao});
+                let custoken = '';
+                pool.query(
+                  `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
+                    if(err) console.log(err);
+                    else {
+                      if(results.rows.length!=0) {
+                        custoken = results.rows[0].custoken;
+                      }
+                      return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao,custoken});
+                    }
+                  }
+                )
               }
             );
           }
@@ -288,8 +313,20 @@ let getTradePage = async (req,res) => {
                     console.log(err);
                   } else {
                     let navdata = results.rows;
-                    let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-                    return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices,vnindex});
+                    let custoken = '';
+                    pool.query(
+                      `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
+                        if(err) console.log(err);
+                        else {
+                          if(results.rows.length!=0) {
+                            custoken = results.rows[0].custoken;
+                          }
+                          let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+                          return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices,vnindex,custoken});
+                        }
+                      }
+                    )
+
                   }
                 }
               )
@@ -306,11 +343,45 @@ let getTradePage = async (req,res) => {
   }
 }
 
-let postTradePage = (req,res) => {
+let postTradePage = async (req,res) => {
   let user=req.user;
   if(user!=undefined){
     if(user.role_id==2 || user.role_id==3)
     {
+      const auth = new google.auth.GoogleAuth({
+        keyFile: './sample_query/sheetkey.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+      });
+      // Create client instance for auth
+      const client = await auth.getClient();
+      // Instance of GG sheets api
+      const googleSheets = google.sheets({version:"v4",auth:client});
+
+      const spreadsheetId = '1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg';
+
+      // Get metadata about spreadsheets
+      const metaData = await googleSheets.spreadsheets.get({
+        auth,
+        spreadsheetId
+      })
+
+      // Read rows from spreadsheet
+      const getRows = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'Price!A:C'
+      })
+
+      // Read rows from spreadsheet
+      const getVnindex = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'vnindex!A:B'
+      })
+
+      let prices = getRows.data.values;
+      let vnindex = getVnindex.data.values;
+
       body = req.body;
       if(body.orderSend){
         console.log(body);
@@ -358,8 +429,21 @@ let postTradePage = (req,res) => {
                           console.log(err);
                         } else {
                           let navdata = results.rows;
-                          let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-                          return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata});
+                          let custoken = '';
+                          pool.query(
+                            `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
+                              if(err) console.log(err);
+                              else {
+                                if(results.rows.length!=0) {
+                                  custoken = results.rows[0].custoken;
+                                }
+
+                                let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+                                return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices,vnindex,custoken});
+                              }
+                            }
+                          )
+
                         }
                       }
                     )
@@ -408,6 +492,91 @@ let getScanListPage = (req,res) => {
   }
 }
 
+// API functions
+let addCusToken = async (req,res) => {
+  let user=req.user;
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      let idToken = req.body.idToken;
+      let verifyResults = await api.verifyUser(idToken);
+      let authCode = verifyResults.body.authCode;
+      let authCodeResults = await api.getCusToken(authCode);
+      let cusToken = authCodeResults.body.custoken;
+      user.custoken = cusToken;
+      console.log(user);
+      pool.query(
+        `SELECT * FROM user_token WHERE user_id=$1;`, [user.id], (err,results) => {
+          if(err) console.log(err);
+          else {
+            if(results.rows.length==0) {
+              pool.query(
+                `INSERT INTO user_token(user_id,custoken) VALUES ($1,$2);`,[user.id,cusToken],(err,results) => {
+                  if(err) console.log(err);
+                  else console.log('token recorded');
+                }
+              )
+            } else {
+              pool.query(
+                `UPDATE user_token SET custoken=$2 WHERE user_id=$1;`,[user.id,cusToken],(err,results) => {
+                  if(err) console.log(err);
+                  else console.log('token recorded');
+                }
+              )
+            }
+          }
+        }
+      )
+    }
+  }
+}
+
+let pushTrans = async (req,res) => {
+  let user=req.user;
+  //console.log(user);
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      //console.log(req.body);
+      let custoken = req.body.custoken;
+      let fundNav = req.body.fundNav;
+      let orderDirection = req.body.orderDirection;
+      let orderType = req.body.orderType;
+      let pct = req.body.pct;
+      let price = req.body.price;
+      let ticker = req.body.ticker;
+      let vol = req.body.vol;
+      let push = await api.pushTrans(custoken,fundNav,orderDirection,orderType,pct,price,ticker,vol);
+      console.log('push trans result: ', push);
+      return push;
+    }
+  }
+}
+
+let pushAdmMsg = async (req,res) => {
+  let user=req.user;
+  //console.log(user);
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      //console.log(req.body);
+      let custoken = req.body.custoken;
+      let cn=req.body.cn;
+      let c1=req.body.c1;
+      let c2=req.body.c2;
+      let c3=req.body.c3;
+      let c4=req.body.c4;
+      let c5=req.body.c5;
+      let speed=req.body.speed;
+      let show=req.body.show;
+      let msg=req.body.msg;
+      let push = await api.pushAdmMsg(custoken,cn,c1,c2,c3,c4,c5,speed,show,msg);
+      console.log('push msg result: ', push);
+      return push;
+    }
+  }
+}
+
 module.exports = {
   getManagerPage:getManagerPage,
   postManagerPage:postManagerPage,
@@ -418,4 +587,7 @@ module.exports = {
   getTradePage: getTradePage,
   postTradePage: postTradePage,
   getScanListPage: getScanListPage,
+  addCusToken: addCusToken,
+  pushTrans:pushTrans,
+  pushAdmMsg:pushAdmMsg,
 }

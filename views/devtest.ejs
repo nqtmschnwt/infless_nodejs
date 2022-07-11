@@ -12,7 +12,7 @@
 
   </head>
   <body>
-    <p>Your authToken is: <span id="idToken"><%- authToken %></span></p>
+    <p>Your idToken is: <span id="idToken"><%- idToken %></span></p>
     <button id="sign-in">Sign In</button>
 
     <script type="module">
@@ -55,28 +55,30 @@
             // ...
             console.log('Success!!! ');
             console.log('===================');
-            // The signed-in user info.
-            /*var user = result.user;
-            user.getIdToken().then(function(idToken) {
-              console.log(idToken);
-              document.getElementById('idToken').innerHTML = idToken;
-            });*/
-
           }
 
-          firebase.auth().currentUser.getIdToken().then(function(idToken) {
+          let currentUser = firebase.auth().currentUser;
+          console.log(currentUser.email);
+
+          currentUser.getIdToken().then(function(idToken) {
             console.log(idToken);
             document.getElementById('idToken').innerHTML = idToken;
-            let data = {authToken: idToken};
+            let data = {idToken: idToken};
 
             fetch("/devtest", {
               method: "POST",
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify(data)
-            }).then(res => {
-              console.log("Request complete! response:", res);
+            }).then(res => res.json())
+            .then(res => {
+              console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
             });
           });
+
+
 
         }).catch((error) => {
           // Handle Errors here.
@@ -89,19 +91,6 @@
           // ...
           console.log('ERROR: ', errorCode, errorMessage);
         });
-
-
-          /*
-          let data = {authToken: idToken};
-
-          fetch("/devtest", {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-          }).then(res => {
-            console.log("Request complete! response:", res);
-          });
-          */
 
     </script>
   </body>

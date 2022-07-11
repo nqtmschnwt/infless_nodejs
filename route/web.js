@@ -50,6 +50,7 @@ let initWebRoutes = (app) => {
       // Admin page
       router.get("/manager", managerController.getManagerPage);
       router.post("/manager", managerController.postManagerPage);
+
       // Trading page
       router.get("/trade-admin", managerController.getTradePage);
       router.post("/trade-admin", managerController.postTradePage);
@@ -79,6 +80,11 @@ let initWebRoutes = (app) => {
       router.get("/portfolio-:id", pfController.getPfInfo);
       router.get("/pf-update", pfController.getPfUpdate);
       router.post("/pf-update", pfController.postPfUpdate);
+
+      // API urls
+      router.post("/addcustoken", managerController.addCusToken);
+      router.post("/pushadmmsg", managerController.pushAdmMsg);
+      router.post("/pushtrans", managerController.pushTrans);
 
 
   // Request with json body

@@ -504,7 +504,7 @@ let addCusToken = async (req,res) => {
       let authCodeResults = await api.getCusToken(authCode);
       let cusToken = authCodeResults.body.custoken;
       user.custoken = cusToken;
-      console.log(user);
+      //console.log(user);
       pool.query(
         `SELECT * FROM user_token WHERE user_id=$1;`, [user.id], (err,results) => {
           if(err) console.log(err);
@@ -513,14 +513,20 @@ let addCusToken = async (req,res) => {
               pool.query(
                 `INSERT INTO user_token(user_id,custoken) VALUES ($1,$2);`,[user.id,cusToken],(err,results) => {
                   if(err) console.log(err);
-                  else console.log('token recorded');
+                  else {
+                    console.log('token recorded');
+                    return res.json({id:user.id,token:cusToken});
+                  }
                 }
               )
             } else {
               pool.query(
                 `UPDATE user_token SET custoken=$2 WHERE user_id=$1;`,[user.id,cusToken],(err,results) => {
                   if(err) console.log(err);
-                  else console.log('token recorded');
+                  else {
+                    console.log('token recorded');
+                    return res.json({id:user.id,custoken:cusToken});
+                  }
                 }
               )
             }

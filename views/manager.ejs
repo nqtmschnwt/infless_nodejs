@@ -209,6 +209,11 @@
       console.log('ERROR: ', errorCode, errorMessage);
     });
 
+    setTimeout(() => {
+      let syncScreen = document.getElementById('syncScreen');
+      syncScreen.style.display = 'none';
+    }, 5000);
+
     socket.on('vol21Admin', function(data){
       if(data.msgHeader == "connectionConfirm"){
         let syncScreen = document.getElementById('syncScreen');

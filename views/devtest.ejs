@@ -173,7 +173,7 @@
                     cnt ++;
                     portfolio[j].volAvailable += tradeCleaned[i].vol;
                     portfolio[j].eq += tradeCleaned[i].vol * tradeCleaned[i].price;
-                    portfolio[j].buyprice = portfolio[j].eq/portfolio[j].volAvailable;
+                    portfolio[j].buyprice = portfolio[j].eq/(portfolio[j].volAvailable + portfolio[j].pending);
                     // push to records
                     records.push({
                       id:0,
@@ -215,18 +215,13 @@
                 for(var j=0;j<portfolio.length;j++) {
                   if(tradeCleaned[i].ticker.toUpperCase() == portfolio[j].ticker.toUpperCase()) {
                     // ticker already in portfolio
-                    if(portfolio[j].volAvailable - tradeCleaned[i].vol <= 0) {
-                      // Sell amount is bigger than available
-                      portfolio[j].volAvailable = 0;
-                      portfolio[j].eq = portfolio[j].buyprice * portfolio[j].pending;
-                      //portfolio[j].buyprice = 0;
-                      netCashFlow += portfolio[j].volAvailable * tradeCleaned[i].price;
-                    } else {
-                      portfolio[j].volAvailable -= tradeCleaned[i].vol;
-                      portfolio[j].eq -= tradeCleaned[i].vol * tradeCleaned[i].price;
-                      if(portfolio[j].eq < 0) portfolio[j].eq = 0;
-                      netCashFlow += tradeCleaned[i].vol * tradeCleaned[i].price;
-                    }
+
+                    portfolio[j].volAvailable -= tradeCleaned[i].vol;
+                    portfolio[j].eq -= tradeCleaned[i].vol * portfolio[j].buyprice;  // tru di theo gia von
+                    if(portfolio[j].eq < 0) portfolio[j].eq = 0;
+                    if(portfolio[j].volAvailable < 0) portfolio[j].volAvailable = 0;
+                    netCashFlow += tradeCleaned[i].vol * tradeCleaned[i].price;
+
                     // push to records
                     records.push({
                       id:0,
@@ -247,6 +242,9 @@
 
         // --------------------record to snapShot------------
         console.log(dates[t]);
+        for(var k=0;k<portfolio.length;k++) {
+          console.log(portfolio[k]);
+        }
         //console.log(JSON.stringify(portfolio));
         console.log("net cashflow: ",netCashFlow);
       }

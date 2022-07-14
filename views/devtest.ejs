@@ -286,7 +286,7 @@
 
       //-----------Portfolio table rendering------------
       let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Khả dụng</th><th>Chờ nhận</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị mua</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th><th>Lãi/lỗ (%)</th></tr>';
-      for(var i=1; i<portfolio.length; i++) {
+      for(var i=0; i<portfolio.length; i++) {
         let color = '';
         if(portfolio[i].price > portfolio[i].buyprice) color='text-success';
         if(portfolio[i].price < portfolio[i].buyprice) color='text-danger';

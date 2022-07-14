@@ -1,449 +1,71 @@
-const fetch = require('node-fetch');
+const fs = require('fs');
+const { pool } = require('../config/dbConfig');
+const { google } = require('googleapis');
 
-const url = 'http://sc.tintinsoft.online:4006';
-const apptoken = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUVFNBUEkiLCJhcHBpZCI6MiwiY2xpZW50aWQiOjEsInBsYW5pZCI6Mn0.e-SzmLVwIcppvWokxnH8iw9wyIHWGt1UpRHvnvb6K-E";
+const auth = new google.auth.GoogleAuth({
+  keyFile: './sample_query/sheetkey.json',
+  scopes: 'https://www.googleapis.com/auth/spreadsheets'
+});
 
-let getTestPage = (req,res) => {
-  //testFunc();
-  let idToken = req.body.idToken;
-  console.log("get");
-  //console.log(authToken);
-  return res.render('devtest',{idToken:"none"});
+let getTestPage = async (req,res) => {
+  let vnindex = await getSheetData('vnindex','A:B');
+  let prices = await getSheetData('Price','A:C');
+  let dividend = await getSheetData('dividend','A:E');
+  let data = {
+    prices: prices,
+    vnindex: vnindex,
+    dividend: dividend
+  }
+  pool.query(
+    `SELECT * FROM trade_orders ORDER BY id ASC;`, (err,results) => {
+      if(err) console.log(err);
+      else {
+        data.trades = results.rows;
+        /*let currentdate = new Date();
+        let last6months = new Date(currentdate.setMonth(currentdate.getMonth()-6));
+        let dformat6 = [last6months.getFullYear(),last6months.getMonth()+1,last6months.getDate()].join('-');
+        pool.query(
+          `SELECT upf.portfolio_date, upf.latest, upf.portfolio_value, upf.net_value, upf.cash_value, upf.debt_value FROM user_portfolio upf
+          INNER JOIN portfolios pf
+          ON upf.portfolio_id = pf.portfolio_id
+          WHERE pf.user_id=0 AND upf.portfolio_date>$1
+          ORDER BY upf.portfolio_date ASC;`,
+          [dformat6],
+          (err,results) => {
+            if(err) console.log(err);
+            else {
+              data.pfRecords = results.rows;*/
+              return res.render('devtest',data);
+            /*}
+          })*/
+      }
+    })
 }
 
-let postTestPage = async (req,res) => {
-  let idToken = req.body.idToken;
-  let verifyResults = await verifyUser(idToken);
-  let authCode = verifyResults.body.authCode;
-  let authCodeResults = await getCusToken(authCode);
-  let cusToken = authCodeResults.body.custoken;
-
-  // test send msg
-  /*let admPushMsgResults = await pushAdmMsg(cusToken);
-  let admPushMsgErr = admPushMsgResults.header.errorcode;
-  var pushMsgErrDesc;
-  if(admPushMsgErr==0) {
-    pushMsgErrDesc = 'Success';
-  } else {
-    pushMsgErrDesc = 'Error #' + admPushMsgErr + ': ' + admPushMsgResults.header.errordesc;
-  }*/
-
-  return res.send({
-        status: 200,
-        message: "Done",
-        cusToken: cusToken,
-        //pushMsg: pushMsgErrDesc
-      });
+let postTestPage = (req,res) => {
+  return res.render('devtest');
 }
 
-function addZero(n) {
-  if (n<10) return('0'+n);
-  else return(''+n);
-}
+async function getSheetData(sheetName,range) {
+  // Create client instance for auth
+  const client = await auth.getClient();
+  // Instance of GG sheets api
+  const googleSheets = google.sheets({version:"v4",auth:client});
 
-//========== API functions ===========
-function verifyUser(idToken) {
-  let d = new Date();
-  let requestID = "inflessVerifyUser"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
+  const spreadsheetId = '1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg';
 
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": "",
-      "requestID": requestID
-    },
-    "body": {
-      "authToken": idToken,
-      "channel": "FireBase",
-      "otp": "",
-      "password": "",
-      "transID": "",
-      "username": ""
-    }
-  };
-
-  return fetch(url + '/webserver/verifyuser/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
+  // Get metadata about spreadsheets
+  const metaData = await googleSheets.spreadsheets.get({
+    auth,
+    spreadsheetId
   })
-  .then(res => res.json());
-}
-
-function getCusToken(authCode) {
-  let d = new Date();
-  let requestID = "inflessCusToken"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": "",
-      "requestID": requestID
-    },
-    "body": {
-      "authCode": authCode,
-      "requestAuthCodeID": ""
-    }
-  };
-
-  return fetch(url + '/api/global/vn/fundmntsystem/getcustoken/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// push lệnh mới trong ngày
-function pushTrans(cusToken) {
-  let d = new Date();
-  let requestID = "inflessPushTrans"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "fundId": "1",  // giá trị cố định
-      "fundNav": "string",
-      "orderDirection": "string",
-      "orderTime": "string",
-      "orderType": "string",
-      "pct": "string",
-      "price": "string",
-      "ticker": "string",
-      "transId": "string",
-      "vol": "string"
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/pushtrans/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// lấy nav client
-function inquiryNav(cusToken) {
-  let d = new Date();
-  let requestID = "inflessInquiryNav"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "data":"" // để chuỗi rỗng
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/inquiryclient/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// lấy danh sách các lệnh mua bán
-function inquiryTrades(cusToken) {
-  let d = new Date();
-  let requestID = "inflessInquiryTrades"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "from": "",// chuỗi dạng date DD/MM/YYYY
-      "fund_nav": "",
-      "id": "",
-      "index": "giá trị id của giao dịch cuối cùng trong lần vấn tin trước",
-      "order": " 1 sắp xếp theo thứ tự thời gian cũ nhất lên đầu, khác 1 theo thứ tự thời gian mới nhất lên đầu ",
-      "order_direction": "",
-      "order_time": "",
-      "order_type": "",
-      "pct": "",
-      "price": "",
-      "rownum": "số lượng bản ghi tối đa cho 1 lần query",
-      "ticker": "",
-      "to": "chuỗi dạng date DD/MM/YYYY",
-      "vol": ""
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/inquirytrans/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// bảng phong thần
-function inquiryConditions(cusToken) {
-  let d = new Date();
-  let requestID = "inflessInquiryConditions"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "addTime": "",
-      "from": "",
-      "index": "giá trị id của giao dịch cuối cùng trong lần vấn tin trước ",
-      "order": "1", // 1 sắp xếp theo thứ tự thời gian cũ nhất lên đầu, khác 1 theo thứ tự thời gian mới nhất lên đầu,
-      "rownum": "số lượng bản ghi tối đa cho 1 lần query",
-      "ticker": "",
-      "to": ""
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/inquirycondition/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// noti đủ đk
-function pushConditionMatch(cusToken) {
-  let d = new Date();
-  let requestID = "inflessPushConditionMatch"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "fundId": "1", // giá trị cố định
-      "conditionmatchId": " id trong bang phong than",
-      "datetime": "string",
-      "price": "string",
-      "ticker": "string",
-      "vol": "string"
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/pushconditionmatch/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// bảng dủ đk
-function inquiryConditionMatch(cusToken) {
-  let d = new Date();
-  let requestID = "inflessInquiryConditionMatch"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "addTime": "",
-      "from": "",
-      "index": " giá trị id của giao dịch cuối cùng trong lần vấn tin trước ",
-      "order": "1 sắp xếp theo thứ tự thời gian cũ nhất lên đầu, khác 1 theo thứ tự thời gian mới nhất lên đầu ",
-      "rownum": " số lượng bản ghi tối đa cho 1 lần query ",
-      "passTime": "",
-      "ticker": "",
-      "to": ""
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/inquiryconditionmatch/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// push cắt lỗ
-function pushSL(cusToken) {
-  let d = new Date();
-  let requestID = "inflessPushSL"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "fundId": "1", // giá trị cố định
-      "datetime": "string",
-      "price": "string",
-      "slId": " id trong bang phong than ",
-      "ticker": "string",
-      "vol": "string"
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/pushconditionsl/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// bảng cắt lỗ
-function inquirySL(cusToken) {
-  let d = new Date();
-  let requestID = "inflessInquirySL"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": requestID
-    },
-    "body": {
-      "slTime": "",
-      "addTime": "",
-      "from": "",
-      "index": " giá trị id của giao dịch cuối cùng trong lần vấn tin trước ",
-      "order": "1 sắp xếp theo thứ tự thời gian cũ nhất lên đầu, khác 1 theo thứ tự thời gian mới nhất lên đầu ",
-      "rownum": " số lượng bản ghi tối đa cho 1 lần query ",
-      "passTime": "",
-      "ticker": "",
-      "to": ""
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/inquiryconditionsl/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// push admin msg
-function pushAdmMsg(cusToken) {
-  let d = new Date();
-  let admMsgRequestID = "inflessPushAdmMsg"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": admMsgRequestID
-    },
-    "body": {
-      "color1": "#ff00ff",
-      "color2": "#ff0000",
-      "color3": "#00ff00",
-      "color4": "#0000ff",
-      "color5": "#00ffff",
-      "colorNum": "5",
-      "fundId": 1,
-      "speed": "100",
-      "warningId": "1",
-      "warningMsg": "test message",
-      "warningShow": "true",
-      "warningTime": "2022-07-03 00:00:00"
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/pushadminmsg/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
-}
-
-// inquiry admin msg
-function inquiryAdmMsg(cusToken) {
-  let d = new Date();
-  let admMsgRequestID = "inflessInquiryAdmMsg"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
-
-  let apiBody = {
-    "header": {
-      "appToken": apptoken,
-      "authUrl": "",
-      "checksum": "",
-      "custToken": cusToken,
-      "requestID": admMsgRequestID
-    },
-    "body": {
-      "warningId": "string"
-    }
-  };
-
-  return fetch(url + '/api/global/vn/inflessweb/pushadminmsg/v1', {
-    method: 'POST',
-    headers: {
-      "APPTOKEN": apptoken,
-    },
-    body: JSON.stringify(apiBody),
-  })
-  .then(res => res.json());
+  // Read rows from spreadsheet
+  const getRows = await googleSheets.spreadsheets.values.get({
+    auth,
+    spreadsheetId,
+    range: sheetName + "!" + range
+  });
+  return getRows.data.values;
 }
 
 module.exports = {

@@ -188,12 +188,12 @@
     var orderType = document.getElementById("order");
 
     function sellCheck() {
-      if (orderType.value == "sell") {
+      /*if (orderType.value == "sell") {
         //alert("check");
             document.getElementById("sell_pct").style.display = "block";
         } else {
             document.getElementById("sell_pct").style.display = "none";
-      }
+      }*/
       document.getElementById('order_value_input').value = (document.getElementById('price_input').value*document.getElementById('vol_input').value.replace(/,/g, '')*1000).toLocaleString('en');
       if(document.getElementById('vol_input').value!=''){
         let vol_input = parseInt(document.getElementById('vol_input').value.replace(/,/g, ''));
@@ -443,7 +443,11 @@
     ticker: 'GEG',
     amount: 0.0006,  // million shares
     price: 0
-  }]
+  }];
+  console.log('----------------------------------');
+  console.log('Cash dividend');
+  let cashDiv = [{date:new Date('2022','06','13'),ticker:'GEX',amount:500}];  // '06' month means July. Months start at 0
+
   if(portfolio.length>0) {
     let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Khả dụng</th><th>Chờ nhận</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị mua</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th><th>Lãi/lỗ (%)</th></tr>';
     for(var i=1; i<portfolio.length; i++) {
@@ -585,10 +589,11 @@ if(navData.length==0){
 } else {
   for(var i=0;i<navData.length;i++) {
     try {
-      netValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].net_value});
-      portfolioValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].portfolio_value});
-      cashValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].cash_value});
-      debtValue.push({label: new Date(navData[i].portfolio_date), y: navData[i].debt_value});
+      let d = new Date(navData[i].portfolio_date;
+      netValue.push({label: d), y: navData[i].net_value});
+      portfolioValue.push({label: d), y: navData[i].portfolio_value});
+      cashValue.push({label: d), y: navData[i].cash_value});
+      debtValue.push({label: d), y: navData[i].debt_value});
     }
     catch(err) {
       console.log(i, err);
@@ -602,9 +607,9 @@ for(var i=0; i<vnindex.length;i++) {
   let parts = vnindex[i][0].split('/');
   let compareDate = new Date(parts[2],parts[1]-1,parts[0]);
   for (var j=0; j<netValue.length; j++) {
-    console.log(compareDate,netValue[j].label, compareDate.getDate()==netValue[j].label.getDate());
+    //console.log(compareDate,netValue[j].label, compareDate.getDate()==netValue[j].label.getDate());
 
-    if (netValue[j].label.getDate() == compareDate.getDate()) {
+    if (netValue[j].label.getDate() == compareDate.getDate() && netValue[j].label.getMonth() == compareDate.getMonth() && netValue[j].label.getFullYear() == compareDate.getFullYear()) {
       navCompare.push({
         date: compareDate,
         vnindex: parseFloat(vnindex[i][1]),

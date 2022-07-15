@@ -837,7 +837,7 @@ chart2.render();
                 console.log('Trả cổ tức bằng tiền '+ dividend[i][4] + ' đồng/CP');
                 try{
                   let cashPerShare = parseFloat(dividend[i][4]);
-                  let cashDiv = (portfolio[j].volAvailable + portfolio[j].pending) * cashPerShare / Math.pow(10,9);
+                  let cashDiv = (portfolio[j].volAvailable + portfolio[j].pending) * Math.pow(10,6) * cashPerShare / Math.pow(10,9);
                   netCashFlow += cashDiv;
                   console.log('Nhận thêm ' + cashDiv + " tỷ");
                   // update price

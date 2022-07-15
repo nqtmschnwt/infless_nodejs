@@ -1092,7 +1092,8 @@ chart2.render();
     dividendTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Ngày</th><th>Mã</th><th>Loại cổ tức/quyền</th><th>Số lượng</th><th>Đơn vị</th><tr>';
     for(var i=0;i<dividendRecords.length;i++) {
       let amount = dividendRecords[i].amount;
-      if(dividendRecords[i].type != 'tiền mặt') amount *= Math.pow(10,6);
+      if(dividendRecords[i].type == 'tiền mặt') amount *= Math.pow(10,9);
+      else amount *= Math.pow(10,6);
       dividendTableContent+='<tr><td>' + dividendRecords[i].date + '</td><td>' + dividendRecords[i].ticker + '</td><td>' + dividendRecords[i].type + '</td><td>' + amount + '</td><td>';
       if(dividendRecords[i].type == 'tiền mặt') dividendTableContent+= 'đồng</td></tr>';
       else dividendTableContent+= 'cổ phiếu</td></tr>';

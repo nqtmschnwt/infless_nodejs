@@ -1094,7 +1094,7 @@ chart2.render();
       let amount = dividendRecords[i].amount;
       if(dividendRecords[i].type == 'tiền mặt') amount *= Math.pow(10,9);
       else amount *= Math.pow(10,6);
-      dividendTableContent+='<tr><td>' + dividendRecords[i].date + '</td><td>' + dividendRecords[i].ticker + '</td><td>' + dividendRecords[i].type + '</td><td>' + amount + '</td><td>';
+      dividendTableContent+='<tr><td>' + dividendRecords[i].date + '</td><td>' + dividendRecords[i].ticker + '</td><td>' + dividendRecords[i].type + '</td><td>' + amount.toLocaleString('en') + '</td><td>';
       if(dividendRecords[i].type == 'tiền mặt') dividendTableContent+= 'đồng</td></tr>';
       else dividendTableContent+= 'cổ phiếu</td></tr>';
     }

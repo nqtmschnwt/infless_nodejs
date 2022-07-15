@@ -847,7 +847,7 @@ chart2.render();
                     date:dates[t],
                     ticker:portfolio[j].ticker,
                     type:"tiền mặt",
-                    amount:cashPerShare
+                    amount:cashDiv
                   });
                 } catch(err) {
                   console.log(err);
@@ -1059,6 +1059,7 @@ chart2.render();
   }
   pfTableContent += '</table>';
   document.getElementById('currentPf').innerHTML=pfTableContent;
+  document.getElementById('currentPfRow').style.display='block';
 
   //-----------Trades record table rendering--------------------
   let recordTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th style="display:none">id</th><th>Ngày</th><th>Lệnh</th><th>Mã</th><th>Khối lượng</th><th>Giá</th><th>Giá vốn TB</th><th>Lãi/lỗ</th></tr>';
@@ -1091,8 +1092,7 @@ chart2.render();
     dividendTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Ngày</th><th>Mã</th><th>Loại cổ tức/quyền</th><th>Số lượng</th><th>Đơn vị</th><tr>';
     for(var i=0;i<dividendRecords.length;i++) {
       let amount = dividendRecords[i].amount;
-      if(dividendRecords[i].type == 'tiền mặt') amount *= Math.pow(10,9);
-      else amount *= Math.pow(10,6);
+      if(dividendRecords[i].type != 'tiền mặt') amount *= Math.pow(10,6);
       dividendTableContent+='<tr><td>' + dividendRecords[i].date + '</td><td>' + dividendRecords[i].ticker + '</td><td>' + dividendRecords[i].type + '</td><td>' + amount + '</td><td>';
       if(dividendRecords[i].type == 'tiền mặt') dividendTableContent+= 'đồng</td></tr>';
       else dividendTableContent+= 'cổ phiếu</td></tr>';

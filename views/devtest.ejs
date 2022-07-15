@@ -10,23 +10,33 @@
     </form>
 
     <div style="position:relative;margin-top:30px;">
-      <div id="chartContainer" style="height: 370px; width: 100%;">
-
-      </div>
+      <div id="chartContainer" style="height: 370px; width: 100%;"></div>
       <div id="canvasTrialHide"></div>
     </div>
-    <div class="title">
-      Chi tiết danh mục
-    </div>
+
+    <div class="title">Chi tiết danh mục</div>
     <div class="block-content" id="currentPf"></div>
 
     <div class="block">
-      <div class="title">
-        Lịch sử lệnh
-      </div>
+      <div class="title">Lịch sử lệnh</div>
       <div class="block-content" id="records">
 
       </div>
+    </div>
+
+    <div class="block">
+      <div class="title">Lịch sử cổ tức</div>
+      <div class="block-content" id="dividend"></div>
+    </div>
+
+    <div style="position:relative;margin-top:30px;">
+      <div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+      <div id="canvasTrialHide"></div>
+    </div>
+
+    <div style="position:relative;margin-top:30px;">
+      <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+      <div id="canvasTrialHide"></div>
     </div>
 
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
@@ -77,7 +87,8 @@
       let totalCap = 0;
       let portfolio = [];
       let netCashFlow = 0;
-      var records = [];  //time,direction,ticker,vol,pct,price,avg_cost,profit
+      let records = [];  //time,direction,ticker,vol,pct,price,avg_cost,profit
+      let dividendRecords = [];
 
       for(var t=0;t<dates.length;t++) {
         // ------------ loop through dates ----------------
@@ -100,6 +111,13 @@
                       portfolio[j].pending += pending;
                       // update price
                       portfolio[j].buyprice = portfolio[j].eq / (portfolio[j].volAvailable + pending);
+                      // dividend records
+                      dividendRecords.push({
+                        date:dates[t],
+                        ticker:portfolio[j].ticker,
+                        type:"cổ phiếu",
+                        amount:pending
+                      });
                     } catch(err) {
                       console.log(err);
                     }
@@ -114,6 +132,13 @@
                       console.log('Nhận thêm ' + cashDiv + " tỷ");
                       // update price
                       portfolio[j].buyprice -= cashPerShare / 1000;  // Not sure: what if cashPerShare > buyPrice?
+                      // dividend records
+                      dividendRecords.push({
+                        date:dates[t],
+                        ticker:portfolio[j].ticker,
+                        type:"tiền mặt",
+                        amount:cashPerShare
+                      });
                     } catch(err) {
                       console.log(err);
                     }
@@ -129,6 +154,13 @@
                       portfolio[j].pending += pending;
                       // update price
                       portfolio[j].buyprice = (portfolio[j].eq + pending * issuePrice) / (portfolio[j].volAvailable + pending);
+                      // dividend records
+                      dividendRecords.push({
+                        date:dates[t],
+                        ticker:portfolio[j].ticker,
+                        type:"cổ phiếu",
+                        amount:pending
+                      });
                     } catch(err) {
                       console.log(err);
                     }
@@ -241,12 +273,12 @@
         }
 
         // --------------------record to snapShot------------
-        console.log(dates[t]);
+        /*console.log(dates[t]);
         for(var k=0;k<portfolio.length;k++) {
           console.log(portfolio[k]);
         }
         //console.log(JSON.stringify(portfolio));
-        console.log("net cashflow: ",netCashFlow);
+        console.log("net cashflow: ",netCashFlow);*/
       }
 
       // -------------Update current price --------------
@@ -293,8 +325,14 @@
         '</td><td>'+ (portfolio[i].volAvailable * Math.pow(10,6)).toLocaleString('en') +
         '</td><td>'+ (portfolio[i].volAvailable * Math.pow(10,6)).toLocaleString('en') +
         '</td><td>'+ (portfolio[i].pending * Math.pow(10,6)).toLocaleString('en') +
-        '</td><td>'+ portfolio[i].buyprice.toFixed(3) +
-        '</td><td>' + portfolio[i].price.toFixed(3) +
+        '</td><td>'+ (portfolio[i].buyprice* Math.pow(10,3)).toLocaleString('en',{
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }) +
+        '</td><td>' + (portfolio[i].price* Math.pow(10,3)).toLocaleString('en',{
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }) +
         '</td><td>' + (portfolio[i].eq * Math.pow(10,9)).toLocaleString('en',{
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
@@ -335,6 +373,27 @@
         recordTable.innerHTML = recordTableContent;
       }
 
+      //-----------Dividend table rendering----------------
+      let dividendTableContent = '';
+      if(dividendRecords.length==0) {
+        dividendTableContent = 'Không có cổ tức/quyền';
+      } else {
+        dividendTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Ngày</th><th>Mã</th><th>Loại cổ tức/quyền</th><th>Số lượng</th><th>Đơn vị</th><tr>';
+        for(var i=0;i<dividendRecords.length;i++) {
+          let amount = dividendRecords[i].amount;
+          if(dividendRecords[i].type == 'tiền mặt') amount *= Math.pow(10,9);
+          else amount *= Math.pow(10,6);
+          dividendTableContent+='<tr><td>' + dividendRecords[i].date + '</td><td>' + dividendRecords[i].ticker + '</td><td>' + dividendRecords[i].type + '</td><td>' + amount + '</td><td>';
+          if(dividendRecords[i].type == 'tiền mặt') dividendTableContent+= 'đồng</td></tr>';
+          else dividendTableContent+= 'cổ phiếu</td></tr>';
+        }
+        dividendTableContent+= '</table>';
+      }
+      let  dividendTable = document.getElementById('dividend');
+      if(dividendTable!=null){
+        dividendTable.innerHTML = dividendTableContent;
+      }
+
       //-----------Chart rendering-----------
       //-----------------Pie chart----------------
       let portfolioChartData=[];
@@ -369,7 +428,154 @@
       });
       chartPie0.render();
 
+      //-----------------Line chart 1----------------
+      let navData = <%- JSON.stringify(pfRecords) %>;
+      console.log(navData);
 
+      let netValue=[];
+
+      if(navData.length==0){
+        netValue=[{ x: new Date(), y: 0 }];
+      } else {
+        for(var i=0;i<navData.length;i++) {
+          try {
+            let d = new Date(navData[i].portfolio_date);
+            netValue.push({label: d, y: navData[i].net_value});
+          }
+          catch(err) {
+            console.log(i, err);
+          }
+        }
+      }
+      var chart1 = new CanvasJS.Chart("chartContainer1",
+          {
+              animationEnabled: true,
+              backgroundColor: "rgba(0,0,0,0)",
+              axisX: {
+                labelFormatter: function (e) {
+          				return CanvasJS.formatDate( e.label, "DD/MM/YYYY");
+          			},
+                labelFontColor: "white"
+              },
+              axisY: {
+                  includeZero: false
+              },
+              axisY2: {
+                title: "tỷ đồng",
+                titleFontColor: "white",
+                labelFontColor: "white"
+              },
+              legend: {
+                fontColor: "white"
+              },
+              toolTip: {
+          			contentFormatter: function (e) {
+          				var content = " ";
+          				for (var i = 0; i < e.entries.length; i++) {
+          					content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y.toFixed(2);
+          					content += "<br/>";
+          				}
+          				return content;
+          			}
+          		},
+              data: [{
+                type:"line",
+                axisYType: "secondary",
+                name: "Giá trị TS ròng",
+                showInLegend: true,
+                markerSize: 10,
+                yValueFormatString: "0.00",
+                dataPoints: netValue
+              }]
+          });
+      chart1.render();
+
+      //-----------------Line chart 2----------------
+      let navCompare = [];
+      for(var i=0; i<vnindex.length;i++) {
+        let parts = vnindex[i][0].split('/');
+        let compareDate = new Date(parts[2],parts[1]-1,parts[0]);
+        for (var j=0; j<netValue.length; j++) {
+          //console.log(compareDate,netValue[j].label, compareDate.getDate()==netValue[j].label.getDate());
+
+          if (netValue[j].label.getDate() == compareDate.getDate() && netValue[j].label.getMonth() == compareDate.getMonth() && netValue[j].label.getFullYear() == compareDate.getFullYear()) {
+            navCompare.push({
+              date: compareDate,
+              vnindex: parseFloat(vnindex[i][1]),
+              nav: netValue[j].y
+            });
+          }
+        }
+      }
+
+      let navChange = [];
+      let vniChange = [];
+      for(var i=0; i<navCompare.length;i++) {
+        navChange.push({
+          label: navCompare[i].date,
+          y: ((navCompare[i].nav - navCompare[0].nav)/navCompare[0].nav*100)
+        });
+        vniChange.push({
+          label: navCompare[i].date,
+          y: ((navCompare[i].vnindex - navCompare[0].vnindex)/navCompare[0].vnindex*100)
+        });
+      }
+
+      console.log(navChange);
+      console.log(vniChange);
+      console.log(navCompare);
+
+      var chart2 = new CanvasJS.Chart("chartContainer2",
+          {
+              animationEnabled: true,
+              backgroundColor: "rgba(0,0,0,0)",
+              axisX: {
+                labelFormatter: function (e) {
+          				return CanvasJS.formatDate( e.label, "DD/MM/YYYY");
+          			},
+                labelFontColor: "white"
+              },
+              axisY: {
+                  includeZero: false
+              },
+              axisY2: {
+                title: "%",
+                titleFontColor: "white",
+                labelFontColor: "white"
+              },
+              legend: {
+                fontColor: "white"
+              },
+              toolTip: {
+          			contentFormatter: function (e) {
+          				var content = " ";
+          				for (var i = 0; i < e.entries.length; i++) {
+          					content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y.toFixed(2) + '%';
+          					content += "<br/>";
+          				}
+          				return content;
+          			}
+          		},
+              data: [{
+                type:"line",
+                axisYType: "secondary",
+                name: "NAV",
+                showInLegend: true,
+                markerSize: 10,
+                yValueFormatString: "0.00",
+                dataPoints: navChange
+              },
+              {
+                type: "line",
+                axisYType: "secondary",
+                name: "VNINDEX",
+                showInLegend: true,
+                markerSize: 10,
+                yValueFormatString: "0.00",
+                dataPoints: vniChange
+              }]
+          });
+      chart2.render();
 
       // ----------Support functions---------
       function addZero(numb) {

@@ -21,11 +21,11 @@ let getTestPage = async (req,res) => {
       if(err) console.log(err);
       else {
         data.trades = results.rows;
-        /*let currentdate = new Date();
+        let currentdate = new Date();
         let last6months = new Date(currentdate.setMonth(currentdate.getMonth()-6));
         let dformat6 = [last6months.getFullYear(),last6months.getMonth()+1,last6months.getDate()].join('-');
         pool.query(
-          `SELECT upf.portfolio_date, upf.latest, upf.portfolio_value, upf.net_value, upf.cash_value, upf.debt_value FROM user_portfolio upf
+          `SELECT upf.portfolio_date, upf.latest, upf.net_value FROM user_portfolio upf
           INNER JOIN portfolios pf
           ON upf.portfolio_id = pf.portfolio_id
           WHERE pf.user_id=0 AND upf.portfolio_date>$1
@@ -34,10 +34,24 @@ let getTestPage = async (req,res) => {
           (err,results) => {
             if(err) console.log(err);
             else {
-              data.pfRecords = results.rows;*/
-              return res.render('devtest',data);
-            /*}
-          })*/
+              data.pfRecords = results.rows;
+              let custoken = '';
+              pool.query(
+                `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
+                  if(err) console.log(err);
+                  else {
+                    if(results.rows.length!=0) {
+                      custoken = results.rows[0].custoken;
+                    }
+
+                    let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+                    return res.render('devtest', data);
+                  }
+                }
+              )
+
+            }
+          });
       }
     })
 }

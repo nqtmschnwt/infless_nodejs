@@ -990,6 +990,12 @@ chart2.render();
     //console.log(JSON.stringify(portfolio));
     console.log("net cashflow: ",netCashFlow);*/
   }
+  // remove all tickers those have total amount = 0
+  for(var i=0; i<portfolio.length; i++) {
+    if(portfolio[i].volAvailable + portfolio[i].pending <= 0) {
+      portfolio.splice(i, 1);
+    }
+  }
 
   // -------------Update current price --------------
   for(var i=0; i<prices.length; i++){

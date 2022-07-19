@@ -903,7 +903,8 @@ chart2.render();
               vol:tradeCleaned[i].vol,
               price:tradeCleaned[i].price,
               avg_cost:tradeCleaned[i].price,
-              profit:0
+              profit:0,
+              profitPct:0
             });
             netCashFlow -= tradeCleaned[i].vol * tradeCleaned[i].price;
           } else {
@@ -925,7 +926,8 @@ chart2.render();
                   vol:tradeCleaned[i].vol,
                   price:tradeCleaned[i].price,
                   avg_cost:portfolio[j].eq/portfolio[j].volAvailable,
-                  profit:0
+                  profit:0,
+                  profitPct:0
                 });
               }
             }
@@ -946,7 +948,8 @@ chart2.render();
                 vol:tradeCleaned[i].vol,
                 price:tradeCleaned[i].price,
                 avg_cost:tradeCleaned[i].price,
-                profit:0
+                profit:0,
+                profitPct:0
               });
             }
             netCashFlow -= tradeCleaned[i].vol * tradeCleaned[i].price;
@@ -973,7 +976,8 @@ chart2.render();
                   vol:tradeCleaned[i].vol,
                   price:tradeCleaned[i].price,
                   avg_cost:portfolio[j].buyprice,
-                  profit:((tradeCleaned[i].price-portfolio[j].buyprice)/portfolio[j].buyprice)*100
+                  profit:(tradeCleaned[i].price-portfolio[j].buyprice)*tradeCleaned[i].vol,
+                  profitPct:((tradeCleaned[i].price-portfolio[j].buyprice)/portfolio[j].buyprice)*100
                 });
               }
             }
@@ -1068,20 +1072,29 @@ chart2.render();
   document.getElementById('currentPfRow').style.display='block';
 
   //-----------Trades record table rendering--------------------
-  let recordTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th style="display:none">id</th><th>Ngày</th><th>Lệnh</th><th>Mã</th><th>Khối lượng</th><th>Giá</th><th>Giá vốn TB</th><th>Lãi/lỗ</th></tr>';
+  let recordTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th style="display:none">id</th><th>Ngày</th><th>Lệnh</th><th>Mã</th><th>Khối lượng</th><th>Giá</th><th>Giá vốn TB</th><th>Lãi/lỗ</th><th>Lãi/lỗ (%)</th></tr>';
   for(var i=records.length-1; i>=0; i--){
     var profitDisplay='',
+        profitPctDisplay='',
         profitStyle='';
-    if(records[i].profit>0) {
-      profitDisplay=records[i].profit.toFixed(2)+' %';
+    if(records[i].profitPct>0) {
+      profitPctDisplay=records[i].profitPct.toFixed(2)+' %';
+      profitDisplay=(records[i].profit * Math.pow(10,9)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      });
       profitStyle='text-success';
     }
-    if(records[i].profit<0) {
-      profitDisplay=records[i].profit.toFixed(2)+' %';
+    if(records[i].profitPct<0) {
+      profitPctDisplay=records[i].profitPct.toFixed(2)+' %';
+      profitDisplay=(records[i].profit * Math.pow(10,9)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      });
       profitStyle='text-danger';
     }
     var dt = records[i].time;
-    recordTableContent+='<tr><td  style="display:none">'+records[i].id+'</td><td>'+dt+'</td><td>'+records[i].direction+'</td><td>'+records[i].ticker+'</td><td>'+(records[i].vol*1000000).toLocaleString('en')+'</td><td>'+records[i].price+'</td><td>'+records[i].avg_cost.toFixed(2)+'</td><td class="'+profitStyle+'">'+profitDisplay+'</td></tr>';
+    recordTableContent+='<tr><td  style="display:none">'+records[i].id+'</td><td>'+dt+'</td><td>'+records[i].direction+'</td><td>'+records[i].ticker+'</td><td>'+(records[i].vol*1000000).toLocaleString('en')+'</td><td>'+records[i].price+'</td><td>'+records[i].avg_cost.toFixed(2)+'</td><td class="'+profitStyle+'">'+profitDisplay+'</td><td class="'+profitStyle+'">'+profitPctDisplay+'</td></tr>';
   }
   recordTableContent+='</table>';
 

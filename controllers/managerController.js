@@ -302,94 +302,6 @@ let getTradePage = async (req,res) => {
               });
           }
         })
-      /*const auth = new google.auth.GoogleAuth({
-        keyFile: './sample_query/sheetkey.json',
-        scopes: 'https://www.googleapis.com/auth/spreadsheets'
-      });
-      // Create client instance for auth
-      const client = await auth.getClient();
-      // Instance of GG sheets api
-      const googleSheets = google.sheets({version:"v4",auth:client});
-
-      const spreadsheetId = '1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg';
-
-      // Get metadata about spreadsheets
-      const metaData = await googleSheets.spreadsheets.get({
-        auth,
-        spreadsheetId
-      })
-
-      // Read rows from spreadsheet
-      const getRows = await googleSheets.spreadsheets.values.get({
-        auth,
-        spreadsheetId,
-        range: 'Price!A:C'
-      })
-
-      // Read rows from spreadsheet
-      const getVnindex = await googleSheets.spreadsheets.values.get({
-        auth,
-        spreadsheetId,
-        range: 'vnindex!A:B'
-      })
-
-      let prices = getRows.data.values;
-      let vnindex = getVnindex.data.values;
-
-      pool.query(
-        `SELECT fund_nav FROM trade_orders ORDER BY id ASC LIMIT 1;`, (err,results) => {
-          if(err) {
-            console.log('Error: ',err);
-          }
-          var initCap = 10;
-          var fund_nav = ''+initCap;
-          if(results.rows.length>0) {
-            fund_nav = results.rows[0].fund_nav;
-          }
-          pool.query(
-            `SELECT * FROM trade_orders ORDER BY id ASC;`, (err,results)=> {
-              if(err) {
-                console.log('Error: ',err);
-              }
-              let trades = results.rows;
-              // get portfolio records
-              let currentdate = new Date();
-              let last6months = new Date(currentdate.setMonth(currentdate.getMonth()-6));
-              let dformat6 = [last6months.getFullYear(),last6months.getMonth()+1,last6months.getDate()].join('-');
-              pool.query(
-                `SELECT upf.portfolio_date, upf.latest, upf.portfolio_value, upf.net_value, upf.cash_value, upf.debt_value FROM user_portfolio upf
-                INNER JOIN portfolios pf
-                ON upf.portfolio_id = pf.portfolio_id
-                WHERE pf.user_id=0 AND upf.portfolio_date>$1
-                ORDER BY upf.portfolio_date ASC;`,
-                [dformat6],
-                (err,results) => {
-                  if(err) {
-                    console.log(err);
-                  } else {
-                    let navdata = results.rows;
-                    let custoken = '';
-                    pool.query(
-                      `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
-                        if(err) console.log(err);
-                        else {
-                          if(results.rows.length!=0) {
-                            custoken = results.rows[0].custoken;
-                          }
-                          let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-                          return res.render('tradeAdmin', {menu:menuData,user,trades:trades,fund_nav,navdata,prices,vnindex,custoken});
-                        }
-                      }
-                    )
-
-                  }
-                }
-              )
-
-            }
-          )
-        }
-      )*/
     } else {
       return res.redirect('/home');
     }
@@ -547,6 +459,53 @@ let getScanListPage = (req,res) => {
   }
 }
 
+let updateFundNav = (req,res) => {
+  let user=req.user;
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      // get portfolio id
+      pool.query(
+        `SELECT portfolio_id FROM portfolios WHERE user_id=0`, (err, results) => {
+          if(err) console.log(err);
+          else {
+            if(results.rows.length > 0) {
+              let pfid = results.rows[0].portfolio_id;
+              // check portfolio record today
+              pool.query(
+                `SELECT * FROM user_portfolio WHERE portfolio_id=$1 AND portfolio_date=$2;`, [pfid,req.body.date], (err, results) => {
+                  if(results.rows.length == 0) {
+                    // Insert nav value today
+                    pool.query(
+                      `INSERT INTO user_portfolio(portfolio_date,net_value,portfolio_id) VALUES ($1,$2,$3);`,[req.body.date,req.body.netValue,pfid], (err, results) => {
+                        if(err) console.log(err);
+                        else return res.json({err:0,errdesc:'fund nav value updated'});
+                      }
+                    )
+                  } else {
+                    // update nav value today
+                    pool.query(
+                      `UPDATE user_portfolio SET net_value=$2 WHERE portfolio_date=$1 AND portfolio_id=$3;`,[req.body.date,req.body.netValue,pfid], (err, results) => {
+                        if(err) console.log(err);
+                        else return res.json({err:0,errdesc:'fund nav value updated'});
+                      }
+                    )
+                  }
+                }
+              )
+            } else return res.json({err:2,errdesc:'portfolio does not exist'});
+          }
+        }
+      )
+
+    } else {
+      return res.json({err:1,errdesc:'access denied'});
+    }
+  } else {
+    return res.json({err:1,errdesc:'access denied'});
+  }
+}
+
 // API functions
 let addCusToken = async (req,res) => {
   let user=req.user;
@@ -673,4 +632,5 @@ module.exports = {
   addCusToken: addCusToken,
   pushTrans:pushTrans,
   pushAdmMsg:pushAdmMsg,
+  updateFundNav:updateFundNav,
 }

@@ -1198,6 +1198,17 @@ chart2.render();
       netValue.push({label: today, y: totalCap});
     }
     // Update Nav to DB
+    fetch("/updatefundnav", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        date: today.getFullYear() + '-' + addZero(today.getMonth()+1) + '-' + addZero(today.getDate()),
+        netValue: totalCap
+      })
+    })
+    .then(res => res.json())
+    .then(res => console.log('fetch response: ',res))
+    .catch(err => console.log(err));
     // not finished
   }
 

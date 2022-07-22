@@ -50,6 +50,7 @@ let initWebRoutes = (app) => {
       // Admin page
       router.get("/manager", managerController.getManagerPage);
       router.post("/manager", managerController.postManagerPage);
+      router.post("/updatefundnav", managerController.updateFundNav);
 
       // Trading page
       router.get("/trade-admin", managerController.getTradePage);

@@ -1112,6 +1112,9 @@ chart2.render();
   if(recordTable!=null){
     recordTable.innerHTML = recordTableContent;
   }
+  //----------------Filtering tickers---------------------
+  let tradedTicker = [...new Set(trades.map(function(a) {return a.ticker;}))];
+  addTradeTickerFilter(tradedTicker);
 
   //-----------Dividend table rendering----------------
   let dividendTableContent = '';
@@ -1366,6 +1369,19 @@ chart2.render();
 
   function arraySize(arr){
     return {r: arr.length, c:arr[0].length === undefined?1:arr[0].length };  // {r: 1, c: 5}
+  }
+
+  function addTradeTickerFilter(tradedTicker) {
+    var x = document.getElementById("tradeRecordTickerFilter");
+    // add blank option
+    var blankOption = document.createElement("option");
+    blankOption.text = '';
+    x.add(blankOption);
+    for(var i=0; i<tradedTicker.length;i++) {
+      var option = document.createElement("option");
+      option.text = tradedTicker[i];
+      x.add(option);
+    }
   }
 
   function tradeRecordFilter() {

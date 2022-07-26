@@ -469,7 +469,7 @@ let getPfInfo = (req,res) => {
                       if(err) {
                         console.log(err);
                       } else {
-                        let portfolioCurrent = {cash:0,portfolio:[]};
+                        let portfolioCurrent = {cash:0,portfolio:'[]'};
                         if (results.rows.length > 0)
                           portfolioCurrent = results.rows[0];
                         let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));

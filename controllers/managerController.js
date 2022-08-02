@@ -232,7 +232,19 @@ let postPTPage = (req,res) => {
                 if(cb.warning_show) cbDisplay = 'block';
                 let canhbao={display:cbDisplay,msg:cb.warning_msg};
                 let lichsucanhbao = results.rows;
-                return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao});
+                let custoken = '';
+                pool.query(
+                  `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
+                    if(err) console.log(err);
+                    else {
+                      if(results.rows.length!=0) {
+                        custoken = results.rows[0].custoken;
+                        console.log(custoken);
+                      }
+                      return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao,custoken});
+                    }
+                  }
+                )
               }
             );
           }

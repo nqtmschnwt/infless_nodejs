@@ -455,6 +455,7 @@ socket.on('trade', function(data){
     var neuVol = newVol(fundnav,clientNav,fundvol).toString();
 
     console.log(data,neuVol);
+    playSound("trade");
 
     if (neuVol>0 && order!="")
     {

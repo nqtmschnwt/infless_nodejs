@@ -203,6 +203,7 @@ let postPTPage = (req,res) => {
                     else {
                       if(results.rows.length!=0) {
                         custoken = results.rows[0].custoken;
+                        console.log(custoken);
                       }
                       return res.render('phongthanAdmin', {menu:menuData,user,canhbao,lichsucanhbao,custoken});
                     }

@@ -410,8 +410,8 @@ function vnDateFormat(dateStr) {
 }
 
 // Sounds
-const audioTrade = new Audio("/assets/mp3/pristine-609.mp3");
-const audioWarn = new Audio("/assets/mp3/warn.mp3");
+const audioTrade = new Audio("https://infless.vn/assets/mp3/pristine-609.mp3");
+const audioWarn = new Audio("https://infless.vn/assets/mp3/warn.mp3");
 
 // Notification sound
 function playSound(s) {

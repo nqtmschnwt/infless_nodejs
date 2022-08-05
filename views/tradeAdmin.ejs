@@ -1037,35 +1037,37 @@ chart2.render();
   //-----------Portfolio table rendering------------
   let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Khả dụng</th><th>Chờ nhận</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị mua</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th><th>Lãi/lỗ (%)</th></tr>';
   for(var i=0; i<portfolio.length; i++) {
-    let color = '';
-    if(portfolio[i].price > portfolio[i].buyprice) color='text-success';
-    if(portfolio[i].price < portfolio[i].buyprice) color='text-danger';
-    let prfPct = (portfolio[i].price - portfolio[i].buyprice)/portfolio[i].buyprice * 100;
-    pfTableContent += '<tr><td>' + portfolio[i].ticker +
-    '</td><td>'+ (portfolio[i].volAvailable * Math.pow(10,6)).toLocaleString('en') +
-    '</td><td>'+ (portfolio[i].volAvailable * Math.pow(10,6)).toLocaleString('en') +
-    '</td><td>'+ (portfolio[i].pending * Math.pow(10,6)).toLocaleString('en') +
-    '</td><td>'+ (portfolio[i].buyprice* Math.pow(10,3)).toLocaleString('en',{
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }) +
-    '</td><td>' + (portfolio[i].price* Math.pow(10,3)).toLocaleString('en',{
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }) +
-    '</td><td>' + (portfolio[i].eq * Math.pow(10,9)).toLocaleString('en',{
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }) +
-    '</td><td>' + (portfolio[i].cap * Math.pow(10,9)).toLocaleString('en',{
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }) +
-    '</td><td class="'+color+'">' + ((portfolio[i].cap - portfolio[i].eq) * Math.pow(10,9)).toLocaleString('en',{
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }) +
-    '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
+    if(portfolio[i].volAvailable + portfolio[i].pending >0) {
+      let color = '';
+      if(portfolio[i].price > portfolio[i].buyprice) color='text-success';
+      if(portfolio[i].price < portfolio[i].buyprice) color='text-danger';
+      let prfPct = (portfolio[i].price - portfolio[i].buyprice)/portfolio[i].buyprice * 100;
+      pfTableContent += '<tr><td>' + portfolio[i].ticker +
+      '</td><td>'+ (portfolio[i].volAvailable * Math.pow(10,6)).toLocaleString('en') +
+      '</td><td>'+ (portfolio[i].volAvailable * Math.pow(10,6)).toLocaleString('en') +
+      '</td><td>'+ (portfolio[i].pending * Math.pow(10,6)).toLocaleString('en') +
+      '</td><td>'+ (portfolio[i].buyprice* Math.pow(10,3)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      }) +
+      '</td><td>' + (portfolio[i].price* Math.pow(10,3)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      }) +
+      '</td><td>' + (portfolio[i].eq * Math.pow(10,9)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      }) +
+      '</td><td>' + (portfolio[i].cap * Math.pow(10,9)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      }) +
+      '</td><td class="'+color+'">' + ((portfolio[i].cap - portfolio[i].eq) * Math.pow(10,9)).toLocaleString('en',{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+      }) +
+      '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
+    }
   }
   pfTableContent += '</table>';
   document.getElementById('currentPf').innerHTML=pfTableContent;

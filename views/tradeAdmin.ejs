@@ -1067,6 +1067,8 @@ chart2.render();
           maximumFractionDigits: 0,
       }) +
       '</td><td class="'+color+'">'+prfPct.toFixed(2)+' %</td></tr>';
+    } else {
+      portfolio.splice(i, 1);
     }
   }
   pfTableContent += '</table>';

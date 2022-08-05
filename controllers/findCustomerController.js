@@ -65,9 +65,9 @@ let postFindCustomers = async (req,res) => {
             INNER JOIN user_services us on u.id=us.user_id
             INNER JOIN user_role ur on u.id=ur.user_id
             INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
-            WHERE ur.role_id<=$1
+            WHERE ur.role_id<=$1 OR u.id=$2
             ORDER BY u.id ASC`,
-            [roleSearch],
+            [roleSearch,user.id],
             (err,results) => {
               if(err) {
                 throw err;

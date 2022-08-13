@@ -10,6 +10,9 @@ const newCustomerController = require('../controllers/newCustomerController');
 const findCustomerController = require('../controllers/findCustomerController');
 const testController = require('../controllers/testController');
 const pfController = require('../controllers/pfController');
+
+const fxController = require('../controllers/fxController');
+
 const app = express();
 const rateLimit = require('express-rate-limit');
 const contextPath = '/inflessweb';
@@ -81,6 +84,12 @@ let initWebRoutes = (app) => {
       router.get("/portfolio-:id", pfController.getPfInfo);
       router.get("/pf-update", pfController.getPfUpdate);
       router.post("/pf-update", pfController.postPfUpdate);
+
+
+      /* FX PAGES */
+      router.get("/fx", fxController.getFxMain);
+      router.get("/econ-us", fxController.getUSEcon);
+      router.post("/fx/indicator", fxController.getIndicator);
 
       // API urls
       router.post("/addcustoken", managerController.addCusToken);

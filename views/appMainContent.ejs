@@ -117,7 +117,7 @@
           <!-- DDK End-->
         </div>
         <% } %>
-        
+
         <div class="col-lg-6">
           <% let clientNav = user.total_nav * 1000000000;%>
           <div class="block" id="clientNavDisplay" style="display:block">
@@ -474,6 +474,7 @@
       profitStyle='text-danger';
     }
     var m = new Date(records[i].time);
+    m.setHours(m.getHours() - 7);
     var dt = addZero(m.getDate()) +"/"+ addZero(m.getMonth()+1) +"/"+ m.getFullYear()  + " " + addZero(m.getHours()) + ":" + addZero(m.getMinutes()) + ":" + addZero(m.getSeconds());
     recordTableContent+='<tr><td>'+records[i].id+'</td><td>'+dt+'</td><td>'+records[i].direction+'</td><td>'+records[i].ticker+'</td><td>'+(records[i].vol).toLocaleString('en')+'</td><td>'+pctDisplay+'</td><td>'+records[i].price+'</td><td>'+records[i].avg_cost.toFixed(2)+'</td><td class="'+profitStyle+'">'+profitDisplay+'</td></tr>';
   }

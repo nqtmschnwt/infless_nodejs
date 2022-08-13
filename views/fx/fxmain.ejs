@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../head.ejs',{page_name:'Forex'}) %>
+<body>
+  <%- include('../hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('../menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('../menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">FX dashboard</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <p class="text-danger">Giao diện mẫu đang phát triển, các thông tin chỉ mang tính minh họa</p>
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="block">
+                <div class="row-title">
+                  Nhận định tổng quan
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="block">
+                <div class="row-title">
+                  Dữ liệu cần cập nhật
+                </div>
+                <div id="upcoming-data">
+                  <table style="width:100%">
+                    <tr>
+                      <td></td>
+                      <td>10/08/2022</td>
+                      <td><a href="/econ-us" class="text-light">USA</a></td>
+                      <td><a href="/indi-usa-cpi" class="text-light">CPI (m/m)</a></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>10/08/2022</td>
+                      <td><a href="/econ-us" class="text-light">USA</a></td>
+                      <td><a href="/indi-usa-core-cpi" class="text-light">Core CPI (m/m)</a></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>11/08/2022</td>
+                      <td><a href="/econ-us" class="text-light">USA</a></td>
+                      <td><a href="/indi-usa-ppi" class="text-light">PPI (m/m)</a></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="block">
+                <div class="row-title">
+                  Lịch kinh tế
+                </div>
+                <div id="econ-calendar" style="height:600px">
+                  <!-- TradingView Widget BEGIN -->
+                  <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <div class="tradingview-widget-copyright"><a href="https://vn.tradingview.com/markets/currencies/economic-calendar/" rel="noopener" target="_blank"><span class="blue-text">Lịch kinh tế</span></a> từ TradingView</div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                    {
+                    "width": "100%",
+                    "height": "100%",
+                    "colorTheme": "dark",
+                    "isTransparent": false,
+                    "locale": "vi_VN",
+                    "importanceFilter": "-1,0,1",
+                    "currencyFilter": "USD,EUR,JPY,CAD,FRF,DEM,CNY,AUD,GBP,CHF,NZD"
+                  }
+                    </script>
+                  </div>
+                  <!-- TradingView Widget END -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('../tail.ejs') %>
+<script src="/js/favico.min.js"></script>
+<script src="/js/custom-script.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
+</html>

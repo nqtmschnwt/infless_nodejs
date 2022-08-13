@@ -1,0 +1,54 @@
+[
+  {
+    "title":"Tổng quan",
+    "link":"/fx",
+    "child":[]
+  },
+  {
+    "title":"Dữ liệu kinh tế",
+    "link":"#",
+    "child":[
+      {
+        "title":"Hoa Kỳ",
+        "link":"/econ-us"
+      },
+      {
+        "title":"Châu Âu",
+        "link":"/econ-eu"
+      },
+      {
+        "title":"Anh Quốc",
+        "link":"/econ-uk"
+      },
+      {
+        "title":"Nhật Bản",
+        "link":"/econ-jp"
+      },
+      {
+        "title":"Trung Quốc",
+        "link":"/econ-cn"
+      },
+      {
+        "title":"Úc",
+        "link":"/econ-au"
+      },
+      {
+        "title":"New Zealand",
+        "link":"/econ-nz"
+      },
+      {
+        "title":"Canada",
+        "link":"/econ-ca"
+      },
+      {
+        "title":"Thụy Sỹ",
+        "link":"/econ-ch"
+      }
+    ]
+  },
+  {
+    "title":"Đăng xuất",
+    "link":"/logout",
+    "child":[]
+  }
+]

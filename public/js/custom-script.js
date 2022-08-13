@@ -1,3 +1,24 @@
+// Page navigation button
+if(document.getElementById("changePageBtn")!=null){
+  document.getElementById("changePageBtn").addEventListener("click", pageNavigation);
+}
+if(document.getElementById("pageNavigation-close")!=null){
+  document.getElementById("pageNavigation-close").addEventListener("click", pageNavigationClose);
+}
+function pageNavigation(){
+  let pageNavigationModal = document.getElementById("pageNavigation-wrapper");
+  if (pageNavigationModal!=null) {
+    if(pageNavigationModal.style.display==="none") pageNavigationModal.style.display = 'block';
+    else pageNavigationModal.style.display = 'none';
+  }
+}
+function pageNavigationClose() {
+  let pageNavigationModal = document.getElementById("pageNavigation-wrapper");
+  if (pageNavigationModal!=null) {
+    if(pageNavigationModal.style.display==="block") pageNavigationModal.style.display = 'none';
+  }
+}
+
 // NAV change button
 if(document.getElementById("nav-change")!=null){
   document.getElementById("nav-change").addEventListener("click", clientNavFormToggle);

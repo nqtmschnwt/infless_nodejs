@@ -70,33 +70,27 @@
         <div class="modal-body">
             <div class="container">
               <div class="row">
-                <!--a class="navbar-brand" href="/manager">
-                  <div class="brand-text brand-sm text-uppercase">
-                    <span class="badge badge-secondary">Vào trang quản lý</span>
+                <% if(user.role_id==2) { %>
+                  <div class="col-lg-4 col-12">
+                  <!--div class="col-lg-6 col-12"-->
+                    <a href="/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
                   </div>
-                  <div class="brand-text brand-big visible text-uppercase">
-                    <span class="badge badge-secondary">Vào trang quản lý</span>
+                  <div class="col-lg-4 col-12">
+                  <!--div class="col-lg-6 col-12"-->
+                    <a href="/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
                   </div>
-                </a-->
-                <!--a class="navbar-brand" href="/home">
-                  <div class="brand-text brand-sm text-uppercase">
-                    <span class="badge badge-secondary">Vào trang khách hàng</span>
+                  <div class="col-lg-4 col-12">
+                    <a href="/fx" class="btn btn-secondary" style="width:100%">Forex</a>
                   </div>
-                  <div class="brand-text brand-big visible text-uppercase">
-                    <span class="badge badge-secondary">Vào trang khách hàng</span>
+                <% } %>
+                <% if(user.role_id==3) { %>
+                  <div class="col-lg-6 col-12">
+                    <a href="/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
                   </div>
-                </a-->
-                <!--div class="col-lg-4 col-12"-->
-                <div class="col-lg-6 col-12">
-                  <a href="/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
-                </div>
-                <!--div class="col-lg-4 col-12"-->
-                <div class="col-lg-6 col-12">
-                  <a href="/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
-                </div>
-                <!--div class="col-lg-4 col-12">
-                  <a href="/fx" class="btn btn-secondary" style="width:100%">Forex</a>
-                </div-->
+                  <div class="col-lg-6 col-12">
+                    <a href="/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
+                  </div>
+                <% } %>
               </div>
             </div>
         </div>

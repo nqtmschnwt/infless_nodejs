@@ -17,7 +17,7 @@
     <div class="page-content" style="padding-bottom:70px;">
       <div class="page-header">
         <div class="container-fluid">
-          <h2 class="h5 no-margin-bottom">Dữ liệu kinh tế Hoa Kỳ</h2>
+          <h2 class="h5 no-margin-bottom">Dữ liệu kinh tế <%- countryName %></h2>
         </div>
       </div>
 
@@ -35,7 +35,11 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-12">
-                        <div class="btn btn-success" id="us-gdp" style="width:100%" onclick="openIndicator('us-gdp')">GDP growth</div>
+                        <% for(var i=0; i<endoIndicators.length; i++) { %>
+                          <% if(endoIndicators[i].type=="target") { %>
+                            <div class="btn btn-success" id="<%- endoIndicators[i].code %>" style="width:100%" onclick="openIndicator('<%- endoIndicators[i].code %>')"><%- endoIndicators[i].name %></div>
+                          <% } %>
+                        <% } %>
                       </div>
                     </div>
                   </div>
@@ -54,12 +58,11 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-12">
-                        <div class="btn btn-danger" id="us-pmi" style="width:100%" onclick="openIndicator('us-pmi')">Business Sentiment - ISM Manufacturing</div>
-                        <div class="btn btn-danger" id="us-nmi" style="width:100%" onclick="openIndicator('us-nmi')">Business Sentiment - NMI Services</div>
-                        <div class="btn btn-danger" id="us-umcsi" style="width:100%" onclick="openIndicator('us-umcsi')">Consumer Sentiment - UMCSI</div>
-                        <div class="btn btn-danger" id="us-bp" style="width:100%" onclick="openIndicator('us-bp')">Building Permits</div>
-                        <div class="btn btn-danger" id="us-m2" style="width:100%" onclick="openIndicator('us-m2')">Money supply - M2</div>
-                        <div class="btn btn-danger" id="us-10ybond" style="width:100%" onclick="openIndicator('us-10ybond')">US 10 Year Treasury Benchmark</div>
+                        <% for(var i=0; i<endoIndicators.length; i++) { %>
+                          <% if(endoIndicators[i].type=="leading") { %>
+                            <div class="btn btn-danger" id="<%- endoIndicators[i].code %>" style="width:100%" onclick="openIndicator('<%- endoIndicators[i].code %>')"><%- endoIndicators[i].name %></div>
+                          <% } %>
+                        <% } %>
                       </div>
                     </div>
                   </div>
@@ -78,11 +81,11 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-12">
-                        <div class="btn btn-warning" id="us-cpi" style="width:100%" onclick="openIndicator('us-cpi')">Inflation - Consumer Price Index</div>
-                        <div class="btn btn-warning" id="us-cpicore" style="width:100%" onclick="openIndicator('us-cpicore')">Inflation - Consumer Price Index Core</div>
-                        <div class="btn btn-warning" id="us-ppi" style="width:100%" onclick="openIndicator('us-ppi')">Inflation - Producer Price Index</div>
-                        <div class="btn btn-warning" id="us-ppicore" style="width:100%" onclick="openIndicator('us-ppicore')">Inflation - Producer Price Index Core</div>
-                        <div class="btn btn-warning" id="us-nfp" style="width:100%" onclick="openIndicator('us-nfp')">Employment - Nonfarm Payroll</div>
+                        <% for(var i=0; i<endoIndicators.length; i++) { %>
+                          <% if(endoIndicators[i].type=="coincident") { %>
+                            <div class="btn btn-warning" id="<%- endoIndicators[i].code %>" style="width:100%" onclick="openIndicator('<%- endoIndicators[i].code %>')"><%- endoIndicators[i].name %></div>
+                          <% } %>
+                        <% } %>
                       </div>
                     </div>
                   </div>
@@ -92,14 +95,16 @@
               <div class="col-lg-6 col-12">
                 <div class="block">
                   <div class="row-title">
-                    Authorities' reactions
+                    Policy reactions
                   </div>
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-12">
-                        <div class="btn btn-warning" id="us-govdebt" style="width:100%" onclick="openIndicator('us-govdebt')">Government - Government Debt to GDP</div>
-                        <div class="btn btn-warning" id="us-govsd" style="width:100%" onclick="openIndicator('us-govsd')">Government - Government Surplus(or Deficit) to GDP</div>
-                        <div class="btn btn-warning" id="us-cbbs" style="width:100%" onclick="openIndicator('us-cbbs')">Central Bank - Balance Sheet to GDP</div>
+                        <% for(var i=0; i<endoIndicators.length; i++) { %>
+                          <% if(endoIndicators[i].type=="reaction") { %>
+                            <div class="btn btn-warning" id="<%- endoIndicators[i].code %>" style="width:100%" onclick="openIndicator('<%- endoIndicators[i].code %>')"><%- endoIndicators[i].name %></div>
+                          <% } %>
+                        <% } %>
                       </div>
                     </div>
                   </div>
@@ -118,7 +123,11 @@
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-12">
-                        <div class="btn btn-secondary" id="us-ir" style="width:100%" onclick="openIndicator('us-ir')">Interest Rate - Federal Reserve Benchmark Rate</div>
+                        <% for(var i=0; i<endoIndicators.length; i++) { %>
+                          <% if(endoIndicators[i].type=="lagging") { %>
+                            <div class="btn btn-secondary" id="<%- endoIndicators[i].code %>" style="width:100%" onclick="openIndicator('<%- endoIndicators[i].code %>')"><%- endoIndicators[i].name %></div>
+                          <% } %>
+                        <% } %>
                       </div>
                     </div>
                   </div>
@@ -141,8 +150,7 @@
               <div class="modal-body" style="max-height:100% !important;">
                 <div id="indicatorWindowTabs">
                   <div class="btn btn-primary" id="indicatorWindowTab-0" onclick="indicatorTab(0)">Biểu đồ</div>
-                  <div class="btn btn-secondary" id="indicatorWindowTab-1" onclick="indicatorTab(1)">Thống kê</div>
-                  <div class="btn btn-secondary" id="indicatorWindowTab-2" onclick="indicatorTab(2)">Dữ liệu</div>
+                  <div class="btn btn-secondary" id="indicatorWindowTab-2" onclick="indicatorTab(1)">Dữ liệu</div>
                 </div>
                 <div id="indicatorTabContent">
                   <div id="indicatorTabContent-0" style="display:block;">
@@ -151,8 +159,8 @@
                       <div class="row">
                         <div class="col-12">
                           <div class="block">
-                            <div id="indicatorChart">
-
+                            <div id="indicatorChart" class="block-content">
+                              <p class="text-secondary">Loading...</p>
                             </div>
                           </div>
                         </div>
@@ -160,44 +168,9 @@
                     </div>
                     <!-- Tab 0 end -->
                   </div>
+
                   <div id="indicatorTabContent-1" style="display:none;">
                     <!-- Tab 1 begin -->
-                    <div class="container-fluid mt-1">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="block">
-                            <div id="indicatorStats">
-                              <table id="indicatorStatTable" style="width:100%">
-                                <tr>
-                                  <td>id</td>
-                                  <td>feature</td>
-                                  <td>value</td>
-                                </tr>
-                                <tr>
-                                  <td>id</td>
-                                  <td>feature</td>
-                                  <td>value</td>
-                                </tr>
-                                <tr>
-                                  <td>id</td>
-                                  <td>feature</td>
-                                  <td>value</td>
-                                </tr>
-                                <tr>
-                                  <td>id</td>
-                                  <td>feature</td>
-                                  <td>value</td>
-                                </tr>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Tab 1 end -->
-                  </div>
-                  <div id="indicatorTabContent-2" style="display:none;">
-                    <!-- Tab 2 begin -->
                     <div class="containter-fluid mt-1">
                       <div class="row">
                         <div class="col-lg-6 col-12">
@@ -211,19 +184,24 @@
                           <div class="block">
                             <div class="row-title">
                               <div class="btn btn-primary" id="indicatorInputToggle" onclick="indicatorEnableForm('input')">Nhập dữ liệu</div>
+                              <% if(user.role_id ==2 ) { %>
                               <div class="btn btn-secondary" id="indicatorEditToggle" onclick="indicatorEnableForm('edit')">Sửa dữ liệu</div>
+                              <% } %>
                             </div>
                             <!-- Data input form begin -->
                             <form action="" id="indicatorInputForm" style="display:block">
+                              <!-- Indicator info begin -->
+                              <div id="indiInfo" class="mt-3 mb-3"></div>
+                              <!-- Indicator info end -->
                               <div class="container-fluid">
                                 <div class="row">
                                   <div class="col-12">
                                     <label>Ngày</label>
-                                    <input type="date" id="indicatorInputDate" class="form-control" placeholder="">
+                                    <input type="date" id="indicatorInputDate" class="form-control" name="indiDate" placeholder="">
                                   </div>
                                   <div class="col-12">
                                     <label>Giá trị</label>
-                                    <input type="text" id="indicatorInputValue" class="form-control" placeholder="">
+                                    <input type="text" id="indicatorInputValue" class="form-control" name="indiVal" placeholder="">
                                   </div>
                                   <div class="col-12 text-center">
                                     <div class="btn btn-success" id="applyInputBtn">Nhập</div>
@@ -233,16 +211,37 @@
                             </form>
                             <!-- Data input form end -->
                             <!-- Data edit form begin -->
+                            <% if(user.role_id ==2 ) { %>
                             <form action="" id="indicatorEditForm" style="display:none">
                               <div class="container-fluid">
                                 <div class="row">
-                                  <div class="col-12">
-                                    <label>Ngày</label>
-                                    <input type="date" id="indicatorEditDate" class="form-control" placeholder="">
+                                  <div class="col-6">
+                                    <div class="container">
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <label>Ngày cũ</label>
+                                          <input type="date" id="indicatorEditOldDate" class="form-control" name="indiOldDate" placeholder="">
+                                        </div>
+                                        <div class="col-12">
+                                          <label>Giá trị cũ</label>
+                                          <input type="text" id="indicatorEditOldValue" class="form-control" name="indiOldVal" placeholder="">
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div class="col-12">
-                                    <label>Giá trị</label>
-                                    <input type="text" id="indicatorEditValue" class="form-control" placeholder="">
+                                  <div class="col-6">
+                                    <div class="container">
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <label>Ngày mới</label>
+                                          <input type="date" id="indicatorEditNewDate" class="form-control" name="indiNewDate" placeholder="">
+                                        </div>
+                                        <div class="col-12">
+                                          <label>Giá trị mới</label>
+                                          <input type="text" id="indicatorEditNewValue" class="form-control" name="indiNewVal" placeholder="">
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                   <div class="col-12 text-center">
                                     <div class="btn btn-warning" id="applyEditBtn">Sửa</div>
@@ -250,12 +249,13 @@
                                 </div>
                               </div>
                             </form>
+                            <% } %>
                             <!-- Data edit form end -->
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!-- Tab 2 end -->
+                    <!-- Tab 1 end -->
                   </div>
                 </div>
               </div>
@@ -295,6 +295,10 @@
         console.log(res);
         // Update indicator window
         updateIndiWindowData(res.indiData);
+        // Update indicator info
+        updateIndiInfo(res.indiInfo.freq,res.indiInfo.releaseTime,res.indiInfo.url0,res.indiInfo.url1,res.indiInfo.url2);
+        // Update chart
+        updateChart(indicatorCode,res.indiData);
       })
       .catch(err => {
         console.log(err);
@@ -320,12 +324,33 @@
     }
   }
 
+  function updateIndiInfo(freq,t,url0,url1,url2) {
+    try {
+      let indiInfo = "Dữ liệu được công bố <span class='text-warning'>" + freq + "</span> ";
+      if (t != "") {
+        indiInfo += "vào <span class='text-warning'>" + t + "</span> ";
+      }
+      if (url0 != "") {
+        indiInfo += "tại " + "<a target='_blank' href='" + url0 + "'>Link</a>";
+      }
+      if (url1 != "") {
+        indiInfo += ", hoặc " + "<a target='_blank' href='" + url1 + "'>Link dự phòng 1</a>";
+      }
+      if (url2 != "") {
+        indiInfo += ", " + "<a target='_blank' href='" + url2 + "'>Link dự phòng 2</a>";
+      }
+      document.getElementById('indiInfo').innerHTML = indiInfo + ".";
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
   function updateIndiWindowData(indiData) {
-    let indiDataContent = 'Dữ liệu đang cập nhật';
+    let indiDataContent = '<p class="text-secondary">Chưa có dữ liệu</p>';
     if (indiData != undefined) {
-      indiDataContent = '<table class="text-center" style="width:100%"><tr><th>Ngày tham chiếu</th><th>Số liệu</th>';
-      for (var i=1; i<indiData.length; i++) {
-        indiDataContent += '<tr><td>' + indiData[i][0] + '</td><td>' + indiData[i][1] + '</td></tr>';
+      indiDataContent = '<table class="text-center" style="width:100%"><tr><th>Ngày tham chiếu</th><th>Số liệu</th>' <% if(user.role_id ==2 ) { %> + '<th></th>' <% } %> + '</tr>';
+      for (var i=indiData.length-1; i>0; i--) {
+        indiDataContent += '<tr><td>' + indiData[i][0] + '</td><td>' + indiData[i][1] + '</td>' <% if(user.role_id ==2 ) { %> + '<td><button class="border-0 btn-transition btn btn-outline-success clientButton" onclick="editIndi('+ "'" + indiData[i][0] + "'" + ',' + indiData[i][1] +')"></button></td>' <% } %> + '</tr>';
       }
       indiDataContent += '</table>';
     }
@@ -340,9 +365,19 @@
     let indicatorWindow = document.getElementById("indicatorWindowWrapper");
     try {
       indicatorWindow.style.display = "none";
+      // Delete indi Info
+      document.getElementById('indiInfo').innerHTML = "";
+      // Delete chart
+      document.getElementById('indicatorChart').innerHTML = '<p class="text-secondary">Loading...</p>';
     } catch(err) {
       console.log(err);
     }
+  }
+
+  function editIndi(d,val) {
+    //alert(d + ': ' + val);
+    indicatorEnableForm('edit');
+    indicatorFillForm('indicatorEditForm',{indiOldDate:d,indiOldVal:val});
   }
 
   function indicatorTab(id) {
@@ -393,6 +428,166 @@
         indicatorInputToggle.classList.add("btn-secondary");
         indicatorEditToggle.classList.remove("btn-secondary");
         inputForm.reset();
+      } catch(err) {
+        console.log(err);
+      }
+    }
+  }
+  //------------------------
+
+  //------------------------
+  // Data form fill
+  //------------------------
+  function indicatorFillForm(formName, data) {
+    try {
+      const { elements } = document.getElementById(formName);
+
+      for (const [ key, value ] of Object.entries(data) ) {
+        const field = elements.namedItem(key)
+        field && (field.value = value)
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
+  //------------------------
+
+  //------------------------
+  // Data submit
+  //------------------------
+  let applyInputBtn = document.getElementById('applyInputBtn');
+  let applyEditBtn = document.getElementById('applyEditBtn');
+  if (applyInputBtn != null) {
+    applyInputBtn.addEventListener("click", function() {
+      try {
+        let inputElements = document.getElementById('indicatorInputForm').getElementsByTagName("input");
+        let indiCode = document.getElementById('indicatorWindowHeading').innerHTML;
+        let inputData = {
+          indicatorCode: indiCode.toLowerCase(),
+          action: 'input',
+          date: inputElements[0].value,
+          val: inputElements[1].value
+        }
+        console.log(inputData);
+        // Send data to server
+        fetch("/fx/indiupdate", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(inputData)
+        }).then(res => res.json())
+        .then(res => {
+          console.log(res);
+          // Update indicator window
+          //updateIndiWindowData(res.indiData);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      } catch(err) {
+        console.log(err);
+      }
+    });
+  }
+
+  if (applyEditBtn != null) {
+    applyEditBtn.addEventListener("click", function() {
+      try {
+        let editElements = document.getElementById('indicatorEditForm').getElementsByTagName("input");
+        let indiCode = document.getElementById('indicatorWindowHeading').innerHTML;
+        let editData = {
+          indicatorCode: indiCode.toLowerCase(),
+          action: 'edit',
+          oldDate: editElements[0].value,
+          oldVal: editElements[1].value,
+          newDate: editElements[2].value,
+          newVal: editElements[3].value
+        }
+        console.log(editData);
+        // Send data to server
+        fetch("/fx/indiupdate", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(editData)
+        }).then(res => res.json())
+        .then(res => {
+          console.log(res);
+          // Update indicator window
+          //updateIndiWindowData(res.indiData);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      } catch(err) {
+        console.log(err);
+      }
+    });
+  }
+  //------------------------
+
+  //------------------------
+  // Data chart
+  //------------------------
+  function updateChart(indicatorCode,data) {
+
+    if (data == undefined) {
+      try {
+        document.getElementById('indicatorChart').innerHTML = '<p class="text-secondary">Chưa có dữ liệu</p>';
+      } catch(err) {
+        console.log(err);
+      }
+      //console.log('Chưa có dữ liệu');
+    } else {
+      console.log(data);
+      let chartData = [];
+      for(var i=1; i<data.length;i++) {
+        chartData.push({
+          label: data[i][0],
+          y: parseFloat(data[i][1])
+        });
+      }
+      try {
+        var chart = new CanvasJS.Chart("indicatorChart",
+            {
+                animationEnabled: true,
+                backgroundColor: "rgba(0,0,0,0)",
+                axisX: {
+                  labelFormatter: function (e) {
+                    return CanvasJS.formatDate( e.label, "DD/MM/YYYY");
+                  },
+                  labelFontColor: "white"
+                },
+                axisY: {
+                    includeZero: false
+                },
+                axisY2: {
+                  title: "",
+                  titleFontColor: "white",
+                  labelFontColor: "white"
+                },
+                legend: {
+                  fontColor: "white"
+                },
+                toolTip: {
+                  contentFormatter: function (e) {
+                    var content = " ";
+                    for (var i = 0; i < e.entries.length; i++) {
+                      content += "<span style='color:" + e.chart.selectedColorSet[i] + ";'>" + CanvasJS.formatDate(e.entries[i].dataPoint.label, "DD/MM/YYYY") + "</span>" + ": " + e.entries[i].dataPoint.y.toFixed(2) + '';
+                      content += "<br/>";
+                    }
+                    return content;
+                  }
+                },
+                data: [{
+                  type:"line",
+                  axisYType: "secondary",
+                  name: indicatorCode,
+                  showInLegend: true,
+                  markerSize: 0,
+                  yValueFormatString: "0.00",
+                  dataPoints: chartData
+                }]
+            });
+        chart.render();
       } catch(err) {
         console.log(err);
       }

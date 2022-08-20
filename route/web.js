@@ -1,4 +1,5 @@
 const express = require('express');
+const apiController = require('../controllers/apiController');
 const setupController = require('../controllers/setupController');
 const homeController = require('../controllers/homeController');
 const loginController = require('../controllers/loginController');
@@ -45,6 +46,8 @@ let initWebRoutes = (app) => {
       router.get("/login", checkAuthenticated, loginController.getLoginPage);
       //router.post("/login", limiter(1,5,'Đăng nhập không thành công quá nhiều lần. Bạn sẽ không thể đăng nhập trong vòng 1 giờ nữa.'), loginController.postLoginPage);
       router.post("/login", loginController.postLoginPage);
+      // Login from external systems
+      router.post("/app/login", apiController.externalLogin);
       // Logout
       router.get("/logout", logoutController.getLogoutPage);
       // Register page
@@ -89,12 +92,17 @@ let initWebRoutes = (app) => {
       /* FX PAGES */
       router.get("/fx", fxController.getFxMain);
       router.get("/econ-us", fxController.getUSEcon);
+      router.get("/econ-jp", fxController.getJPEcon);
       router.post("/fx/indicator", fxController.getIndicator);
+      router.post("/fx/indiupdate", fxController.updateIndicator);
 
       // API urls
       router.post("/addcustoken", managerController.addCusToken);
       router.post("/pushadmmsg", managerController.pushAdmMsg);
       router.post("/pushtrans", managerController.pushTrans);
+
+      /* FX API */
+      router.get("/fx/api/v1", fxController.apiGetIndicator);
 
 
   // Request with json body

@@ -1,0 +1,82 @@
+[
+  {
+    "type":"target",
+    "name":"Real GDP",
+    "code":"us-gdp"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Manufacturing PMI",
+    "code":"us-pmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Services NMI",
+    "code":"us-nmi"
+  },
+  {
+    "type":"leading",
+    "name":"Consumer Sentiment - UMCSI",
+    "code":"us-umcsi"
+  },
+  {
+    "type":"leading",
+    "name":"Building Permits",
+    "code":"us-bp"
+  },
+  {
+    "type":"leading",
+    "name":"US 10Year Treasury Yield",
+    "code":"us-10ybond"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Consumer Price Index",
+    "code":"us-cpi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Consumer Price Index Core",
+    "code":"us-cpicore"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Producer Price Index",
+    "code":"us-ppi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Producer Price Index Core",
+    "code":"us-ppicore"
+  },
+  {
+    "type":"coincident",
+    "name":"Employment - Nonfarm Payroll",
+    "code":"us-nfp"
+  },
+  {
+    "type":"reaction",
+    "name":"Government - Government Debt",
+    "code":"us-govdebt"
+  },
+  {
+    "type":"reaction",
+    "name":"Government - Government Surplus(or Deficit)",
+    "code":"us-govsd"
+  },
+  {
+    "type":"reaction",
+    "name":"Central Bank - Balance Sheet",
+    "code":"us-cbbs"
+  },
+  {
+    "type":"reaction",
+    "name":"Money supply - M2",
+    "code":"us-m2"
+  },
+  {
+    "type":"lagging",
+    "name":"Interest Rate - Fed Fund Rate",
+    "code":"us-ir"
+  }
+]

@@ -7,53 +7,8 @@ const auth = new google.auth.GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/spreadsheets'
 });
 
-let getTestPage = async (req,res) => {
-  let vnindex = await getSheetData('vnindex','A:B');
-  let prices = await getSheetData('Price','A:C');
-  let dividend = await getSheetData('dividend','A:E');
-  let data = {
-    prices: prices,
-    vnindex: vnindex,
-    dividend: dividend
-  }
-  pool.query(
-    `SELECT * FROM trade_orders ORDER BY id ASC;`, (err,results) => {
-      if(err) console.log(err);
-      else {
-        data.trades = results.rows;
-        let currentdate = new Date();
-        let last6months = new Date(currentdate.setMonth(currentdate.getMonth()-6));
-        let dformat6 = [last6months.getFullYear(),last6months.getMonth()+1,last6months.getDate()].join('-');
-        pool.query(
-          `SELECT upf.portfolio_date, upf.latest, upf.net_value FROM user_portfolio upf
-          INNER JOIN portfolios pf
-          ON upf.portfolio_id = pf.portfolio_id
-          WHERE pf.user_id=0 AND upf.portfolio_date>$1
-          ORDER BY upf.portfolio_date ASC;`,
-          [dformat6],
-          (err,results) => {
-            if(err) console.log(err);
-            else {
-              data.pfRecords = results.rows;
-              let custoken = '';
-              pool.query(
-                `SELECT custoken FROM user_token WHERE user_id=$1;`,[user.id],(err,results) => {
-                  if(err) console.log(err);
-                  else {
-                    if(results.rows.length!=0) {
-                      custoken = results.rows[0].custoken;
-                    }
-
-                    let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
-                    return res.render('devtest', data);
-                  }
-                }
-              )
-
-            }
-          });
-      }
-    })
+let getTestPage = (req,res) => {
+  return res.render('devtest');
 }
 
 let postTestPage = (req,res) => {

@@ -447,7 +447,29 @@ function inquiryAdmMsg(cusToken) {
   .then(res => res.json());
 }
 
+let externalRegister = (req,res) => {
+  console.log(req.body);
+}
+
+let externalLogin = (req,res) => {
+  console.log(req.body);
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({
+    error: '0',
+    errdesc: 'Login success'
+  }));
+  // Errors including:
+  /*
+  {
+    wrong username
+    wrong password
+  }
+  */
+}
+
 module.exports = {
+  externalRegister:externalRegister,
+  externalLogin:externalLogin,
   verifyUser:verifyUser,
   getCusToken:getCusToken,
   pushTrans:pushTrans,

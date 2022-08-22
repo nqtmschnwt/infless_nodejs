@@ -348,7 +348,7 @@ let postTradePage = async (req,res) => {
         pool.query(
           `INSERT INTO trade_orders(order_time, order_direction, order_type, ticker, vol, price, pct, fund_nav)
           VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
-          [dformat,body.order_direction,body.order_type,body.ticker.toUpperCase(),parseFloat(body.vol.replace(/,/g, ''))/1000000,parseFloat(body.price.replace(/,/g, '')),parseFloat(body.pct),parseFloat(body.fund_nav.replace(/,/g, ''))/1000000000],
+          [dformat,body.order_direction,body.order_type,body.ticker.toUpperCase().replace(/\s/g,''),parseFloat(body.vol.replace(/,/g, ''))/1000000,parseFloat(body.price.replace(/,/g, '')),parseFloat(body.pct),parseFloat(body.fund_nav.replace(/,/g, ''))/1000000000],
           (err,results) => {
             if(err) {
               console.log('Error: ',err);

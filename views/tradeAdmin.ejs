@@ -531,6 +531,7 @@
     for(var j=0;j<portfolio.length;j++){
       if(prices[i][0] == portfolio[j].ticker) {
         try {
+          //console.log(prices[i][0])
           portfolio[j].price = parseFloat(prices[i][2]);
           portfolio[j].cap = (portfolio[j].volAvailable + portfolio[j].pending) * portfolio[j].price;
         } catch(err) {

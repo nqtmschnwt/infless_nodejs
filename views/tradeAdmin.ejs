@@ -562,7 +562,7 @@
   document.getElementById('fund_cash_input').value = (cash * Math.pow(10,9)).toLocaleString('en');
 
   //-----------Portfolio table rendering------------
-  for(var i=0; i<portfolio.length; i++) {
+  for (var i = portfolio.length -1; i >= 0; i--)
     if(portfolio[i].volAvailable + portfolio[i].pending <= 0) {
       portfolio.splice(i, 1);
     }

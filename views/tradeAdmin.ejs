@@ -705,7 +705,7 @@
   let stock_pct=0;
   for(var i=0;i<portfolio.length;i++){
     if((portfolio[i].volAvailable + portfolio[i].pending)>0){
-      portfolioChartData.push({"values":[(portfolio[i].cap/totalCap*100).toFixed(2)],"text":portfolio[i].ticker});
+      portfolioChartData.push({"values":[portfolio[i].cap/totalCap*100],"text":portfolio[i].ticker});
       stock_pct+=portfolio[i].cap/totalCap*100;
     }
   }

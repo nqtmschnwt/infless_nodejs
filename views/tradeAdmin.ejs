@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <body>
   <%- include('hotStyles.ejs') %>
   <!-- Loader -->
@@ -670,13 +671,14 @@
 
   //-----------Chart rendering-----------
   //-----------------Pie chart----------------
+  // CanvasJS
+  /*
   let portfolioChartData=[];
   let stock_pct=0;
   for(var i=0;i<portfolio.length;i++){
     if((portfolio[i].volAvailable + portfolio[i].pending)>0){
       portfolioChartData.push({y:(portfolio[i].cap/totalCap*100).toFixed(2),label:portfolio[i].ticker});
       stock_pct+=portfolio[i].cap/totalCap*100;
-      //console.log(portfolio[i].cap/totalCap*100,stock_pct);
     }
   }
   portfolioChartData.push({y:100-stock_pct,label:'Tiền mặt'});
@@ -691,16 +693,49 @@
       yValueFormatString: "##0.00\"%\"",
       indexLabel: "{label} {y}",
       indexLabelFontColor: "white",
-      dataPoints: portfolioChartData/*[
-        {y: 79.45, label: "Google"},
-        {y: 7.31, label: "Bing"},
-        {y: 7.06, label: "Baidu"},
-        {y: 4.91, label: "Yahoo"},
-        {y: 1.26, label: "Others"}
-      ]*/
+      dataPoints: portfolioChartData
     }]
   });
   chartPie0.render();
+  */
+  // Zingchart
+  let portfolioChartData=[];
+  let stock_pct=0;
+  for(var i=0;i<portfolio.length;i++){
+    if((portfolio[i].volAvailable + portfolio[i].pending)>0){
+      portfolioChartData.push({"values":[(portfolio[i].cap/totalCap*100).toFixed(2)],"text":portfolio[i].ticker});
+      stock_pct+=portfolio[i].cap/totalCap*100;
+    }
+  }
+  portfolioChartData.push({"values":[100-stock_pct],"text":'Tiền mặt'});
+  ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+  var myConfig = {
+    "type": "pie3d", //"pie", "pie3d", "ring", or "ring3d"
+    'backgroundColor':'none', // This is in the root
+    'plotarea':{
+      'backgroundColor':'transparent'
+    },
+    "plot": {
+      'border-width': 0,
+      "value-box": {
+        "font-size": 10,
+        "font-weight": "normal",
+        "placement": "out"
+      },
+      "tooltip": {
+        "text": "%t: %npv%",
+      },
+      "offset-r": "15%" //provide percentage value
+    },
+    "series": portfolioChartData
+  };
+
+  zingchart.render({
+    id: 'chartContainer',
+    data: myConfig,
+    height: "100%",
+    width: "100%"
+  });
 
   //-----------------Line chart 1----------------
   let navData = <%- JSON.stringify(pfRecords) %>;

@@ -1,9 +1,55 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+  <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <body>
   <div class="btn btn-primary" id="test-btn">Test</div>
   <div id="test-results"></div>
+  <div id='myChart'></div>
+  <script>
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+    var myConfig = {
+      "type": "pie3d", //"pie", "pie3d", "ring", or "ring3d"
+      "title": {
+        "text": "Exploded Pie Chart"
+      },
+      "plot": {
+        'border-width': 0,
+        "tooltip": {
+          "text": "%t: %npv%",
+        },
+        "offset-r": "15%" //provide percentage value
+      },
+      "series": [{
+          "text": "Alpha",
+          "values": [59]
+        },
+        {
+          "text": "Beta",
+          "values": [55]
+        },
+        {
+          "text": "Gamma",
+          "values": [30]
+        },
+        {
+          "text": "Delta",
+          "values": [28]
+        },
+        {
+          "text": "Epsilon",
+          "values": [15]
+        }
+      ]
+    };
+
+    zingchart.render({
+      id: 'myChart',
+      data: myConfig,
+      height: 400,
+      width: "100%"
+    });
+  </script>
   <script>
     let testBtn = document.getElementById("test-btn");
     testBtn.addEventListener("click", myFunction);

@@ -567,6 +567,8 @@
       portfolio.splice(i, 1);
     }
   }
+  console.log('After splice:');
+  console.log(portfolio);
   let pfTableContent = '<table style="margin-top:30px;width:100%;text-align:center"><tr><th>Mã</th><th>Khối lượng</th><th>Khả dụng</th><th>Chờ nhận</th><th>Giá vốn TB</th><th>Giá hiện tại</th><th>Giá trị mua</th><th>Giá trị hiện tại</th><th>Lãi/lỗ</th><th>Lãi/lỗ (%)</th></tr>';
   for(var i=0; i<portfolio.length; i++) {
     let color = '';

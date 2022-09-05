@@ -21,6 +21,7 @@ let getVol21 = (req,res) => {
 }
 
 let postVol21 = (req,res) => {
+  res.sendStatus(200);
   let dt = new Date();
   let complete_date = dt.toLocaleString('vi-VN',{hour12:false,timeZone:'Asia/Ho_Chi_Minh'})
   let dtHour = dt.getHours();
@@ -44,7 +45,7 @@ let postVol21 = (req,res) => {
             if(err) {
               console.log(err); // throw err;
             } else {
-              res.json({err:0,errdesc:'Success'});
+              //res.json({err:0,errdesc:'Success'});
               if(results.rows.length > 0) {
                 console.log('Found: ',results.rows);
                 for(var i = 0; i<results.rows.length; i++){
@@ -96,7 +97,7 @@ let postVol21 = (req,res) => {
                   }
                 }
               } else {
-                res.json({err:0,errdesc:'Success',result:results.rows});
+                console.log('Success');
               }
             }
           });
@@ -112,12 +113,12 @@ let postVol21 = (req,res) => {
           });
 
       } else {
-        res.json({err:1,errdesc:'Wrong key'});
+        console.log('Wrong key');
       }
     } else
-      res.json({err:1,errdesc:'No key'});
+      console.log('No key');
   } else {
-    res.json({err:1,errdesc:'Not trading time'});
+    console.log('Not trading time');
   }
 }
 

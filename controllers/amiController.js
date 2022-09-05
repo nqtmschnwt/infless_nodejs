@@ -258,6 +258,6 @@ function sendSL() {
 
 
 module.exports = {
-  getVol21: getVol21,
+  getVol21: postVol21,
   postVol21: postVol21,
 }

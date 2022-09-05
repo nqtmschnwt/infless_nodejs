@@ -62,6 +62,7 @@ let postVol21 = (req,res) => {
                             console.log(err); // throw err;
                           } else
                           console.log(results.rows);
+                          res.json({err:0,errdesc:'Success'});
 
                           sendPhongThan();
                           sendDK();
@@ -81,6 +82,7 @@ let postVol21 = (req,res) => {
                             console.log(err); // throw err;
                           } else
                           console.log(results.rows);
+                          res.json({err:0,errdesc:'Success'});
 
                           sendPhongThan();
                           sendSL();

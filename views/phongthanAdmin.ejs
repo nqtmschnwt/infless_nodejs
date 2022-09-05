@@ -143,7 +143,8 @@
 <%- include ('tail.ejs') %>
 <script type="text/javascript">
   //var socket = io('https://infless-copy-trade.herokuapp.com/', { transport : ['websocket'] });
-  var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
+  //var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
+  var socket = io('/', { transport : ['websocket'] });
   var consoleDiv = document.getElementById('console-21'),
       clientConsole = document.getElementById('vol21ClientConsole'),
       clientLoading = document.getElementById('vol21ClientLoading'),
@@ -303,8 +304,12 @@
   }
 
   function vnDateFormat(dateStr) {
-    var dateFormatter = new Intl.DateTimeFormat("vi-VN");
-    return dateFormatter.format(Date.parse(dateStr)).replace(/\b(\d\/)/g,'0$1');
+    try {
+      var dateFormatter = new Intl.DateTimeFormat("vi-VN");
+      return dateFormatter.format(Date.parse(dateStr)).replace(/\b(\d\/)/g,'0$1');
+    } catch(err) {
+      return dateStr;
+    }
   }
 
 

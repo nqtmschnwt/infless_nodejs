@@ -1,4 +1,5 @@
 const express = require('express');
+const amiController = require('../controllers/amiController');
 const apiController = require('../controllers/apiController');
 const setupController = require('../controllers/setupController');
 const homeController = require('../controllers/homeController');
@@ -87,6 +88,10 @@ let initWebRoutes = (app) => {
       router.get("/portfolio-:id", pfController.getPfInfo);
       router.get("/pf-update", pfController.getPfUpdate);
       router.post("/pf-update", pfController.postPfUpdate);
+
+      // Ami
+      router.get("/ami", amiController.getVol21);
+      router.post("/ami", amiController.postVol21);
 
 
       /* FX PAGES */

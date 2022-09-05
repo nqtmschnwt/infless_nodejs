@@ -1,4 +1,5 @@
-var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
+//var socket = io('https://infless-copy-trade-clone-001.herokuapp.com/', { transport : ['websocket'] });
+var socket = io('/', { transport : ['websocket'] });
 
 var usr = document.getElementById('user_phone').innerHTML;
 window.onload = function() {
@@ -405,8 +406,12 @@ function checkTime(i) {
 }
 
 function vnDateFormat(dateStr) {
-  let dateFormatter = new Intl.DateTimeFormat("vi-VN");
-  return dateFormatter.format(Date.parse(dateStr)).replace(/\b(\d\/)/g,'0$1');
+  try {
+    let dateFormatter = new Intl.DateTimeFormat("vi-VN");
+    return dateFormatter.format(Date.parse(dateStr)).replace(/\b(\d\/)/g,'0$1');
+  } catch(err) {
+    return dateStr;
+  }
 }
 
 // Sounds

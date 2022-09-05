@@ -62,7 +62,7 @@ let dbkl = [];
 // Listen for events
 socket.on('vol21', function(data){
   //Update DBKL
-  //console.log(data);
+  console.log(data);
   if(document.getElementById(data['ticker']+"-pt-dbkl")!= null){
     document.getElementById(data['ticker']+"-pt-dbkl").innerHTML = data['volDB'] + " %";
     if(dbkl.length==0) {

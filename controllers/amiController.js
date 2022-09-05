@@ -44,6 +44,7 @@ let postVol21 = (req,res) => {
             if(err) {
               console.log(err); // throw err;
             } else {
+              res.json({err:0,errdesc:'Success'});
               if(results.rows.length > 0) {
                 console.log('Found: ',results.rows);
                 for(var i = 0; i<results.rows.length; i++){
@@ -62,7 +63,7 @@ let postVol21 = (req,res) => {
                             console.log(err); // throw err;
                           } else
                           console.log(results.rows);
-                          res.json({err:0,errdesc:'Success'});
+
 
                           sendPhongThan();
                           sendDK();
@@ -82,7 +83,7 @@ let postVol21 = (req,res) => {
                             console.log(err); // throw err;
                           } else
                           console.log(results.rows);
-                          res.json({err:0,errdesc:'Success'});
+
 
                           sendPhongThan();
                           sendSL();

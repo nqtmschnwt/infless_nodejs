@@ -21,7 +21,7 @@ let getVol21 = (req,res) => {
 }
 
 let postVol21 = (req,res) => {
-  res.sendStatus(200);
+  //res.sendStatus(200);
   let dt = new Date();
   let complete_date = dt.toLocaleString('vi-VN',{hour12:false,timeZone:'Asia/Ho_Chi_Minh'})
   let dtHour = dt.getHours();
@@ -30,6 +30,7 @@ let postVol21 = (req,res) => {
   console.log(complete_date);
 
   if((dtHour==9 && dtMinute>14) || dtHour>9) {
+    res.sendStatus(200);
     let url_parts = url.parse(req.url, true);
     let query = url_parts.query;
     if("key" in query) {
@@ -118,6 +119,7 @@ let postVol21 = (req,res) => {
     } else
       console.log('No key');
   } else {
+    res.sendStatus(200);
     console.log('Not trading time');
   }
 }

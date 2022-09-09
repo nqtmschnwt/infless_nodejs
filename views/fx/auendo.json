@@ -1,0 +1,82 @@
+[
+  {
+    "type":"target",
+    "name":"Real GDP",
+    "code":"au-gdp"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Manufacturing PMI",
+    "code":"au-pmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Services PMI",
+    "code":"au-spmi"
+  },
+  {
+    "type":"leading",
+    "name":"Consumer Sentiment - Westpac Consumer Sentiment",
+    "code":"au-wcs"
+  },
+  {
+    "type":"leading",
+    "name":"Building Approvals",
+    "code":"au-ba"
+  },
+  {
+    "type":"leading",
+    "name":"US 10Year Treasury Yield",
+    "code":"au-10ybond"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Consumer Price Index",
+    "code":"au-cpi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Melbourne Institute Inflation Expectation",
+    "code":"au-mi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Producer Price Index",
+    "code":"au-ppi"
+  },
+  {
+    "type":"coincident",
+    "name":"Employment - Employment change",
+    "code":"au-employ"
+  },
+  {
+    "type":"coincident",
+    "name":"Employment - ANZ Job Advertisements",
+    "code":"au-anzjob"
+  },
+  {
+    "type":"reaction",
+    "name":"Government - Government Debt",
+    "code":"au-govdebt"
+  },
+  {
+    "type":"reaction",
+    "name":"Government - Government Surplus(or Deficit)",
+    "code":"au-govsd"
+  },
+  {
+    "type":"reaction",
+    "name":"Central Bank - Balance Sheet",
+    "code":"au-cbbs"
+  },
+  {
+    "type":"reaction",
+    "name":"Money supply - M3",
+    "code":"au-m3"
+  },
+  {
+    "type":"lagging",
+    "name":"Interest Rate - RBA Cash Rate",
+    "code":"au-ir"
+  }
+]

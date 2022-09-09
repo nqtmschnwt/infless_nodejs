@@ -9,6 +9,7 @@ const auth = new google.auth.GoogleAuth({
 });
 
 const fileIds = {
+  au:'1RImBcO8calzmQi8AtbX5SApLPRakM1uXGroIImYeIjM',
   us:'1EBQzuO_E7aRQHjZB69V14Gcs_AIjA-uofERyDr_SyZw',
   jp:'1NU7WYgfBzGyKpH1MbH14oQc5tOGrTKo2XZzcel_2gCQ'
 };
@@ -58,6 +59,27 @@ let getJPEcon = async (req,res) => {
         let endoIndicators = JSON.parse(fs.readFileSync('./views/fx/jpendo.json'));  // edit this
         let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/fxMenu.json'));
         let countryName = 'Nhật Bản';  // edit this
+        return res.render('fx/fxecon', {menu:menuData,user,endoIndicators,countryName});
+      } catch(err) {
+        console.log(err);
+      }
+    } else {
+      return res.render('404');
+    }
+  } else {
+    return res.redirect('/login');
+  }
+}
+
+let getAUEcon = async (req,res) => {
+  let user=req.user;
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      try {
+        let endoIndicators = JSON.parse(fs.readFileSync('./views/fx/auendo.json'));  // edit this
+        let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/fxMenu.json'));
+        let countryName = 'Australia';  // edit this
         return res.render('fx/fxecon', {menu:menuData,user,endoIndicators,countryName});
       } catch(err) {
         console.log(err);
@@ -248,6 +270,7 @@ async function updateSheetData(fileId,sheetName,range,val) {
 
 module.exports = {
   getFxMain:getFxMain,
+  getAUEcon:getAUEcon,
   getUSEcon:getUSEcon,
   getJPEcon:getJPEcon,
   getIndicator:getIndicator,

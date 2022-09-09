@@ -96,6 +96,7 @@ let initWebRoutes = (app) => {
 
       /* FX PAGES */
       router.get("/fx", fxController.getFxMain);
+      router.get("/econ-au", fxController.getAUEcon);
       router.get("/econ-us", fxController.getUSEcon);
       router.get("/econ-jp", fxController.getJPEcon);
       router.post("/fx/indicator", fxController.getIndicator);

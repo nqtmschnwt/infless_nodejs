@@ -101,6 +101,7 @@ let initWebRoutes = (app) => {
       router.get("/econ-jp", fxController.getJPEcon);
       router.post("/fx/indicator", fxController.getIndicator);
       router.post("/fx/indiupdate", fxController.updateIndicator);
+      router.post("/fxtrades", fxController.fxTradesInquiry);
 
       // API urls
       router.post("/addcustoken", managerController.addCusToken);

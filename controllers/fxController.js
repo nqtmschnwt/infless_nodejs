@@ -268,6 +268,11 @@ async function updateSheetData(fileId,sheetName,range,val) {
   }
 }
 
+let fxTradesInquiry = (req,res) => {
+  console.log(req.body);
+  return res.send('Success');
+}
+
 module.exports = {
   getFxMain:getFxMain,
   getAUEcon:getAUEcon,
@@ -276,4 +281,5 @@ module.exports = {
   getIndicator:getIndicator,
   apiGetIndicator:apiGetIndicator,
   updateIndicator:updateIndicator,
+  fxTradesInquiry:fxTradesInquiry,
 }

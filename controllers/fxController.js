@@ -270,7 +270,7 @@ async function updateSheetData(fileId,sheetName,range,val) {
 
 let fxTradesInquiry = (req,res) => {
   console.log(req.body);
-  return res.send('Success');
+  return res.status(200).send('OK');
 }
 
 module.exports = {

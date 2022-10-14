@@ -99,6 +99,7 @@ let initWebRoutes = (app) => {
       router.get("/econ-au", fxController.getAUEcon);
       router.get("/econ-us", fxController.getUSEcon);
       router.get("/econ-jp", fxController.getJPEcon);
+      router.get("/econ-eu", fxController.getEUEcon);
       router.post("/fx/indicator", fxController.getIndicator);
       router.post("/fx/indiupdate", fxController.updateIndicator);
       router.post("/fxtrades", fxController.fxTradesInquiry);
@@ -107,9 +108,12 @@ let initWebRoutes = (app) => {
       router.post("/addcustoken", managerController.addCusToken);
       router.post("/pushadmmsg", managerController.pushAdmMsg);
       router.post("/pushtrans", managerController.pushTrans);
+      router.post("/createuser", managerController.createUser);
+      router.post("/updateuser", managerController.updateUser);
 
       /* FX API */
       router.get("/fx/api/v1", fxController.apiGetIndicator);
+      router.post("/fx/api/v1", fxController.apiGetIndicator);
 
 
   // Request with json body

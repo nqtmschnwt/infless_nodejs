@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { pool } = require('../config/dbConfig');
+const api = require('../controllers/apiController');
 
 let getNewCustomers = (req,res) => {
   let user=req.user;
@@ -30,8 +31,14 @@ let getNewCustomers = (req,res) => {
   }
 }
 
-let postNewCustomers = (req,res) => {
+let postNewCustomers = async (req,res) => {
   console.log(req.body);
+  let expTime = "";
+  let surName = "";
+  let cusToken = "";
+  let email = "";
+  let phone = "";
+
   if(req.body.action == 'acceptCustomer') {
     pool.query(
       `WITH new_active AS (
@@ -54,13 +61,42 @@ let postNewCustomers = (req,res) => {
       INSERT INTO user_services(user_id,copytrade)
       VALUES ((SELECT user_id FROM new_active),'true');`,
       [parseInt(req.body.id), addDays(parseInt(req.body.expiry)),addDays(0)],
-      (err, results)=>{
+      (err, results) => {
         if(err){
-          throw err;
+          console.log(err);
         }
         console.log(`User activated ${req.body.id}`);
+        // Get that user
+        pool.query(
+          `SELECT u.id,u.name,u.phone,u.email,ex.expire_date FROM users u
+          INNER JOIN expiry ex ON u.id = ex.user_id
+          WHERE u.id=$1;`, [parseInt(req.body.id)],
+          (err,results) => {
+            if(err) {
+              console.log(err);
+            } else {
+              // call api
+              let user = results.rows[0];
+              let ed = new Date(user.expire_date);
+              expTime = ed.getFullYear() + addZero(ed.getMonth()+1) + addZero(ed.getDate());
+              surName = user.name.split(' ')[0];
+              email = user.email;
+              phone = user.phone;
+              pool.query(
+                `SELECT * FROM user_token WHERE user_id=$1;`, [req.user.id], (err,results) => {
+                  if(err) console.log(err);
+                  else {
+                    cusToken = results.rows[0].custoken;
+                    apiCreateUser(cusToken,email,expTime,phone,"",surName)
+                  }
+                }
+              )
+            }
+          }
+        )
       }
     )
+
   } else if (req.body.action == 'declineCustomer') {
     console.log()
     pool.query(
@@ -80,16 +116,30 @@ let postNewCustomers = (req,res) => {
           throw err;
         }
         console.log(`User deleted  ${req.body.id}`);
+        //return res.redirect('/new-customers');
       }
     )
   }
+
+
   return res.redirect('/new-customers');
+}
+
+async function apiCreateUser(cusToken,email,expTime,phone,role,surName) {
+  console.log("New value:",cusToken,email,expTime,phone,"",surName);
+  let apiCall = await api.createUser(cusToken,email,expTime,phone,"",surName);
+  console.log('Create user result: ', apiCall);
 }
 
 function addDays(days) {
   var result = new Date();
   result.setDate(result.getDate() + days);
   return result;
+}
+
+function addZero(n) {
+  if (n<10) return('0'+n);
+  else return(''+n);
 }
 
 module.exports = {

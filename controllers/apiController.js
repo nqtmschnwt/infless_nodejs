@@ -3,39 +3,6 @@ const fetch = require('node-fetch');
 const url = 'http://sc.tintinsoft.online:4006';
 const apptoken = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUVFNBUEkiLCJhcHBpZCI6MiwiY2xpZW50aWQiOjEsInBsYW5pZCI6Mn0.e-SzmLVwIcppvWokxnH8iw9wyIHWGt1UpRHvnvb6K-E";
 
-/*let getTestPage = (req,res) => {
-  //testFunc();
-  let idToken = req.body.idToken;
-  console.log("get");
-  //console.log(authToken);
-  return res.render('devtest',{idToken:"none"});
-}
-
-let postTestPage = async (req,res) => {
-  let idToken = req.body.idToken;
-  let verifyResults = await verifyUser(idToken);
-  let authCode = verifyResults.body.authCode;
-  let authCodeResults = await getCusToken(authCode);
-  let cusToken = authCodeResults.body.custoken;
-
-  // test send msg
-  let admPushMsgResults = await pushAdmMsg(cusToken);
-  let admPushMsgErr = admPushMsgResults.header.errorcode;
-  var pushMsgErrDesc;
-  if(admPushMsgErr==0) {
-    pushMsgErrDesc = 'Success';
-  } else {
-    pushMsgErrDesc = 'Error #' + admPushMsgErr + ': ' + admPushMsgResults.header.errordesc;
-  }
-
-  return res.send({
-        status: 200,
-        message: "Done",
-        cusToken: cusToken,
-        pushMsg: pushMsgErrDesc
-      });
-}*/
-
 function addZero(n) {
   if (n<10) return('0'+n);
   else return(''+n);
@@ -93,6 +60,84 @@ function getCusToken(authCode) {
   };
 
   return fetch(url + '/api/global/vn/fundmntsystem/getcustoken/v1', {
+    method: 'POST',
+    headers: {
+      "APPTOKEN": apptoken,
+    },
+    body: JSON.stringify(apiBody),
+  })
+  .then(res => res.json());
+}
+
+// đăng ký user
+function createUser(cusToken,email,expTime,phone,role,surName) {
+  let d = new Date();
+  let requestID = "inflessCreateUser"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
+
+  let apiBody = {
+    "header": {
+      "appToken": apptoken,
+      "authUrl": "",
+      "checksum": "",
+      "custToken": cusToken,
+      "requestID": requestID
+    },
+    "body": {
+      "active_email": "", //(chuỗi trống)
+      "active_time": d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()),
+      "approve_email": "",
+      "email": email,
+      "expire_time": expTime, //YYYYMMDD
+      "phone": phone,
+      "role": "",
+      "sessionID": "",
+      "status": "",
+      "surName": surName
+    }
+  };
+
+  console.log(apiBody);
+
+  return fetch(url + '/api/global/vn/fundmntsystem/user/create/v1', {
+    method: 'POST',
+    headers: {
+      "APPTOKEN": apptoken,
+    },
+    body: JSON.stringify(apiBody),
+  })
+  .then(res => res.json());
+}
+
+// active user
+function updateUser(cusToken,email,expTime,phone,role,status,surName) {
+  let d = new Date();
+  let requestID = "inflessUpdateUser"  + d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()) + addZero(d.getHours()) + addZero(d.getMinutes()) + addZero(d.getSeconds());
+
+  let apiBody = {
+    "header": {
+      "appToken": apptoken,
+      "authUrl": "",
+      "checksum": "",
+      "custToken": cusToken,
+      "requestID": requestID
+    },
+    "body": {
+      "active_email": "", //(chuỗi trống)
+      "active_time": d.getFullYear() + addZero(d.getMonth()+1) + addZero(d.getDate()),
+      "approve_email": "",
+      "email": email,
+      "expire_time": expTime, //YYYYMMDD
+      "phone": phone,
+      "role": "",
+      "sessionID": "",
+      "status": status,
+      "surName": surName
+    }
+  };
+
+  console.log(apiBody);
+
+  return fetch(url + '/api/global/vn/fundmntsystem/user/update/v1', {
     method: 'POST',
     headers: {
       "APPTOKEN": apptoken,
@@ -474,6 +519,8 @@ module.exports = {
   getCusToken:getCusToken,
   pushTrans:pushTrans,
   pushAdmMsg:pushAdmMsg,
+  createUser:createUser,
+  updateUser:updateUser,
 }
 
 /*

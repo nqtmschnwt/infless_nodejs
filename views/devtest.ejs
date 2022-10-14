@@ -5,37 +5,159 @@
 <body>
   <div class="btn btn-primary" id="test-btn">Test</div>
   <div id="test-results"></div>
+  <div id="createUser"></div>
   <div id='myChart'></div>
-  <script>
+  <script  type="module">
 		var socket = io("/");
     let testBtn = document.getElementById("test-btn");
-    testBtn.addEventListener("click", myFunction);
 
-    function myFunction(){
-      fetch("/ami?ticker=TEST&DateTime=2022-09-02 20:52:30&price=7&vol=10&key=tungdeptrai", {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({})
-      }).then(res => res.json())
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    }
 
-    // Socket msg
-    socket.on('apiResponse', function(data) {
-      console.log(data);
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA55RLyd-DL6oF50Ijb6f8TY5ev9LcnV-A",
+      authDomain: "fundmntsystem.firebaseapp.com",
+      projectId: "fundmntsystem",
+      storageBucket: "fundmntsystem.appspot.com",
+      messagingSenderId: "907222202776",
+      appId: "1:907222202776:web:5c7cf5d2e49f6c7e1393ed"
+    };
+
+
+    firebase.initializeApp(firebaseConfig);
+
+    // Google provider
+    var provider = new firebase.auth.GoogleAuthProvider();
+
+    testBtn.addEventListener('click',function() {
+      firebase.auth().signInWithRedirect(provider);
     });
 
-    socket.on('phongThan', function(data) {
-      console.log('Phong than:');
-      console.log(data);
-    })
+    // Sign in from redirect
+    firebase.auth()
+      .getRedirectResult()
+      .then((result) => {
+        if (result.credential) {
+          //** @type {firebase.auth.OAuthCredential}
+          var credential = result.credential;
 
-    
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          var token = credential.accessToken;
+          console.log(token);
+          // ...
+          console.log('Success!!! ');
+          console.log('===================');
+        }
+
+        let currentUser = firebase.auth().currentUser;
+        if(currentUser == undefined) {
+          console.log('undefined user');
+          // login
+        } else {
+          console.log(currentUser.email);
+
+          currentUser.getIdToken().then(function(idToken) {
+            console.log(idToken);
+            //document.getElementById('idToken').innerHTML = idToken;
+            let data = {idToken: idToken};
+
+            fetch("/addcustoken", {
+              method: "POST",
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(data)
+            }).then(res => res.json())
+            .then(res => {
+              console.log(res);
+              if(res.custoken) {
+                try {
+                  console.log(res.custoken);
+                  document.getElementById('test-results').innerHTML = res.custoken;
+                  //var email = "nqt.clone" + randNumber(3) + "@gmail.com";
+                  var email = 'nqt.clone896@gmail.com';
+                  var expTime = "20231231";
+                  //var phone = "+849" + randNumber(8);
+                  var phone = '+84960268840';
+                  var role = "";
+                  //var name = "Test" + randNumber(3);
+                  var name = 'Test995';
+                  updateUser(res.custoken,email,expTime,phone,role,name);
+                } catch (e) {
+                  console.log(e);
+                }
+
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+          });
+        }
+
+
+      }).catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+        console.log('ERROR: ', errorCode, errorMessage);
+      });
+
+      async function createUser(custoken,email,expTime,phone,role,surName) {
+        fetch("/createuser", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            custoken: custoken,
+            email: email,
+            expTime: expTime,
+            phone: phone,
+            role: role,
+            surName: surName
+          })
+        }).then(res => res.json())
+        .then(res => {
+          console.log(res);
+          document.getElementById('createUser').innerHTML = JSON.stringify(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      }
+
+      async function updateUser(custoken,email,expTime,phone,role,surName) {
+        fetch("/updateuser", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            custoken: custoken,
+            email: email,
+            expTime: expTime,
+            phone: phone,
+            role: role,
+            surName: surName
+          })
+        }).then(res => res.json())
+        .then(res => {
+          console.log(res);
+          document.getElementById('createUser').innerHTML = JSON.stringify(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      }
+
+      function randNumber(num) {
+        return parseInt(Math.random().toFixed(num).replace("0.",""))
+      }
   </script>
 </body>
 </html>

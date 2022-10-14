@@ -26,7 +26,7 @@
   },
   {
     "type":"leading",
-    "name":"US 10Year Treasury Yield",
+    "name":"AU 10Year Treasury Yield",
     "code":"au-10ybond"
   },
   {

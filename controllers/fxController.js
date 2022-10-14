@@ -11,7 +11,8 @@ const auth = new google.auth.GoogleAuth({
 const fileIds = {
   au:'1RImBcO8calzmQi8AtbX5SApLPRakM1uXGroIImYeIjM',
   us:'1EBQzuO_E7aRQHjZB69V14Gcs_AIjA-uofERyDr_SyZw',
-  jp:'1NU7WYgfBzGyKpH1MbH14oQc5tOGrTKo2XZzcel_2gCQ'
+  jp:'1NU7WYgfBzGyKpH1MbH14oQc5tOGrTKo2XZzcel_2gCQ',
+  eu:'1Ht-MoWxDyrvKhko_f_nD3aZhFL4cbz2SinLavARVVJc'
 };
 
 let getFxMain = (req,res) => {
@@ -38,6 +39,27 @@ let getUSEcon = async (req,res) => {
         let endoIndicators = JSON.parse(fs.readFileSync('./views/fx/usendo.json')); // edit this
         let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/fxMenu.json'));
         let countryName = 'Hoa Kỳ';  // edit this
+        return res.render('fx/fxecon', {menu:menuData,user,endoIndicators,countryName});
+      } catch(err) {
+        console.log(err);
+      }
+    } else {
+      return res.render('404');
+    }
+  } else {
+    return res.redirect('/login');
+  }
+}
+
+let getEUEcon = async (req,res) => {
+  let user=req.user;
+  if(user!=undefined){
+    if(user.role_id==2 || user.role_id==3)
+    {
+      try {
+        let endoIndicators = JSON.parse(fs.readFileSync('./views/fx/euendo.json')); // edit this
+        let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/fxMenu.json'));
+        let countryName = 'Châu Âu';  // edit this
         return res.render('fx/fxecon', {menu:menuData,user,endoIndicators,countryName});
       } catch(err) {
         console.log(err);
@@ -131,7 +153,7 @@ let getIndicator = async (req,res) => {
       }
 
       // Get data
-      let indiData = await getSheetData(fileIds[country],indiCode,'A:B');
+      let indiData = await getSheetData(fileIds[country],indiCode,'A5:B');
 
       return res.json({err:0,errdesc:'Get indicator success',indiInfo,indiData});
     } else {
@@ -149,7 +171,7 @@ let apiGetIndicator = async (req,res) => {
     let country = reqIndi.split('-')[0];
     let indiCode = reqIndi.split('-')[1];
     // Get data
-    let indiData = await getSheetData(fileIds[country],indiCode,'A:B');
+    let indiData = await getSheetData(fileIds[country],indiCode,'A5:B');
     return res.json({reqId:req.query.reqId,err:0,errdesc:'Success',data:indiData});
   } catch(err) {
     console.log(err);
@@ -278,6 +300,7 @@ module.exports = {
   getAUEcon:getAUEcon,
   getUSEcon:getUSEcon,
   getJPEcon:getJPEcon,
+  getEUEcon:getEUEcon,
   getIndicator:getIndicator,
   apiGetIndicator:apiGetIndicator,
   updateIndicator:updateIndicator,

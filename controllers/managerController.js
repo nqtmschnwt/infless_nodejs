@@ -488,41 +488,46 @@ let addCusToken = async (req,res) => {
   if(user!=undefined){
     if(user.role_id==2 || user.role_id==3)
     {
-      let idToken = req.body.idToken;
-      let verifyResults = await api.verifyUser(idToken);
-      let authCode = verifyResults.body.authCode;
-      let authCodeResults = await api.getCusToken(authCode);
-      let cusToken = authCodeResults.body.custoken;
-      user.custoken = cusToken;
-      //console.log(user);
-      pool.query(
-        `SELECT * FROM user_token WHERE user_id=$1;`, [user.id], (err,results) => {
-          if(err) console.log(err);
-          else {
-            if(results.rows.length==0) {
-              pool.query(
-                `INSERT INTO user_token(user_id,custoken) VALUES ($1,$2);`,[user.id,cusToken],(err,results) => {
-                  if(err) console.log(err);
-                  else {
-                    console.log('token recorded');
-                    return res.json({id:user.id,token:cusToken});
+      try {
+        let idToken = req.body.idToken;
+        console.log('idToken: ' + idToken);
+        let verifyResults = await api.verifyUser(idToken);
+        let authCode = verifyResults.body.authCode;
+        let authCodeResults = await api.getCusToken(authCode);
+        let cusToken = authCodeResults.body.custoken;
+        user.custoken = cusToken;
+        //console.log(user);
+        pool.query(
+          `SELECT * FROM user_token WHERE user_id=$1;`, [user.id], (err,results) => {
+            if(err) console.log(err);
+            else {
+              if(results.rows.length==0) {
+                pool.query(
+                  `INSERT INTO user_token(user_id,custoken) VALUES ($1,$2);`,[user.id,cusToken],(err,results) => {
+                    if(err) console.log(err);
+                    else {
+                      console.log('token recorded');
+                      return res.json({id:user.id,token:cusToken});
+                    }
                   }
-                }
-              )
-            } else {
-              pool.query(
-                `UPDATE user_token SET custoken=$2 WHERE user_id=$1;`,[user.id,cusToken],(err,results) => {
-                  if(err) console.log(err);
-                  else {
-                    console.log('token recorded');
-                    return res.json({id:user.id,custoken:cusToken});
+                )
+              } else {
+                pool.query(
+                  `UPDATE user_token SET custoken=$2 WHERE user_id=$1;`,[user.id,cusToken],(err,results) => {
+                    if(err) console.log(err);
+                    else {
+                      console.log('token recorded');
+                      return res.json({id:user.id,custoken:cusToken});
+                    }
                   }
-                }
-              )
+                )
+              }
             }
           }
-        }
-      )
+        )
+      } catch(err) {
+        console.log(err);
+      }
     }
   }
 }
@@ -573,6 +578,32 @@ let pushAdmMsg = async (req,res) => {
   }
 }
 
+let createUser = async (req,res) => {
+      //console.log(req.body);
+      let custoken = req.body.custoken;
+      let email=req.body.email;
+      let expTime=req.body.expTime;
+      let phone=req.body.phone;
+      let role=req.body.role;
+      let surName=req.body.surName;
+      let push = await api.createUser(custoken,email,expTime,phone,role,surName);
+      console.log('Result: ', push);
+      return res.json(push);
+}
+
+let updateUser = async (req,res) => {
+      //console.log(req.body);
+      let custoken = req.body.custoken;
+      let email=req.body.email;
+      let expTime=req.body.expTime;
+      let phone=req.body.phone;
+      let role=req.body.role;
+      let surName=req.body.surName;
+      let push = await api.updateUser(custoken,email,expTime,phone,role,surName);
+      console.log('Result: ', push);
+      return res.json(push);
+}
+
 async function getSheetData(sheetName,range) {
   // Create client instance for auth
   const client = await auth.getClient();
@@ -609,4 +640,6 @@ module.exports = {
   pushTrans:pushTrans,
   pushAdmMsg:pushAdmMsg,
   updateFundNav:updateFundNav,
+  createUser:createUser,
+  updateUser:updateUser,
 }

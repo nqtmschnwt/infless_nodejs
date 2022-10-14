@@ -28,7 +28,43 @@
             <div class="col-lg-6 col-12">
               <div class="block">
                 <div class="row-title">
-                  Nhận định tổng quan
+                  Inflation score (higher score is weaker currency)
+                </div>
+                <div class="block-content">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-3" id='us-flag'>USD: </div>
+                      <div class="col-9" id="us">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='eu-flag'>EUR: </div>
+                      <div class="col-9" id="eu">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='uk-flag'>GBP: </div>
+                      <div class="col-9" id="uk">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='jp-flag'>JPY: </div>
+                      <div class="col-9" id="jp">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='au-flag'>AUD: </div>
+                      <div class="col-9" id="au">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='ca-flag'>CAD: </div>
+                      <div class="col-9" id="ca">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='nz-flag'>NZD: </div>
+                      <div class="col-9" id="nz">Loading...</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3" id='ch-flag'>CHF: </div>
+                      <div class="col-9" id="ch">Loading...</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -96,7 +132,405 @@
 <script src="/js/favico.min.js"></script>
 <script src="/js/custom-script.js"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+  let indicatorsAll = [
+    {
+      country:'us',
+      indicators: [
+        ["us-pmi",false,'M','leading'],
+        ["us-nmi",false,'M','leading'],
+        ["us-umcsi",false,'M','leading'],
+        ["us-bp",false,'M','leading'],
+        ["us-10ybond",false,'M','leading'],
+        ["us-cpi",false,'M','coincident'],
+        ["us-cpicore",false,'M','coincident'],
+        ["us-ppi",false,'M','coincident'],
+        ["us-ppicore",false,'M','coincident'],
+        ["us-nfp",false,'M','coincident'],
+        ["us-govdebt",false,'Q','reaction'],
+        ["us-govsd",false,'M','reaction'],
+        ["us-cbbs",false,'W','reaction'],
+        ["us-m2",false,'M','reaction'],
+      ],
+      leadingScore: [],
+      coincidentScore: [],
+      reactionScore: [],
+      totalScore: 0
+    }/*,
+    {
+      country:'eu',
+      indicators: [
+        ["eu-eumpmi",false,'M','leading'],
+        ["eu-euspmi",false,'M','leading'],
+        ["eu-frmpmi",false,'M','leading'],
+        ["eu-frspmi",false,'M','leading'],
+        ["eu-dempmi",false,'M','leading'],
+        ["eu-despmi",false,'M','leading'],
+        ["eu-indu",true,'M','leading'],
+        ["eu-serv",true,'M','leading'],
+        ["eu-cons",true,'M','leading'],
+        ["eu-buil",true,'M','leading'],
+        ["eu-de10ybond",false,'M','leading'],
+        ["eu-fr10ybond",false,'M','leading'],
+        ["eu-cpi",false,'M','coincident'],
+        ["eu-cpicore",false,'M','coincident'],
+        ["eu-dewpi",false,'M','coincident'],
+        ["eu-deppi",false,'M','coincident'],
+        ["eu-euppi",false,'M','coincident'],
+        ["eu-deunemploy",false,'M','coincident'],
+        ["eu-euunemploy",false,'M','coincident'],
+        ["eu-eugovdebt",false,'Q','reaction'],
+        ["eu-eugovsd",false,'Q','reaction'],
+        ["eu-cbbs",false,'W','reaction'],
+        ["eu-m2",false,'M','reaction'],
+      ],
+      leadingScore: [],
+      coincidentScore: [],
+      reactionScore: [],
+      totalScore: 0
+    },
+    {
+      country:'jp',
+      indicators: [
+        ["jp-pmi",false,'M','leading'],
+        ["jp-spmi",false,'M','leading'],
+        ["jp-cc",false,'M','leading'],
+        ["jp-co",true,'M','leading'],
+        ["jp-10ybond",false,'M','leading'],
+        ["jp-tokyocpi",true,'M','coincident'],
+        ["jp-ppi",true,'M','coincident'],
+        ["jp-sppi",true,'M','coincident'],
+        ["jp-unemploy",false,'M','coincident'],
+        ["jp-govdebt",false,'Q','reaction'],
+        ["jp-govsd",false,'M','reaction'],
+        ["jp-cbbs",false,'M','reaction'],
+        ["jp-m2",false,'M','reaction'],
+      ],
+      leadingScore: [],
+      coincidentScore: [],
+      reactionScore: [],
+      totalScore: 0
+    },
+    {
+      country:'au',
+      indicators: [
+        ["au-pmi",false,'M','leading'],
+        ["au-spmi",false,'M','leading'],
+        ["au-wcs",true,'M','leading'],
+        ["au-ba",true,'M','leading'],
+        ["au-10ybond",false,'M','leading'],
+        ["au-cpi",true,'Q','coincident'],
+        ["au-ppi",true,'Q','coincident'],
+        ["au-mi",true,'M','coincident'],
+        ["au-employ",true,'M','coincident'],
+        ["au-anzjob",true,'M','coincident'],
+        ["au-govdebt",false,'M','reaction'],
+        ["au-govsd",false,'M','reaction'],
+        ["au-cbbs",false,'W','reaction'],
+        ["au-m3",false,'M','reaction'],
+      ],
+      leadingScore: [],
+      coincidentScore: [],
+      reactionScore: [],
+      totalScore: 0
+    },*/
+  ];
 
+  /*
+  var cnt = 0;
+  //for (var cnt=0; cnt<indicatorsAll.length; cnt++) {
+  while (cnt<indicatorsAll.length) {
+
+      let country = indicatorsAll[cnt];
+      var i = 0;
+      while (i<country.indicators.length) {
+      //for (var i=0; i<country.indicators.length; i++) {
+        //console.log(country.country);
+        //indiRequest(country.country,country.indicators[i][0],country.indicators[i][1],country.indicators[i][2],country.indicators[i][3]);
+        //doRequest(country,i);
+        (function(ind) {
+         setTimeout(function(){
+           let d = new Date();
+           console.log(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ": " + cnt + ", " + i);
+         },
+         1000 * (ind+1) );
+        })(i);
+        i++;
+      }
+
+    cnt++;
+  }*/
+
+  var i = 0;
+  var k = 1;
+  var obj = setInterval( function () {
+      console.log(i,k);
+      let country = indicatorsAll[i];
+      indiRequest(country.country,country.indicators[k][0],country.indicators[k][1],country.indicators[k][2],country.indicators[k][3]);
+      if(k < country.indicators.length - 1)
+         k++;
+      else
+      {
+          k = 1;
+          if(i<indicatorsAll.length - 1)
+               i++;
+          else
+               clearInterval(obj);
+      }
+  }, 1000);
+
+  function doRequest(country,i) {
+
+      //indiRequest(country.country,country.indicators[i][0],country.indicators[i][1],country.indicators[i][2],country.indicators[i][3]);
+      let d = new Date();
+      console.log(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+
+  }
+
+  function countryScore(countryName) {
+    for (var cnt=0; cnt<indicatorsAll.length; cnt++) {
+      try {
+        let country = indicatorsAll[cnt];
+        if (country.country == countryName) {
+          let leading = 0;
+          let coincident = 0;
+          let reaction = 0;
+          let sum1 = 0;
+          let t1 = 0;
+          for (var i=0; i<country.leadingScore.length; i++) {
+            if (!isNaN(country.leadingScore[i])) {
+              sum1 += country.leadingScore[i];
+              t1 += 1;
+            }
+          }
+          leading = sum1/t1;
+
+          let sum2 = 0;
+          let t2 = 0;
+          for (var i=0; i<country.coincidentScore.length; i++) {
+            if (!isNaN(country.coincidentScore[i])) {
+              sum2 += country.coincidentScore[i];
+              t2 += 1;
+            }
+          }
+          coincident = sum2/t2;
+
+          let sum3 = 0;
+          let t3 = 0;
+          for (var i=0; i<country.reactionScore.length; i++) {
+            if(!isNaN(country.reactionScore[i])) {
+              sum3 += country.reactionScore[i];
+              t3 += 1;
+            }
+          }
+          reaction = sum3/t3;
+
+          country.totalScore = leading - (coincident + reaction);
+          if (!isNaN(country.totalScore))
+            document.getElementById(countryName).innerHTML = country.totalScore;
+        }
+      } catch(err) {
+        console.log(err);
+      }
+    }
+  }
+
+  function indiRequest(country,reqCode,changed,freq,type) {
+    let freqNum = 1;
+    switch(freq.toUpperCase()) {
+      case 'W':
+        freqNum = 52;
+        break;
+      case 'M':
+        freqNum = 12;
+        break;
+      case 'Q':
+        freqNum = 4;
+        break;
+      default:
+        freqNum = 1;
+    }
+    let tday = new Date();
+    let dt = tday.getFullYear() + addZero(tday.getMonth()+1) + addZero(tday.getDate())  + "_" + addZero(tday.getHours()) + addZero(tday.getMinutes()) + addZero(tday.getSeconds());
+    let params = {
+      "reqId": "web_" + dt,
+      "code": reqCode
+    };
+    let query = Object.keys(params)
+               .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+               .join('&');
+
+    fetch("/fx/api/v1?" + query, {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({})  // empty body
+    }).then(res => res.json())
+    .then(res => {
+      //console.log(country,type);
+      testData2(country,type,score(stdDev(avg(pctChange(res.data,changed),2,freqNum),3),3,4));
+      countryScore(country);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+
+  function pctChange(data,changed) {
+    data[0].push('pct_change');
+    for (var i=1;i<data.length;i++) {
+      try {
+        data[i][0] = new Date(data[i][0]);
+        data[i][1] = parseFloat(data[i][1]);
+        if (changed) {
+          data[i].push(data[i][1]);
+        } else {
+          if (i==1)
+            data[i].push(0);
+          else {
+            if (data[i-1][1] != 0)
+              data[i].push((data[i][1] - data[i-1][1])/data[i-1][1]*100);
+            else {
+              data[i].push((data[i][1] - data[i-1][1])/0.000000001 * 100);
+            }
+          }
+        }
+      } catch(err) {
+        console.log(err);
+      }
+    }
+    return data;
+  }
+
+  function avg(data,colIndex,period) {
+    data[0].push('avg');
+    for (var i=1;i<data.length;i++) {
+      try {
+        if (period<=1) {
+          data[i].push(data[i][colIndex]);
+        } else if (i<period) {
+          data[i].push(parseInt('')); // NaN value
+        } else {
+          let sum = 0;
+          for (var j=0;j<period;j++) {
+            sum += data[i-j][colIndex];
+          }
+          data[i].push(sum/period);
+        }
+      } catch(err) {
+        console.log(err);
+      }
+    }
+    dropNa(data);
+    return data;
+  }
+
+  function stdDev(data,colIndex) {
+    data[0].push('stdDev');
+    try {
+      let sum = 0;
+      let sum1 = 0;
+      for (var i=1; i<data.length; i++) {
+        sum += data[i][colIndex];
+        let mean = sum/i;
+        sum1 += Math.pow(data[i][colIndex] - mean, 2);
+        data[i].push(Math.sqrt(sum1/i));
+      }
+    } catch(err) {
+      console.log(err);
+    }
+    return data;
+  }
+
+  function dropNa(data) {
+    for(var i=data.length-1; i>0; i--) {
+      for (var j=1; j<data[i].length; j++) {
+        if (isNaN(data[i][j])) {
+          data.splice(i,1);
+          break;
+        }
+      }
+    }
+    return data;
+  }
+
+  function score(data,valIndex,stdIndex) {
+    data[0].push("score");
+    for (var i=1; i<data.length; i++) {
+      let score = 0;
+      if (data[i][valIndex] >=0) {
+        if (data[i][valIndex] <= data[i][stdIndex]) {
+          score = data[i][valIndex] / data[i][stdIndex] * 100;
+        } else {
+          score = 100 - (data[i][valIndex] - data[i][stdIndex])/data[i][stdIndex] * 100;
+        }
+      } else {
+        if (data[i][valIndex] >= -data[i][stdIndex]) {
+          score = data[i][valIndex] / data[i][stdIndex] * 100;
+        } else {
+          score = -100 - (data[i][stdIndex] + data[i][valIndex])/data[i][stdIndex] * 100;
+        }
+      }
+
+      // Set range from -100 to 100
+      if (score > 100) data[i].push(100);
+      else if (score < -100) data[i].push(-100);
+      else data[i].push(score);
+    }
+    //console.log(data[0][1] + ": " + data[data.length-1][data[data.length-1].length-1]);
+    if (isNaN(data[data.length-1][data[data.length-1].length-1])) {
+      console.log('----------------------');
+      console.log(data[0][1]);
+      console.log(data);
+    }
+    return data;
+  }
+
+  function testData(data) {
+    // update div innerHTML
+    //console.log(data[data.length-1][data[data.length-1].length-1]);
+    try {
+      let testContent = "<table id='testTable' style='width:100%'><tr>";
+      // Headers
+      for (var i=0; i<data[0].length; i++) {
+        testContent += "<th>" + data[0][i] + "</th>";
+      }
+      testContent += "</tr>";
+      testContent += "</table>";
+      document.getElementById("test").innerHTML = testContent;
+
+      // Table main content
+      for (var i=1; i<data.length; i++) {
+        let row = document.getElementById("testTable").insertRow(-1);  // insert into position 0 means insert to the 1st position; -1 to the end position
+        for (var j=0; j<data[i].length; j++) {
+          let cell = row.insertCell(-1);
+          cell.innerHTML = data[i][j];
+        }
+      }
+
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  function testData2(countryName,type,data) {
+    try {
+      for (var cnt=0; cnt<indicatorsAll.length; cnt++) {
+        let country = indicatorsAll[cnt];
+        if (country.country == countryName) {
+          if(type == 'leading')
+            country.leadingScore.push(data[data.length-1][data[data.length-1].length-1]);
+          else if (type=='coincident')
+            country.coincidentScore.push(data[data.length-1][data[data.length-1].length-1]);
+          else if (type=='reaction')
+            country.reactionScore.push(data[data.length-1][data[data.length-1].length-1]);
+        }
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+</script>
 
 
 </html>

@@ -91,7 +91,7 @@ let postRegisterPage = async (req,res) => {
               [name,phoneFormatted,email.trim(),hashedPassword,ref.trim()],
               (err, results) => {
                 if(err) {
-                  throw err
+                  console.log(err);
                 }
                 //console.log(results.rows);
                 req.flash("success_msg", "Đăng ký thành công. Chúng tôi sẽ liên hệ với bạn để xác minh và kích hoạt tài khoản");
@@ -119,7 +119,7 @@ let postRegisterPage = async (req,res) => {
               [name,phoneFormatted,email,hashedPassword,refPhone.getNumber( 'e164' )],
               (err, results) => {
                 if(err) {
-                  throw err
+                  console.log(err);
                 }
                 //console.log(results.rows);
                 req.flash("success_msg", "Đăng ký thành công. Chúng tôi sẽ liên hệ với bạn để xác minh và kích hoạt tài khoản");

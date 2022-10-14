@@ -1,0 +1,127 @@
+[
+  {
+    "type":"target",
+    "name":"Real GDP",
+    "code":"eu-gdp"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - EU Manufacturing PMI",
+    "code":"eu-eumpmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - EU Services PMI",
+    "code":"eu-euspmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - France Manufacturing PMI",
+    "code":"eu-frmpmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - France Services PMI",
+    "code":"eu-frspmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Germany Manufacturing PMI",
+    "code":"eu-dempmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Germany Services PMI",
+    "code":"eu-despmi"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Industrial Confidence",
+    "code":"eu-indu"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Service Confidence",
+    "code":"eu-serv"
+  },
+  {
+    "type":"leading",
+    "name":"Consumer Sentiment - Consumer Confidence",
+    "code":"eu-cons"
+  },
+  {
+    "type":"leading",
+    "name":"Business Sentiment - Construction Confidence",
+    "code":"eu-buil"
+  },
+  {
+    "type":"leading",
+    "name":"Germany 10Year Treasury Yield",
+    "code":"eu-de10ybond"
+  },
+  {
+    "type":"leading",
+    "name":"France 10Year Treasury Yield",
+    "code":"eu-fr10ybond"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Consumer Price Index",
+    "code":"eu-cpi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Core Consumer Price Index",
+    "code":"eu-cpicore"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Germany Wholesale Price Index",
+    "code":"eu-dewpi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - Germany Producer Price Index",
+    "code":"eu-deppi"
+  },
+  {
+    "type":"coincident",
+    "name":"Inflation - EU Producer Price Index",
+    "code":"eu-euppi"
+  },
+  {
+    "type":"coincident",
+    "name":"Employment - Germany Unemployment",
+    "code":"eu-deunemploy"
+  },
+  {
+    "type":"coincident",
+    "name":"Employment - EU Unemployment",
+    "code":"eu-euunemploy"
+  },
+  {
+    "type":"reaction",
+    "name":"Government - Government Debt",
+    "code":"eu-eugovdebt"
+  },
+  {
+    "type":"reaction",
+    "name":"Government - Government Surplus(or Deficit)",
+    "code":"eu-eugovsd"
+  },
+  {
+    "type":"reaction",
+    "name":"Central Bank - Balance Sheet",
+    "code":"eu-cbbs"
+  },
+  {
+    "type":"reaction",
+    "name":"Money supply - M2",
+    "code":"eu-m2"
+  },
+  {
+    "type":"lagging",
+    "name":"Interest Rate - ECB Main refinancing rate",
+    "code":"eu-ir"
+  }
+]

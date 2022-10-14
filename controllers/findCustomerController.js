@@ -2,6 +2,7 @@ const fs = require('fs');
 const { pool } = require('../config/dbConfig');
 const bcrypt = require('bcrypt');
 const phoneNumber = require( 'awesome-phonenumber' );
+const api = require('../controllers/apiController');
 
 let getFindCustomers = (req,res) => {
   let user=req.user;
@@ -130,6 +131,7 @@ let postFindCustomers = async (req,res) => {
         let ddkChange = req.body.ddkChange;
         let slChange = req.body.slChange;
         let personalSLTPChange = req.body.personalSLTPChange;
+        let appStatus = req.body.appStatus;
 
         var roleID;
         if(req.body.role_id){
@@ -184,6 +186,17 @@ let postFindCustomers = async (req,res) => {
               throw err;
             } else {
               console.log("Client info changed");
+              // Call api
+              pool.query(
+                `SELECT * FROM user_token WHERE user_id=$1;`, [req.user.id], (err,results) => {
+                  if(err) console.log(err);
+                  else {
+                    cusToken = results.rows[0].custoken;
+                    apiUpdateUser(cusToken,email,expire.split('-').join(''),phoneFormatted,"",appStatus,name)
+                    //console.log([cusToken,email,expire.split('-').join(''),phoneFormatted,"",appStatus,name]);
+                  }
+                }
+              )
               // RELOAD THE LAST QUERY DATA
               query.name = req.body.queryName;
               query.phone = req.body.queryPhone;
@@ -257,6 +270,12 @@ let postFindCustomers = async (req,res) => {
   } else {
     return res.redirect('/login');
   }
+}
+
+async function apiUpdateUser(cusToken,email,expTime,phone,role,status,surName) {
+  console.log("New value:",cusToken,email,expTime,phone,"",surName);
+  let apiCall = await api.updateUser(cusToken,email,expTime,phone,"",status,surName);
+  console.log('Update user result: ', apiCall);
 }
 
 module.exports = {

@@ -236,6 +236,20 @@
     });
   }
 
+  function sendDelMultiForm(){
+    socket.emit('vol21Admin', {
+      'key':'tungdeptrai',
+      'DateTime':dt,
+      'cmd':{
+        'cmdHeader':'delAllTicker',
+        'cmdContent':{
+          'ticker':'',
+          'id':'',
+        }
+      }
+    });
+  }
+
   batcanhbao.addEventListener('click', function(){
     var   canhbaoMsg = document.getElementById('canhbaoMsg');
     var   canhbaoColor1 = document.getElementById('canhbaoColor1');
@@ -332,6 +346,9 @@
       if(data.msgContent.cmdHeader == 'delTicker'){
         closeDelForm();
         clearDelForm();
+      }
+      if(data.msgContent.cmdHeader == 'delAllTicker'){
+        closeDelMultiForm();
       }
       console.log(data);
     } else if (data.msgHeader == 'cmdError') {

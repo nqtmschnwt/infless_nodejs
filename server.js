@@ -664,4 +664,33 @@ function adminCmd(socket,cmd) {
       )
     }
   }
+
+  // DELETE ALL TICKER
+  if(cmd.cmdHeader == "delAllTicker") {
+    let {id,ticker} = cmd.cmdContent;
+    let errors=[];
+
+    if (errors.length >0) {
+      // IF error(s) in inputs
+      socket.emit('vol21Admin', {
+        'msgHeader':'cmdError',
+        'msgContent':errors,
+      });
+    } else {
+      // Delete ticker from database
+      //console.log(ticker);
+      pool.query(
+        `DELETE FROM phongthan;`,
+        (err,results) => {
+          if(err) {
+            console.log(err); // throw err;
+          } else
+          console.log(results.rows);
+
+          // Insert completed, then broadcast new updated table
+          sendPhongThan();
+        }
+      )
+    }
+  }
 }

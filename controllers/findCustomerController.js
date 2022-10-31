@@ -191,9 +191,11 @@ let postFindCustomers = async (req,res) => {
                 `SELECT * FROM user_token WHERE user_id=$1;`, [req.user.id], (err,results) => {
                   if(err) console.log(err);
                   else {
-                    cusToken = results.rows[0].custoken;
-                    apiUpdateUser(cusToken,email,expire.split('-').join(''),phoneFormatted,"",appStatus,name)
-                    //console.log([cusToken,email,expire.split('-').join(''),phoneFormatted,"",appStatus,name]);
+                    if (results.rows.length>0) {
+                      cusToken = results.rows[0].custoken;
+                      apiUpdateUser(cusToken,email,expire.split('-').join(''),phoneFormatted,"",appStatus,name)
+                      //console.log([cusToken,email,expire.split('-').join(''),phoneFormatted,"",appStatus,name]);
+                    }
                   }
                 }
               )

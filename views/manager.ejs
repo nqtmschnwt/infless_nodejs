@@ -36,6 +36,11 @@
           <div class="row">
             <div class="col-lg-6 col-12">
               <div class="block">
+                <div class="title">Kết nối app: <span id="appconnect"></span></div>
+                <div id="custoken" style="word-wrap: break-word"></div>
+                <div class="btn btn-primary" id="gglogin">Đăng nhập Google</div>
+              </div>
+              <div class="block">
                 <h4 class="title">Người dùng mới đăng ký</h4>
                 <div class="number dashtext-1" style="font-size:2em;text-align:right;">1,000</div>
                 <div class="progress progress-template">
@@ -143,6 +148,11 @@
     firebase.auth().signInWithRedirect(provider);
   };
 
+  var gglogin = document.getElementById('gglogin');
+  gglogin.addEventListener('click',function() {
+    firebase.auth().signInWithRedirect(provider);
+  });
+
   // Sign in from redirect
   firebase.auth()
     .getRedirectResult()
@@ -162,9 +172,21 @@
       let currentUser = firebase.auth().currentUser;
       if(currentUser == undefined) {
         console.log('undefined user');
+        try {
+          document.getElementById('appconnect').innerHTML = "thất bại";
+          document.getElementById('custoken').innerHTML = "Hãy đăng nhập lại Google";
+        } catch(err) {
+          console.log(err);
+        }
         // login
       } else {
         console.log(currentUser.email);
+        try {
+          document.getElementById('appconnect').innerHTML = "thành công";
+          document.getElementById('gglogin').style.display = "none";
+        } catch(err) {
+          console.log(err);
+        }
 
         currentUser.getIdToken().then(function(idToken) {
           console.log(idToken);
@@ -179,7 +201,12 @@
           .then(res => {
             //console.log(res);
             if(res.custoken) {
-              console.log(res.custoken);
+              //console.log(res.custoken);
+              try {
+                document.getElementById('custoken').innerHTML = "Token: " + res.custoken;
+              } catch(err) {
+                console.log(err);
+              }
               var m = new Date();
               var dt = m.getFullYear() +"-"+ addZero(m.getMonth()+1) +"-"+ addZero(m.getDate())  + " " + addZero(m.getHours()) + "-" + addZero(m.getMinutes()) + "-" + addZero(m.getSeconds());
               socket.emit('vol21Admin', {

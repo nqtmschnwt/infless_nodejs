@@ -1,7 +1,7 @@
 [
   {
     "title":"Home",
-    "link":"/home",
+    "link":"/securities/home",
     "child":[]
   },
   {
@@ -33,12 +33,12 @@
   },
   {
     "title":"Đổi mật khẩu",
-    "link":"/change-password",
+    "link":"/securities/change-password",
     "child":[]
   },
   {
     "title":"Đăng xuất",
-    "link":"/logout",
+    "link":"/securities/logout",
     "child":[]
   }
 ]

@@ -19,10 +19,10 @@ let getFindCustomers = (req,res) => {
       }
       return res.render('findCustomers', {menu:menuData,user,data:[],query});
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -267,10 +267,10 @@ let postFindCustomers = async (req,res) => {
 
       //...
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 

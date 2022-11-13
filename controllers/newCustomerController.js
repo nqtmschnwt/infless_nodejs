@@ -24,10 +24,10 @@ let getNewCustomers = (req,res) => {
       )
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -122,7 +122,7 @@ let postNewCustomers = async (req,res) => {
   }
 
 
-  return res.redirect('/new-customers');
+  return res.redirect('/securities/new-customers');
 }
 
 async function apiCreateUser(cusToken,email,expTime,phone,role,surName) {

@@ -23,10 +23,10 @@ let getPfPage = (req,res) => {
       )
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -424,14 +424,14 @@ let postPfPage = (req,res) => {
       }
 
       if(req.body.findnone) {
-        return res.redirect("/pf-control");
+        return res.redirect("/securities/pf-control");
       }
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -488,10 +488,10 @@ let getPfInfo = (req,res) => {
 
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -554,10 +554,10 @@ let getPfUpdate = async (req,res) => {
       //return res.render('pf_update', {menu:menuData,user});
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 

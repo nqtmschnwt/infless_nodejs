@@ -15,7 +15,7 @@ let getChangePasswordPage = (req,res) => {
       return res.render('changePsw', {menu:menuData,user});
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -70,7 +70,7 @@ let postChangePasswordPage = async (req,res) => {
           throw err;
         } else {
           req.flash("success_msg", "Thay đổi mật khẩu thành công");
-          res.redirect('/change-password');
+          res.redirect('/securities/change-password');
         }
       }
     )

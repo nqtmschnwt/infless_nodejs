@@ -95,7 +95,7 @@ let postRegisterPage = async (req,res) => {
                 }
                 //console.log(results.rows);
                 req.flash("success_msg", "Đăng ký thành công. Chúng tôi sẽ liên hệ với bạn để xác minh và kích hoạt tài khoản");
-                res.redirect('/login');
+                res.redirect('/securities/login');
               }
             )
           } else {
@@ -123,7 +123,7 @@ let postRegisterPage = async (req,res) => {
                 }
                 //console.log(results.rows);
                 req.flash("success_msg", "Đăng ký thành công. Chúng tôi sẽ liên hệ với bạn để xác minh và kích hoạt tài khoản");
-                res.redirect('/login');
+                res.redirect('/securities/login');
               }
             )
           }

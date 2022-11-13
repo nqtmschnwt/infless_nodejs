@@ -1,7 +1,7 @@
 [
   {
     "title":"Tổng quan",
-    "link":"/manager",
+    "link":"/securities/manager",
     "child":[]
   },
   {
@@ -10,15 +10,15 @@
     "child":[
       {
         "title":"Duyệt khách mới",
-        "link":"/new-customers"
+        "link":"/securities/new-customers"
       },
       {
         "title":"Tra cứu khách",
-        "link":"/find-customers"
+        "link":"/securities/find-customers"
       },
       {
         "title":"Quản lý danh mục",
-        "link":"/pf-control"
+        "link":"/securities/pf-control"
       }
     ]
   },
@@ -28,31 +28,31 @@
     "child":[
       {
         "title":"Copy trade",
-        "link":"/trade-admin"
+        "link":"/securities/trade-admin"
       },
       {
         "title":"Tool Phong thần",
-        "link":"/pt-admin"
+        "link":"/securities/pt-admin"
       },
       {
         "title":"Danh mục scan",
-        "link":"/scan-list"
+        "link":"/securities/scan-list"
       }
     ]
   },
   {
     "title":"Link tải App",
-    "link":"/download-setup",
+    "link":"/securities/download-setup",
     "child":[]
   },
   {
     "title":"Đổi mật khẩu",
-    "link":"/change-password",
+    "link":"/securities/change-password",
     "child":[]
   },
   {
     "title":"Đăng xuất",
-    "link":"/logout",
+    "link":"/securities/logout",
     "child":[]
   }
 ]

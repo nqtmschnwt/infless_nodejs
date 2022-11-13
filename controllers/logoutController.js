@@ -4,9 +4,9 @@ let getLogoutPage = (req,res) => {
     console.log("User logged out:",req.user.id);
     req.logOut();
     req.flash('success_msg', 'Bạn đã đăng xuất thành công');
-    res.redirect('/login');
+    res.redirect('/securities/login');
   } else {
-    res.redirect('/login');
+    res.redirect('/securities/login');
   }
 }
 

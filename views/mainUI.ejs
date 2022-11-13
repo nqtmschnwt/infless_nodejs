@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Infless Corp</title>
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+  <!-- Custom -->
+  <link rel="stylesheet" href="assets/css/style2023.css">
+
+</head>
+<body>
+  <div class="">
+    <canvas id="space"></canvas>
+  </div>
+  <div id="scene-01">
+    <div class="" id="scene-01-container" >
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="welcomelogo">
+              <img src="assets/img/logo.png" alt="infless" class="welcomelogoimg">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="scene-01-next-container"  onclick="transition12('scene-01','scene-02')">
+        <div id="scene-01-next">
+            <div class="pulse">NEXT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="" id="scene-02">
+    <div class="" id="scene-02-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="wrapper">
+              <div class="front-face">
+                  <img src="assets/img/logo_outer.png" id="logo-outer">
+                  <img src="assets/img/logo_inner.png" id="logo-inner">
+              </div>
+            </div>
+            <nav class="circular-menu">
+
+              <div class="circle">
+                <a href="" class=""><img class="circle-icon" src="assets/img/startup_icon.png"></img>Startup</a>
+                <a href="" class=""><img class="circle-icon" src="assets/img/real_estate_icon.png"></img>Bất động sản</a>
+                <a href="/securities/" class=""><img class="circle-icon" src="assets/img/stock_icon.png"></img>Chứng khoán</a>
+                <a href="" class=""><img class="circle-icon" src="assets/img/fx_icon.png"></img>Forex</a>
+                <a href="" class=""><img class="circle-icon" src="assets/img/cafe_icon.png"></img>Chuỗi cafe</a>
+                <a href="" class=""><img class="circle-icon" src="assets/img/charity_icon.png"></img>Quỹ từ thiện</a>
+              </div>
+
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/newui.js"></script>
+  <script src="assets/js/jq.js"></script>
+</body>
+</html>

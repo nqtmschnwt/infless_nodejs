@@ -9,8 +9,8 @@ let getLoginPage = (req,res) => {
 }
 
 let postLoginPage = passport.authenticate('local', {
-  successRedirect: '/home',
-  failureRedirect: '/login',
+  successRedirect: '/securities/home',
+  failureRedirect: '/securities/login',
   failureFlash: true
 })
 

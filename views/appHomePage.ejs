@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('head.ejs',{page_name:'Trading'}) %>
-<link rel="stylesheet" href="assets/css/appMain.css">
+<link rel="stylesheet" href="../assets/css/appMain.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <body>
   <%- include('hotStyles.ejs') %>
   <!-- Loader -->
   <div id="loading">
-    <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
+    <img id="loading-image" src="../img/Gordon.gif" alt="Loading..." />
   </div>
   <!-- HEADER BEGIN -->
   <%- include('menus/headerMenu.ejs',{user}) %>
@@ -37,7 +37,7 @@
   </div>
 </body>
 <%- include ('tail.ejs') %>
-<script src="/js/favico.min.js"></script>
-<script src="/js/custom-script.js"></script>
-<script src="/js/dashboard-main.js"></script>
+<script src="../js/favico.min.js"></script>
+<script src="../js/custom-script.js"></script>
+<script src="../js/dashboard-main.js"></script>
 </html>

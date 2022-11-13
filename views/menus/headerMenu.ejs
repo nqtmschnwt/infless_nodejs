@@ -3,7 +3,7 @@
     <div class="container-fluid d-flex align-items-center justify-content-between">
       <div class="navbar-header">
         <!--Navbar header-->
-        <a href="/home" class="navbar-brand">
+        <a href="/securities/home" class="navbar-brand">
           <div class="brand-text brand-big visible text-uppercase">
             <strong class="text-primary">Infless</strong>
             <strong>Investment</strong>
@@ -45,7 +45,7 @@
           <% } %>
         </div>
         <a href="/user">
-          <div class="avatar"><img src="img/icons/profle-512.png" alt="..." class="img-fluid rounded-circle"></div>
+          <div class="avatar"><img src="../img/icons/profle-512.png" alt="..." class="img-fluid rounded-circle"></div>
           <div id="user_phone" style="display:none">
             <%= user.phone %>
           </div>
@@ -73,11 +73,11 @@
                 <% if(user.role_id==2) { %>
                   <div class="col-lg-4 col-12">
                   <!--div class="col-lg-6 col-12"-->
-                    <a href="/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
+                    <a href="/securities/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
                   </div>
                   <div class="col-lg-4 col-12">
                   <!--div class="col-lg-6 col-12"-->
-                    <a href="/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
+                    <a href="/securities/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
                   </div>
                   <div class="col-lg-4 col-12">
                     <a href="/fx" class="btn btn-secondary" style="width:100%">Forex</a>
@@ -85,10 +85,10 @@
                 <% } %>
                 <% if(user.role_id==3) { %>
                   <div class="col-lg-6 col-12">
-                    <a href="/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
+                    <a href="/securities/home" class="btn btn-secondary" style="width:100%">Khách hàng</a>
                   </div>
                   <div class="col-lg-6 col-12">
-                    <a href="/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
+                    <a href="/securities/manager" class="btn btn-secondary" style="width:100%">Quản lý</a>
                   </div>
                 <% } %>
               </div>

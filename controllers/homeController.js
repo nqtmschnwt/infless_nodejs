@@ -402,8 +402,13 @@ let getMucTieuPage = (req,res) => {
   return res.render('webPhuongChamMucTieu');
 }
 
+let getMainUIPage = (req,res) => {
+  return res.render('mainUI');
+}
+
 
 module.exports = {
+  // Securities pages
   getAppHomePage: getAppHomePage,
   getWebHomePage: getWebHomePage,
   getWebDownloadPage: getWebDownloadPage,
@@ -416,4 +421,6 @@ module.exports = {
   getGioiThieuPage: getGioiThieuPage,
   getTamNhinPage: getTamNhinPage,
   getMucTieuPage: getMucTieuPage,
+  // Main UI pages
+  getMainUIPage:getMainUIPage,
 }

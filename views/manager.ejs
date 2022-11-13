@@ -193,7 +193,7 @@
           //document.getElementById('idToken').innerHTML = idToken;
           let data = {idToken: idToken};
 
-          fetch("/addcustoken", {
+          fetch("/securities/addcustoken", {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)

@@ -225,7 +225,7 @@
   });
   console.log(data2);
   for(var i=0;i<data2.length;i++) {
-    fetch("/pf-update", {
+    fetch("/securities/pf-update", {
       method: "POST",
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data2[i])

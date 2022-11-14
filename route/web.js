@@ -51,6 +51,7 @@ let initWebRoutes = (app) => {
       router.get("/login", checkAuthenticated, loginController.getLoginPage);
       //router.post("/login", limiter(1,5,'Đăng nhập không thành công quá nhiều lần. Bạn sẽ không thể đăng nhập trong vòng 1 giờ nữa.'), loginController.postLoginPage);
       router.post("/securities/login", loginController.postLoginPage);
+      router.post("/login", loginController.postLoginPage);
       // Login from external systems
       router.post("/securities/app/login", apiController.externalLogin);
       // Logout

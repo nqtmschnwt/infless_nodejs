@@ -142,7 +142,7 @@ let initWebRoutes = (app) => {
 // Check user logged in or not, then redirect
 function checkAuthenticated(req,res,next){
   if(req.isAuthenticated()){
-    return res.redirect('/apphome');
+    return res.redirect('/securities/apphome');
   }
   next();
 }
@@ -151,7 +151,7 @@ function checkNotAuthenticated(req,res,next){
   if(req.isAuthenticated()){
     return next();
   }
-  res.redirect('/login');
+  res.redirect('/securities/login');
 }
 
 // Limit number of request every hour

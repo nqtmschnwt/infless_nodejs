@@ -192,6 +192,7 @@ html,body{
   position: absolute;
   text-align: center;
   transform: translate(-30px,-50px);
+  font-size: 14px;
 }
 
 .circle-icon {

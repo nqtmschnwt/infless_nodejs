@@ -19,7 +19,7 @@ let getManagerPage = (req,res) => {
       return res.render('404');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 
 }
@@ -77,7 +77,7 @@ let getDownloadSetupPage = (req,res) => {
       return res.render('404');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -115,10 +115,10 @@ let postDownloadSetupPage = (req,res) => {
       let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
       return res.render('downloadSetup', {menu:menuData,user,data:{},result:r});
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -159,10 +159,10 @@ let getPTPage = (req,res) => {
         }
       );
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -253,10 +253,10 @@ let postPTPage = (req,res) => {
 
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -316,10 +316,10 @@ let getTradePage = async (req,res) => {
           }
         })
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -404,10 +404,10 @@ let postTradePage = async (req,res) => {
       }
 
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 
@@ -428,10 +428,10 @@ let getScanListPage = (req,res) => {
         }
       )
     } else {
-      return res.redirect('/home');
+      return res.redirect('/securities/home');
     }
   } else {
-    return res.redirect('/login');
+    return res.redirect('/securities/login');
   }
 }
 

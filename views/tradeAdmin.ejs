@@ -338,6 +338,8 @@
             console.log('Ngày '+ dates[t] + " có cổ tức trên " + (portfolio[j].volAvailable * Math.pow(10,6)) + " cổ phiếu " + portfolio[j].ticker);
             switch(dividend[i][0]) {
               case 'Trả cổ tức bằng cổ phiếu':
+                console.log('');
+                break;
               case 'Thưởng cổ phiếu':
                 // code block
                 console.log('Trả cổ tức bằng cổ phiếu tỷ lệ '+ dividend[i][4]);
@@ -403,6 +405,26 @@
                 }
               default:
                 // code block
+            }
+          }
+        }
+      }
+      if(dates[t] == dividend[i][3]) {    // Ngay thuc hien
+        for(var j=0; j<portfolio.length; j++) {  // check if portfolio has this ticker
+          if(dividend[i][1] == portfolio[j].ticker) {
+            switch(dividend[i][0]) {
+              case 'Trả cổ tức bằng cổ phiếu':
+                console.log(dates[t] + ' ' + portfolio[j].ticker + ' cổ tức bằng cổ phiếu về TK');
+                portfolio[j].volAvailable += portfolio[j].pending;
+                portfolio[j].pending = 0;
+                break;
+              case 'Thưởng cổ phiếu':
+                console.log(dates[t] + ' ' + portfolio[j].ticker + ' thưởng cổ phiếu về TK');
+                portfolio[j].volAvailable += portfolio[j].pending;
+                portfolio[j].pending = 0;
+                break;
+              default:
+                console.log('');
             }
           }
         }

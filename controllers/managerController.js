@@ -273,6 +273,7 @@ let getTradePage = async (req,res) => {
         vnindex: vnindex,
         dividend: dividend
       }
+      //console.log(data);
       pool.query(
         `SELECT * FROM trade_orders ORDER BY id ASC;`, (err,results) => {
           if(err) console.log(err);

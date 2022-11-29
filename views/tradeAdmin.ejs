@@ -415,13 +415,13 @@
             switch(dividend[i][0]) {
               case 'Trả cổ tức bằng cổ phiếu':
                 console.log(dates[t] + ' ' + portfolio[j].ticker + ' cổ tức bằng cổ phiếu về TK');
-                portfolio[j].volAvailable += portfolio[j].pending;
-                portfolio[j].pending = 0;
+                //portfolio[j].volAvailable += portfolio[j].pending;
+                //portfolio[j].pending = 0;
                 break;
               case 'Thưởng cổ phiếu':
                 console.log(dates[t] + ' ' + portfolio[j].ticker + ' thưởng cổ phiếu về TK');
-                portfolio[j].volAvailable += portfolio[j].pending;
-                portfolio[j].pending = 0;
+                //portfolio[j].volAvailable += portfolio[j].pending;
+                //portfolio[j].pending = 0;
                 break;
               default:
                 console.log('');

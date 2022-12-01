@@ -104,7 +104,7 @@ let postAppHomePage = (req,res) => {
           console.log(parseInt(user.id),d,count);
         }
       )
-      return res.redirect('/apphome');
+      return res.redirect('/securities/apphome');
     }
     if(req.body.personalAdd){
       try {
@@ -132,7 +132,7 @@ let postAppHomePage = (req,res) => {
                     if(err) {
                       console.log('Error: ', err);
                     } else {
-                      return res.redirect('/apphome');
+                      return res.redirect('/securities/apphome');
                     }
                   }
                 )
@@ -159,7 +159,7 @@ let postAppHomePage = (req,res) => {
                     if(err) {
                       console.log('Error: ', err);
                     } else {
-                      return res.redirect('/apphome');
+                      return res.redirect('/securities/apphome');
                     }
                   }
                 )
@@ -208,12 +208,12 @@ let postAppHomePage = (req,res) => {
                       if(err) {
                         console.log('Error: ', err);
                       } else {
-                        return res.redirect('/apphome');
+                        return res.redirect('/securities/apphome');
                       }
                     }
                   )
                 } else {
-                  return res.redirect('/apphome');
+                  return res.redirect('/securities/apphome');
                 }
               }
             }
@@ -253,7 +253,7 @@ let postAppHomePage = (req,res) => {
                     if(err) {
                       console.log('Error: ', err);
                     } else {
-                      return res.redirect('/apphome');
+                      return res.redirect('/securities/apphome');
                     }
                   }
                 )

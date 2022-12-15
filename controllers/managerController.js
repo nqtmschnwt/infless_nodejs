@@ -11,7 +11,7 @@ const auth = new google.auth.GoogleAuth({
 let getManagerPage = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
       return res.render('manager', {menu:menuData,user});
@@ -68,7 +68,7 @@ let postManagerPage = (req,res) => {
 let getDownloadSetupPage = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       r = {result:'',msg:''};
       let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
@@ -84,7 +84,7 @@ let getDownloadSetupPage = (req,res) => {
 let postDownloadSetupPage = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       var errors = 0;
       for(var i in req.body){
@@ -126,7 +126,7 @@ let getPTPage = (req,res) => {
   let user=req.user;
   //console.log(user); custoken is added in frontend
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
       pool.query(
@@ -169,7 +169,7 @@ let getPTPage = (req,res) => {
 let postPTPage = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       let body = req.body;
       //console.log(body);
@@ -263,7 +263,7 @@ let postPTPage = (req,res) => {
 let getTradePage = async (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       let vnindex = await getSheetData('vnindex','A:B');
       let prices = await getSheetData('Price','A:C');
@@ -327,7 +327,7 @@ let getTradePage = async (req,res) => {
 let postTradePage = async (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       let vnindex = await getSheetData('vnindex','A:B');
       let prices = await getSheetData('Price','A:C');
@@ -415,7 +415,7 @@ let postTradePage = async (req,res) => {
 let getScanListPage = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       pool.query(
         `SELECT sltp FROM user_personal_sltp;`, (err,results) => {
@@ -439,7 +439,7 @@ let getScanListPage = (req,res) => {
 let updateFundNav = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       // get portfolio id
       pool.query(
@@ -487,7 +487,7 @@ let updateFundNav = (req,res) => {
 let addCusToken = async (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       try {
         let idToken = req.body.idToken;
@@ -537,7 +537,7 @@ let pushTrans = async (req,res) => {
   let user=req.user;
   //console.log(user);
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       //console.log(req.body);
       let custoken = req.body.custoken;
@@ -559,7 +559,7 @@ let pushAdmMsg = async (req,res) => {
   let user=req.user;
   //console.log(user);
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       //console.log(req.body);
       let custoken = req.body.custoken;

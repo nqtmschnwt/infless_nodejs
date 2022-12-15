@@ -195,7 +195,7 @@
                           <option value="0">Không</option>
                         </select>
                       </div>
-                      <% if(user.role_id == 2) { %>
+                      <% if(user.role_id >= 2) { %>
                         <div class="col-lg-4 col-12 form-group">
                           <label>Cấp quyền</label>
                           <select id="" class="form-control" name="role_id">

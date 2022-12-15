@@ -7,7 +7,7 @@ const api = require('../controllers/apiController');
 let getFindCustomers = (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
       let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
       let query = {
@@ -29,11 +29,10 @@ let getFindCustomers = (req,res) => {
 let postFindCustomers = async (req,res) => {
   let user=req.user;
   if(user!=undefined){
-    if(user.role_id==2 || user.role_id==3)
+    if(user.role_id>1)
     {
-      let roleSearch=1;
-      if(user.role_id==2)
-        roleSearch = 3;
+      let roleSearch=user.role_id;
+
       let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
       let query = {
         name:"",
@@ -60,13 +59,13 @@ let postFindCustomers = async (req,res) => {
         if(!name && !phone && !email && !ref && status=='false'){
           // All fields are empty
           pool.query(
-            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl,us.personal_sltp,nav.total_nav FROM users u
+            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl,us.personal_sltp,ur.role_id,nav.total_nav FROM users u
             INNER JOIN ref_info r ON u.id=r.user_id
             INNER JOIN expiry e ON u.id=e.user_id
             INNER JOIN user_services us on u.id=us.user_id
             INNER JOIN user_role ur on u.id=ur.user_id
             INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
-            WHERE ur.role_id<=$1 OR u.id=$2
+            WHERE ur.role_id=1 OR ur.role_id>=$1 OR u.id=$2
             ORDER BY u.id ASC`,
             [roleSearch,user.id],
             (err,results) => {
@@ -97,7 +96,7 @@ let postFindCustomers = async (req,res) => {
           }
 
           pool.query(
-            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl,us.personal_sltp,nav.total_nav FROM users u
+            `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl,us.personal_sltp,ur.role_id,nav.total_nav FROM users u
             INNER JOIN ref_info r ON u.id=r.user_id
             INNER JOIN expiry e ON u.id=e.user_id
             INNER JOIN user_services us on u.id=us.user_id
@@ -207,13 +206,13 @@ let postFindCustomers = async (req,res) => {
               query.status = req.body.queryStatus;
               if(!query.name && !query.phone && !query.email && !query.ref){
                 pool.query(
-                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl,us.personal_sltp,nav.total_nav FROM users u
+                  `SELECT u.id,u.name,u.phone,u.email,r.ref_id,e.expire_date,us.copytrade,us.phongthan,us.ddk,us.sl,us.personal_sltp,ur.role_id,nav.total_nav FROM users u
                   INNER JOIN ref_info r ON u.id=r.user_id
                   INNER JOIN expiry e ON u.id=e.user_id
                   INNER JOIN user_services us on u.id=us.user_id
                   INNER JOIN user_role ur on u.id=ur.user_id
                   INNER JOIN (SELECT DISTINCT ON (n.user_id) n.user_id,n.total_nav FROM user_nav n JOIN users u on u.id=n.user_id ORDER BY n.user_id DESC ) nav ON u.id = nav.user_id
-                  WHERE ur.role_id<=$1
+                  WHERE ur.role_id=1 OR ur.role_id>=$1
                   ORDER BY u.id ASC`,
                   [roleSearch],
                   (err,results) => {

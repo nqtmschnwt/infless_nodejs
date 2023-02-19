@@ -367,7 +367,10 @@ let getWebDownloadPage = (req,res) => {
       );
     }
   );
+}
 
+let getLanding2023 = (req,res) => {
+  return res.render('systemldp');
 }
 
 let getPrivatePolicyPage = (req,res) => {
@@ -421,6 +424,7 @@ module.exports = {
   getGioiThieuPage: getGioiThieuPage,
   getTamNhinPage: getTamNhinPage,
   getMucTieuPage: getMucTieuPage,
+  getDemoLandingPage: getLanding2023,
   // Main UI pages
   getMainUIPage:getMainUIPage,
 }

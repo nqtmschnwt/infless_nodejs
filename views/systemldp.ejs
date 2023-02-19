@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS via CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <!-- GG font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/systemldp.css">
+</head>
+
+<body>
+    <div class="container">
+        <!--section id="section1" class="section-one">
+            <p class="section1-text text-center" style="display: none;">Thay vì mất 20-50 triệu cho các khóa học đầu tư, chỉ cần hệ thống này </p>
+            <img id="hopsanpham1" style="display: none;" src="img/hopsanpham.png" alt="Random Image">
+            <p class="section1-text text-center" style="display: none;">Bạn sẽ có...</p>
+            <div id="btn1" style="display: none;" class="btn btn-primary">Tôi sẽ có những gì?</div>
+        </section-->
+
+        <section id="section1" class="section-one">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <img id="hopsanpham1" style="display: none;" src="../img/hopsanpham.png" alt="Random Image">
+                    </div>
+                    <div class="col-lg-6">
+                        <h2 class="" style="display: none;">Thay vì mất 20-50 triệu cho các khóa học đầu tư, chỉ cần hệ thống này bạn sẽ có:</h2>
+                        <ul class="section2ul" style="display:none;">
+                            <li>Bản đồ đầu tư đơn giản, hiểu tình trạng mã cổ phiếu đang nắm giữ chỉ trong 10’</li>
+                            <li>Không cần giỏi công nghệ vẫn tự mình đầu tư với tỷ lệ thắng cao</li>
+                            <li>Bộ 4 chỉ báo sức mạnh tuyệt đối trên thị trường chứng khoán</li>
+                            <li>Giảm bớt độ nhiễu hay lạc lối trong vô vàn phương pháp đầu tư trên thị trường chứng khoán</li>
+                        </ul>
+                        <div id="btn1" style="display: none;" class="btn">Quyền lợi tôi nhận được là gì?</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </section>
+
+        <section id="section2" class="section-two">
+            <h2 class="text-center" style="display:none;">Quyền lợi của bạn khi mua hệ thống này</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <img id="hopsanpham1" style="display: none;" src="../img/hopsanpham.png" alt="Random Image">
+                    </div>
+                    <div class="col-lg-6">
+                        <ul class="section3ul" style="display:none;">
+                            <li>Giúp bạn xây dựng bộ nguyên tắc đầu tư từ con số 0 mà không cần hiểu biết sâu về kinh tế</li>
+                            <li>Khắc phục tình trạng thiếu định hướng và phương pháp trong đầu tư chứng khoán</li>
+                            <li>Thay vì mất 20-50tr cho các khóa học đầu tư, mỗi tháng bạn chỉ cần bỏ ra xxx triệu cho hệ thống này</li>
+                            <li>Được hỗ trợ trực tiếp cùng nhà sang lập trong quá trình ứng dụng kiến thức vào thực tiễn</li>
+                            <li>Được tham gia cộng đồng Affiliate về hệ thống, giúp bạn kiếm được 3-10tr/tháng chỉ với 5’ mỗi ngày</li>
+                        </ul>
+                        <!-- Button to trigger the modal -->
+                        <button class="btn" id="btn2" style="display:none;">Mua ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The modal -->
+            <div id="myModal" class="modal noautoani">
+                <div class="modal-content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="close">&times;</span>
+                                <h2 class="text-center">Thông tin đơn hàng</h2>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="name">Họ và tên:</label>
+                                        <input type="text" id="name" name="name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email:</label>
+                                        <input type="email" id="email" name="email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Số điện thoại:</label>
+                                        <input type="tel" id="phone" name="phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product">Tên sản phẩm</label>
+                                        <input type="text" class="form-control" name="product" id="product" placeholder="Product" value="Hệ thống hỗ trợ giao dịch Infless: 4.000.000/tháng" readonly>
+                                    </div>
+                                    <div class="form-group order-amount">
+                                        <label for="amount">Số tháng sử dụng:</label>
+                                        <input type="number" id="order-amount" name="order-amount" value="1" min="1">
+                                        <!--div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="increase-btn">+</button>
+                                            <button class="btn btn-outline-secondary" type="button" id="decrease-btn">-</button>
+                                        </div-->
+                                    </div>
+                                    <div id="totalOrderMoneyContainer">Thành tiền: <span id="totalOrderMoney">4000000</span></div>
+                                    <div id="submit-button" type="submit" class="btn submit-btn">Thêm vào giỏ hàng</div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="cart-icon" class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+
+        <div id="cart-modal" class="modal noautoani">
+            <div class="modal-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="close">&times;</span>
+                            <h2 class="text-center">Giỏ hàng</h2>
+                            <div id="cart-info"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="payment-modal" class="modal noautoani">
+            <div class="modal-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="close">&times;</span>
+                            <h2 class="text-center">Thanh toán đơn hàng</h2>
+                            <p id="payment-info" class="font-weight-bold">Quý khách vui lòng chuyển khoản theo thông tin như sau:</p>
+                            <p>Chủ tài khoản: <span class="font-weight-bold">Bùi Minh Hải</span></p>
+                            <p>Số tài khoản: <span class="font-weight-bold">99999999999</span></p>
+                            <p>Ngân hàng: <span class="font-weight-bold">TMCP Quân đội (MB)</span></p>
+                            <p>Số tiền: <span id="payment-amount" class="font-weight-bold"></span> đồng <span id="payment-amount-spell"></span></p>
+                            <p>Nội dung: <span id="payment-note" class="font-weight-bold"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS via CDN -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="../js/systemldp.js"></script>
+    <script>
+        fadeInSection("section1");
+    </script>
+</body>
+
+</html>

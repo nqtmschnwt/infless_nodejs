@@ -39,6 +39,7 @@ let initWebRoutes = (app) => {
       router.get("/securities/privacy-policy/", homeController.getPrivatePolicyPage);
       router.get("/securities/lien-he/", homeController.getLienHePage);
       router.get("/securities/tuyen-dung/", homeController.getTuyendungPage);
+      router.get("/securities/demolanding2023/", homeController.getDemoLandingPage);
 
 
   /* PLATFORM PAGES */

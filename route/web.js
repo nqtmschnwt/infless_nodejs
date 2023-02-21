@@ -40,6 +40,7 @@ let initWebRoutes = (app) => {
       router.get("/securities/lien-he/", homeController.getLienHePage);
       router.get("/securities/tuyen-dung/", homeController.getTuyendungPage);
       router.get("/securities/demolanding2023/", homeController.getDemoLandingPage);
+      router.get("/securities/thankyoupage/", homeController.getThankYouPage);
 
 
   /* PLATFORM PAGES */

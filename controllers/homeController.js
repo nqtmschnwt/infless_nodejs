@@ -373,6 +373,11 @@ let getLanding2023 = (req,res) => {
   return res.render('systemldp');
 }
 
+let getThankYouPage = (req,res) => {
+  return res.render('thankyou');
+}
+
+
 let getPrivatePolicyPage = (req,res) => {
   return res.render('webPrivatePolicy');
 }
@@ -425,6 +430,7 @@ module.exports = {
   getTamNhinPage: getTamNhinPage,
   getMucTieuPage: getMucTieuPage,
   getDemoLandingPage: getLanding2023,
+  getThankYouPage: getThankYouPage,
   // Main UI pages
   getMainUIPage:getMainUIPage,
 }

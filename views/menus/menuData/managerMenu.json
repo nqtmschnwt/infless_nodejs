@@ -1,58 +1,60 @@
-[
-  {
-    "title":"Tổng quan",
-    "link":"/securities/manager",
-    "child":[]
-  },
-  {
-    "title":"Quản lý khách",
-    "link":"#",
-    "child":[
-      {
-        "title":"Duyệt khách mới",
-        "link":"/securities/new-customers"
-      },
-      {
-        "title":"Tra cứu khách",
-        "link":"/securities/find-customers"
-      },
-      {
-        "title":"Quản lý danh mục",
-        "link":"/securities/pf-control"
-      }
-    ]
-  },
-  {
-    "title":"Trading",
-    "link":"#",
-    "child":[
-      {
-        "title":"Copy trade",
-        "link":"/securities/trade-admin"
-      },
-      {
-        "title":"Tool Phong thần",
-        "link":"/securities/pt-admin"
-      },
-      {
-        "title":"Danh mục scan",
-        "link":"/securities/scan-list"
-      }
-    ]
-  },
-  {
-    "title":"Link tải App",
-    "link":"/securities/download-setup",
-    "child":[]
-  },
-  {
-    "title":"Đổi mật khẩu",
-    "link":"/securities/change-password",
-    "child":[]
-  },
-  {
-    "title":"Đăng xuất",
-    "link":"/securities/logout",
-    "child":[]
-  }
+[{
+        "title": "Tổng quan",
+        "link": "/securities/manager",
+        "child": []
+    },
+    {
+        "title": "Quản lý khách",
+        "link": "#",
+        "child": [{
+                "title": "Duyệt khách mới",
+                "link": "/securities/new-customers"
+            },
+            {
+                "title": "Tra cứu khách",
+                "link": "/securities/find-customers"
+            },
+            {
+                "title": "Quản lý danh mục",
+                "link": "/securities/pf-control"
+            }
+        ]
+    },
+    {
+        "title": "Trading",
+        "link": "#",
+        "child": [{
+                "title": "Copy trade",
+                "link": "/securities/trade-admin"
+            },
+            {
+                "title": "Tool Phong thần",
+                "link": "/securities/pt-admin"
+            },
+            {
+                "title": "Danh mục scan",
+                "link": "/securities/scan-list"
+            }
+        ]
+    },
+    {
+        "title": "Link tải App",
+        "link": "/securities/download-setup",
+        "child": []
+    },
+    {
+        "title": "Demo shop",
+        "link": "/securities/shop",
+        "child": []
+    },
+    {
+        "title": "Đổi mật khẩu",
+        "link": "/securities/change-password",
+        "child": []
+    },
+    {
+        "title": "Đăng xuất",
+        "link": "/securities/logout",
+        "child": []
+    }
 ]

@@ -1,0 +1,476 @@
+/* Global styles */
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* Header styles */
+
+
+/* Header */
+
+header {
+    background-color: #343a40;
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 60px;
+}
+
+.fa-user,
+.fa-shopping-cart {
+    font-size: 2.2rem !important;
+}
+
+
+/* Logo */
+
+.logo {
+    height: 60px;
+}
+
+#logo {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+#logo img {
+    max-width: 100%;
+}
+
+.navbar-toggler {
+    border-color: #fff !important;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+.nav-link {
+    display: inline-block;
+    line-height: 50px;
+    /* adjust value to center vertically */
+}
+
+
+/* User Icon */
+
+
+/* Shopping Cart Icon */
+
+#user-icon {
+    position: relative;
+    /*margin-right: 20px;*/
+    line-height: 24px;
+    color: #fff;
+}
+
+#shopping-cart-icon {
+    line-height: 24px;
+    color: #fff;
+}
+
+
+/* Red Dot */
+
+.red-dot {
+    position: absolute;
+    /*top: 11px;
+    right: 16px;*/
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.page-content {
+    padding: 40px 20px;
+}
+
+
+/* Product page styles */
+
+.product-labels {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 2;
+    margin-right: 15px;
+}
+
+.product-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    margin-right: 6px;
+    margin-top: 6px;
+    border-radius: 2px;
+    color: #fff;
+}
+
+.product-label.product-sale {
+    background-color: #ff9800;
+}
+
+.product-label.product-new {
+    background-color: #ff9800;
+}
+
+.product-label.product-discount {
+    background-color: #4cd964;
+}
+
+.product-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.product-img {
+    border: 2px solid rgba(240, 242, 245, 1);
+}
+
+.product-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.product-description {
+    margin-top: 1rem;
+}
+
+.product-price {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.product-quantity {
+    width: 50px;
+}
+
+.product-rating {
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+}
+
+.product-rating .fa-star {
+    color: gold;
+}
+
+.product-quantity-group {
+    display: flex;
+    align-items: center;
+}
+
+.product-quantity {
+    width: 70px;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.quantity-btns {
+    display: flex;
+    flex-direction: column;
+}
+
+.quantity-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.quantity-input {
+    width: 50px;
+    height: 30px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0 10px;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.quantity-btn {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*position: absolute;
+    top: 0;*/
+    z-index: 1;
+}
+
+.product-add-to-cart {
+    margin: 0 5px;
+}
+
+#product-add-to-cart,
+#product-buy-now {
+    height: 40px;
+}
+
+#user-account-icon {
+    font-size: 2rem;
+    /* sets the size of the user account icon */
+    margin-right: 1rem;
+    /* adds some spacing between the icon and other elements */
+}
+
+#shopping-cart-icon {
+    font-size: 2rem;
+    /* sets the size of the shopping cart icon */
+    margin-right: 1rem;
+    /* adds some spacing between the icon and other elements */
+}
+
+
+/* Active tab header */
+
+.tab-header.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+
+/* Inactive tab header */
+
+.tab-header {
+    background-color: #f8f9fa;
+    color: #333;
+    border: none;
+}
+
+
+/* Active tab content */
+
+.tab-content.active {
+    display: block;
+}
+
+
+/* Inactive tab content */
+
+.tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid #00000014;
+}
+
+
+/* Cart Modal */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-dialog {
+    position: relative;
+    margin: 10% auto;
+    padding: 0;
+    max-width: 98%;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+}
+
+.close {
+    font-size: 2rem;
+    color: #aaa;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    color: #333;
+    border: 1px solid transparent;
+    /*padding: 10px 20px;*/
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #bbb;
+}
+
+.remove-product-icon {
+    cursor: pointer;
+    color: red;
+}
+
+
+/* Payment Modal */
+
+.payment-detail {
+    font-weight: bold;
+}
+
+#bill-code {
+    color: red;
+}
+
+
+/*
+#paymentModal .modal-content {
+    border-radius: 0;
+}
+
+#paymentModal .btn-close {
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+#paymentModal .modal-body {
+    padding: 20px;
+}
+
+#paymentModal label {
+    font-weight: bold;
+}
+
+#paymentModal input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+#paymentModal .row>div:first-child {
+    margin-right: 10px;
+}
+
+#paymentModal .modal-footer {
+    border-top: none;
+    padding: 20px;
+}
+
+#paymentModal .btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+#paymentModal .btn-primary:hover {
+    background-color: #0062cc;
+}*/
+
+.notification,
+.notification-error {
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9;
+    display: none;
+}
+
+.notification {
+    background-color: #3ad14570;
+}
+
+.notification-error {
+    background-color: #d13a3a70;
+}
+
+.notification p,
+.notification-error p {
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.noti-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.view-cart-btn,
+.continue-shopping-btn {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.view-cart-btn:hover,
+.continue-shopping-btn:hover {
+    background-color: #0069d9;
+}
+
+.view-cart-btn:focus,
+.continue-shopping-btn:focus {
+    outline: none;
+}

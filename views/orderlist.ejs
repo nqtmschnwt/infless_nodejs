@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('head.ejs',{page_name:'Trang quản lý'}) %>
+<script src="../js/vendor/filesaver.js"></script>
+<body>
+  <%- include('hotStyles.ejs') %>
+  <!-- Loader -->
+  <div id="loading">
+    <img id="loading-image" src="../img/Gordon.gif" alt="Loading..." />
+  </div>
+  <!-- HEADER BEGIN -->
+  <%- include('menus/headerMenu.ejs',{user}) %>
+  <!-- HEADER END -->
+  <div class="d-flex align-items-stretch">
+    <nav id="sidebar">
+      <%- include('menus/menu.ejs',{device:'pc'}) %>
+    </nav>
+    <div class="page-content" style="padding-bottom:70px;">
+      <div class="page-header">
+        <div class="container-fluid">
+          <h2 class="h5 no-margin-bottom">Danh sách đơn hàng</h2>
+        </div>
+      </div>
+
+      <section>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="block">
+                <div id="orderlist"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</body>
+<%- include ('tail.ejs') %>
+<script src="../js/favico.min.js"></script>
+<script src="../js/custom-script.js"></script>
+
+<script>
+  let orderlist = <%- JSON.stringify(orderlist) %>;
+  let orderlistDiv = document.getElementById('orderlist');
+  if(orderlist.length==0) orderlistDiv.innerHTML = 'Danh sách đang trống';
+  else {
+    const orderTable = document.createElement("table");
+    orderTable.setAttribute('id','order-table');
+    orderTable.setAttribute('style','width:100%;');
+    const orderTableHeading = document.createElement('thead');
+    orderTableHeading.innerHTML = '<tr><th>Ngày</th><th>Tên khách hàng</th><th>Điện thoại</th><th>Email</th><th>Mã đơn hàng</th><th>Số tiền</th><th>Nội dung</th><th>Tình trạng</th><th></th></tr>';
+    orderTable.appendChild(orderTableHeading);
+    const orderTableBody = document.createElement('tbody');
+    for(var i=0; i<orderlist.length;i++) {
+      let dateCell = document.createElement('td');
+      try {
+        let d = new Date(orderlist[i]._date);
+        dateCell.innerHTML = d.toLocaleString('vi-VN',{
+          year: 'numeric', month: 'numeric', day: 'numeric',
+        });
+      } catch (e) {
+        dateCell.innerHTML = '';
+      }
+      let orderTableRow = document.createElement('tr');
+      let nameCell = document.createElement('td');
+      nameCell.innerHTML = orderlist[i].name;
+      let phoneCell = document.createElement('td');
+      phoneCell.innerHTML = orderlist[i].phone;
+      let emailCell = document.createElement('td');
+      emailCell.innerHTML = orderlist[i].email;
+      let billIDCell = document.createElement('td');
+      billIDCell.innerHTML = orderlist[i].bill_id;
+      let billValueCell = document.createElement('td');
+      billValueCell.innerHTML = separateThousands(orderlist[i].bill_value * (10**9));
+      let orderDetailCell = document.createElement('td');
+      let orderDetails = JSON.parse(orderlist[i].order_details);
+      if (orderDetails.length==0) orderDetailCell.innerHTML = 'Đơn hàng trống';
+      else {
+        let orderUL = document.createElement('ul');
+        for (var j=0;j<orderDetails.length;j++) {
+          let orderLI = document.createElement('li');
+          orderLI.innerHTML = 'Mã SP: ' + orderDetails[j].orderDetails.code + "; Số lượng: " + orderDetails[j].orderDetails.quantity + "; Đơn giá: " + separateThousands(orderDetails[j].orderDetails.price);
+          orderUL.appendChild(orderLI);
+        }
+        orderDetailCell.appendChild(orderUL);
+      }
+
+      let billStatusCell = document.createElement('td');
+      switch (orderlist[i].bill_status) {
+        case '':
+          billStatusCell.innerHTML = 'Chờ thanh toán';
+          billStatusCell.setAttribute('class','text-warning');
+          break;
+        case 'pending_payment':
+          billStatusCell.innerHTML = 'Chờ thanh toán';
+          billStatusCell.setAttribute('class','text-warning');
+          break;
+        case 'paid':
+          billStatusCell.innerHTML = 'Đã thanh toán';
+          billStatusCell.setAttribute('class','text-success');
+          break;
+        case 'cancelled':
+          billStatusCell.innerHTML = 'Đã hủy';
+          billStatusCell.setAttribute('class','text-danger');
+          break;
+        default:
+          billStatusCell.innerHTML = 'Chờ thanh toán';
+          billStatusCell.setAttribute('class','text-warning');
+      }
+
+      let appovalCell = document.createElement('td');
+      appovalCell.setAttribute('class', 'text-center');
+      var form = document.createElement("form");
+      form.setAttribute("method", "post");
+      form.setAttribute("action", "");
+      let orderInp = document.createElement('input');
+      orderInp.type = "text";
+      orderInp.setAttribute('value', orderlist[i].bill_id);
+      orderInp.setAttribute('style', 'display:none');
+      orderInp.readOnly = true;
+      let orderAcceptBtn = document.createElement('button');
+      orderAcceptBtn.setAttribute('class', 'btn btn-success');
+      orderAcceptBtn.setAttribute('type', 'submit');
+      orderAcceptBtn.setAttribute('value', 'orderAccept');
+      orderAcceptBtn.setAttribute('name', 'action');
+      orderAcceptBtn.setAttribute('style', 'width:100%;');
+      let orderAcceptIcon = document.createElement('i');
+      orderAcceptIcon.setAttribute('class', 'fa fa-check');
+      orderAcceptBtn.appendChild(orderAcceptIcon);
+      let orderCancelBtn = document.createElement('button');
+      orderCancelBtn.setAttribute('class', 'btn btn-danger');
+      orderCancelBtn.setAttribute('type', 'submit');
+      orderCancelBtn.setAttribute('value', 'orderCancel');
+      orderCancelBtn.setAttribute('name', 'action');
+      orderCancelBtn.setAttribute('style', 'width:100%;');
+      let orderCancelIcon = document.createElement('i');
+      orderCancelIcon.setAttribute('class', 'fa fa-trash');
+      orderCancelBtn.appendChild(orderCancelIcon);
+      form.appendChild(orderInp);
+      form.appendChild(orderAcceptBtn);
+      form.appendChild(orderCancelBtn);
+      appovalCell.appendChild(form);
+
+
+      orderTableRow.appendChild(dateCell);
+      orderTableRow.appendChild(nameCell);
+      orderTableRow.appendChild(phoneCell);
+      orderTableRow.appendChild(emailCell);
+      orderTableRow.appendChild(billIDCell);
+      orderTableRow.appendChild(billValueCell);
+      orderTableRow.appendChild(orderDetailCell);
+      orderTableRow.appendChild(billStatusCell);
+      orderTableRow.appendChild(appovalCell);
+
+      orderTableBody.appendChild(orderTableRow);
+    }
+    orderTable.appendChild(orderTableBody);
+    orderlistDiv.appendChild(orderTable);
+  }
+
+  function separateThousands(num) {
+    return Number(num).toLocaleString('vi-VN');
+  }
+</script>
+
+</html>

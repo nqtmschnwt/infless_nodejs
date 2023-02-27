@@ -79,6 +79,10 @@ let initWebRoutes = (app) => {
     // Download settup page
     router.get("/securities/download-setup", managerController.getDownloadSetupPage);
     router.post("/securities/download-setup", managerController.postDownloadSetupPage);
+    // Shop management page
+    router.get("/securities/shop-management", managerController.getShopManagementPage);
+    router.post("/securities/shop-management", managerController.postShopManagementPage);
+    //router.post("/securities/shop-management", managerController.postShopManagementPage);
     // Change password page
     router.get("/securities/change-password", changePasswordController.getChangePasswordPage);
     router.post("/securities/change-password", changePasswordController.postChangePasswordPage);

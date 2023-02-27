@@ -533,6 +533,41 @@ let addCusToken = async (req,res) => {
   }
 }
 
+let getShopManagementPage = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      pool.query(
+        `SELECT o.id,o._date,o.user_id,o.bill_id,o.bill_value,o.order_details,o.bill_status,u.name,u.phone,u.email FROM orders o
+        INNER JOIN users u ON o.user_id=u.id ORDER BY o.id ASC;`,
+        (err,results) => {
+          if(err) {
+            console.log('Error: ',err);
+          } else {
+            let orderlist = results.rows;
+            let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+            return res.render('orderlist',{menu:menuData,user,orderlist});
+          }
+        }
+      )
+    }
+  }
+}
+
+let postShopManagementPage = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      return res.json({id:user.id,phone:'123456789'});
+    } else {
+      console.log('user rule = 0');
+    }
+  } else {
+    console.log('user rule = 0');
+  }
+}
+/*API*/
+
 let pushTrans = async (req,res) => {
   let user=req.user;
   //console.log(user);
@@ -638,6 +673,8 @@ module.exports = {
   postTradePage: postTradePage,
   getScanListPage: getScanListPage,
   addCusToken: addCusToken,
+  getShopManagementPage: getShopManagementPage,
+  postShopManagementPage: postShopManagementPage,
   pushTrans:pushTrans,
   pushAdmMsg:pushAdmMsg,
   updateFundNav:updateFundNav,

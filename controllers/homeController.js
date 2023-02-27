@@ -434,12 +434,27 @@ let postShopPage = (req, res) => {
         orderData.userPhone = user.phone;
         orderData.userEmail = user.email;
         orderData.billID = data.orderBill.billCode;
-        orderData.billValue = data.orderBill.billValue;
+        orderData.billValue = data.orderBill.billValue / (10 ** 9);
         orderData.orderDetails = JSON.stringify(data.orderArr);
 
-        console.log(orderData);
-        // Send a response back to the client
-        res.send({ error: 0, message: 'success' });
+        let date = new Date();
+        let dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+            .toISOString()
+            .split("T")[0];
+
+        pool.query(
+            `INSERT INTO orders(user_id, bill_id, bill_value, order_details,_date) VALUES ($1,$2,$3,$4,$5)`, [orderData.userID, orderData.billID, orderData.billValue, orderData.orderDetails, dateString],
+            (err, results) => {
+                if (err) {
+                    res.send({ error: 1, message: 'Unknown error' });
+                } else {
+                    console.log(orderData);
+                    // Send a response back to the client
+                    res.send({ error: 0, message: 'success' });
+                }
+            }
+        )
+
     } else {
         // Send a response back to the client
         res.send({ error: 1, message: 'User not logged in' });

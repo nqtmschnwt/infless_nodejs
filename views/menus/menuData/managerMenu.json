@@ -43,9 +43,17 @@
         "child": []
     },
     {
-        "title": "Demo shop",
-        "link": "/securities/shop",
-        "child": []
+        "title": "Quản lý cửa hàng",
+        "link": "#",
+        "child": [{
+                "title": "Xem giao diện cửa hàng",
+                "link": "/securities/shop"
+            },
+            {
+                "title": "Quản lý đơn hàng",
+                "link": "/securities/shop-management"
+            }
+        ]
     },
     {
         "title": "Đổi mật khẩu",

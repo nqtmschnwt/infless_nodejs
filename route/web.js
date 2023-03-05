@@ -117,6 +117,9 @@ let initWebRoutes = (app) => {
     router.post("/fx/indiupdate", fxController.updateIndicator);
     router.post("/fxtrades", fxController.fxTradesInquiry);
 
+    /* MT4 */
+    router.post("/mt4/", fxController.postFxMt4);
+
     // API urls
     router.post("/securities/addcustoken", managerController.addCusToken);
     router.post("/securities/pushadmmsg", managerController.pushAdmMsg);

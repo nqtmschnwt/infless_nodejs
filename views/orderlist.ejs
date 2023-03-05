@@ -88,6 +88,7 @@
       }
 
       let billStatusCell = document.createElement('td');
+      billStatusCell.setAttribute('id','status-' + orderlist[i].bill_id)
       switch (orderlist[i].bill_status) {
         case '':
           billStatusCell.innerHTML = 'Chờ thanh toán';
@@ -112,37 +113,42 @@
 
       let appovalCell = document.createElement('td');
       appovalCell.setAttribute('class', 'text-center');
-      var form = document.createElement("form");
-      form.setAttribute("method", "post");
-      form.setAttribute("action", "");
-      let orderInp = document.createElement('input');
-      orderInp.type = "text";
-      orderInp.setAttribute('value', orderlist[i].bill_id);
-      orderInp.setAttribute('style', 'display:none');
-      orderInp.readOnly = true;
-      let orderAcceptBtn = document.createElement('button');
-      orderAcceptBtn.setAttribute('class', 'btn btn-success');
-      orderAcceptBtn.setAttribute('type', 'submit');
-      orderAcceptBtn.setAttribute('value', 'orderAccept');
-      orderAcceptBtn.setAttribute('name', 'action');
-      orderAcceptBtn.setAttribute('style', 'width:100%;');
-      let orderAcceptIcon = document.createElement('i');
-      orderAcceptIcon.setAttribute('class', 'fa fa-check');
-      orderAcceptBtn.appendChild(orderAcceptIcon);
-      let orderCancelBtn = document.createElement('button');
-      orderCancelBtn.setAttribute('class', 'btn btn-danger');
-      orderCancelBtn.setAttribute('type', 'submit');
-      orderCancelBtn.setAttribute('value', 'orderCancel');
-      orderCancelBtn.setAttribute('name', 'action');
-      orderCancelBtn.setAttribute('style', 'width:100%;');
-      let orderCancelIcon = document.createElement('i');
-      orderCancelIcon.setAttribute('class', 'fa fa-trash');
-      orderCancelBtn.appendChild(orderCancelIcon);
-      form.appendChild(orderInp);
-      form.appendChild(orderAcceptBtn);
-      form.appendChild(orderCancelBtn);
-      appovalCell.appendChild(form);
-
+      if (orderlist[i].bill_status != 'paid' && orderlist[i].bill_status != 'cancelled') {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "");
+        form.setAttribute("id", "form-" + orderlist[i].bill_id);
+        let orderInp = document.createElement('input');
+        orderInp.type = "text";
+        orderInp.setAttribute('value', orderlist[i].bill_id);
+        orderInp.setAttribute('style', 'display:none');
+        orderInp.setAttribute('name', 'bill_id');
+        orderInp.readOnly = true;
+        let orderAcceptBtn = document.createElement('div');
+        orderAcceptBtn.setAttribute('class', 'btn btn-success');
+        orderAcceptBtn.setAttribute('type', 'submit');
+        orderAcceptBtn.setAttribute('value', 'orderAccept');
+        orderAcceptBtn.setAttribute('name', 'action');
+        orderAcceptBtn.setAttribute('style', 'width:100%;');
+        orderAcceptBtn.setAttribute('onclick', 'orderApproval(true,"'+ orderlist[i].bill_id +'")');
+        let orderAcceptIcon = document.createElement('i');
+        orderAcceptIcon.setAttribute('class', 'fa fa-check');
+        orderAcceptBtn.appendChild(orderAcceptIcon);
+        let orderCancelBtn = document.createElement('div');
+        orderCancelBtn.setAttribute('class', 'btn btn-danger');
+        orderCancelBtn.setAttribute('type', 'submit');
+        orderCancelBtn.setAttribute('value', 'orderCancel');
+        orderCancelBtn.setAttribute('name', 'action');
+        orderCancelBtn.setAttribute('style', 'width:100%;');
+        orderCancelBtn.setAttribute('onclick', 'orderApproval(false,"'+ orderlist[i].bill_id +'")');
+        let orderCancelIcon = document.createElement('i');
+        orderCancelIcon.setAttribute('class', 'fa fa-trash');
+        orderCancelBtn.appendChild(orderCancelIcon);
+        form.appendChild(orderInp);
+        form.appendChild(orderAcceptBtn);
+        form.appendChild(orderCancelBtn);
+        appovalCell.appendChild(form);
+      }
 
       orderTableRow.appendChild(dateCell);
       orderTableRow.appendChild(nameCell);
@@ -162,6 +168,43 @@
 
   function separateThousands(num) {
     return Number(num).toLocaleString('vi-VN');
+  }
+
+  // Submit order to server
+  function orderApproval(accept,code) {
+      fetch('', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  orderAccept: accept,
+                  orderBill: code
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log(data);
+              if (data.error == 0) {
+                const statusCell = document.getElementById('status-' + data.message.split(',')[1]);
+                if (data.message.split(',')[0] == 'accepted') {
+                  statusCell.innerHTML = 'Đã thanh toán';
+                  // Change color, remove buttons
+                  statusCell.setAttribute('class', 'text-success');
+                  document.getElementById('form-' + data.message.split(',')[1]).innerHTML = '';
+                } else if (data.message.split(',')[0] == 'cancelled') {
+                  statusCell.innerHTML = 'Đã hủy';
+                  // Change color, remove buttons
+                  statusCell.setAttribute('class', 'text-danger');
+                  document.getElementById('form-' + data.message.split(',')[1]).innerHTML = '';
+                }
+              } else {
+                console.log('Error: ',data.message);
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
   }
 </script>
 

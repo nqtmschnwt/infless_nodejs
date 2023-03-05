@@ -558,12 +558,39 @@ let postShopManagementPage = (req,res) => {
   let user=req.user;
   if(user!=undefined) {
     if(user.role_id>1) {
-      return res.json({id:user.id,phone:'123456789'});
+      let data = req.body;
+      console.log(data);
+      if (data.orderAccept) {
+        pool.query(
+          `UPDATE orders SET bill_status='paid' WHERE bill_id=$1;`,
+          [data.orderBill],
+          (err,results) => {
+            if(err) {
+              return res.json({error:1,message:err});
+            } else {
+              return res.json({error:0,message:'accepted,' + data.orderBill});
+            }
+          }
+        )
+      } else {
+        pool.query(
+          `UPDATE orders SET bill_status='cancelled' WHERE bill_id=$1;`,
+          [data.orderBill],
+          (err,results) => {
+            if(err) {
+              return res.json({error:1,message:err});
+            } else {
+              return res.json({error:0,message:'cancelled,' + data.orderBill});
+            }
+          }
+        )
+      }
+      //return res.json({id:user.id,phone:'123456789'});
     } else {
-      console.log('user rule = 0');
+      return res.json({error:1,message:'User has no permisson.'});
     }
   } else {
-    console.log('user rule = 0');
+    return res.json({error:1,message:'User has no permisson.'});
   }
 }
 /*API*/

@@ -295,6 +295,10 @@ let fxTradesInquiry = (req,res) => {
   return res.status(200).send(JSON.stringify({err:0,errdesc:'Success'}));
 }
 
+let postFxMt4 = (req,res) => {
+  return res.status(200).send(JSON.stringify({err:0,errdesc:'Success'}));
+}
+
 module.exports = {
   getFxMain:getFxMain,
   getAUEcon:getAUEcon,
@@ -305,4 +309,5 @@ module.exports = {
   apiGetIndicator:apiGetIndicator,
   updateIndicator:updateIndicator,
   fxTradesInquiry:fxTradesInquiry,
+  postFxMt4:postFxMt4,
 }

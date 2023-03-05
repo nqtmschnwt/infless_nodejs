@@ -296,7 +296,7 @@ let fxTradesInquiry = (req,res) => {
 }
 
 let postFxMt4 = (req,res) => {
-  return res.status(200).send(JSON.stringify({err:0,errdesc:'Success'}));
+  return res.json({error:0,message:"success"});
 }
 
 module.exports = {

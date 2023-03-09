@@ -44,6 +44,7 @@ let postPfPage = (req,res) => {
           [req.body.id,req.body.acc,req.body.company],
           (err,results) => {
             if(err) {
+              console.log("Error (1)");
               console.log(err);
             } else {
               if(parseInt(results.rows[0].count)==0) {
@@ -77,6 +78,7 @@ let postPfPage = (req,res) => {
                   [req.body.id,req.body.acc.toUpperCase(),req.body.company.toUpperCase(),dformat,parseFloat(req.body.tstt)/1000000000,parseFloat(req.body.tsrong)/1000000000,parseFloat(req.body.cash)/1000000000,parseFloat(req.body.debt)/1000000000,JSON.stringify(portfolio)],
                   (err,results) => {
                     if(err) {
+                      console.log("Error (2)");
                       console.log(err);
                     } else {
                       console.log('OK');
@@ -89,6 +91,7 @@ let postPfPage = (req,res) => {
               pool.query(
                 'SELECT u.id,u.name,u.phone,u.email FROM users u FULL OUTER JOIN portfolios pf ON u.id = pf.user_id WHERE pf.portfolio_id IS NULL;',(err,results) => {
                   if(err) {
+                    console.log("Error (3)");
                     console.log('Error: ',err);
                   } else {
                     let blankpfusers = results.rows;
@@ -132,6 +135,7 @@ let postPfPage = (req,res) => {
           [req.body.pfid,dformat],
           (err,results) => {
             if(err) {
+              console.log("Error (4)");
               console.log(err);
             } else {
               if(parseInt(results.rows[0].count)==0) {
@@ -146,6 +150,7 @@ let postPfPage = (req,res) => {
                   [req.body.pfid,dformat,parseFloat(req.body.tstt)/1000000000,parseFloat(req.body.tsrong)/1000000000,parseFloat(req.body.cash)/1000000000,parseFloat(req.body.debt)/1000000000,JSON.stringify(portfolio)],
                   (err,results) => {
                     if(err) {
+                      console.log("Error (5)");
                       console.log(err);
                     } else {
                       console.log('OK');
@@ -169,6 +174,7 @@ let postPfPage = (req,res) => {
                   [req.body.pfid,dformat,parseFloat(req.body.tstt)/1000000000,parseFloat(req.body.tsrong)/1000000000,parseFloat(req.body.cash)/1000000000,parseFloat(req.body.debt)/1000000000,JSON.stringify(portfolio)],
                   (err,results) => {
                     if(err) {
+                      console.log("Error (6)");
                       console.log(err);
                     } else {
                       console.log('OK');
@@ -201,6 +207,7 @@ let postPfPage = (req,res) => {
                   ORDER BY u.id ASC`,
                   ['%'+query.name+'%','%'+phoneFormatted+'%','%'+query.email+'%','%'+refSearch+'%','%'+query.acc+'%','%'+query.company+'%'], (err,results)=>{
                     if(err) {
+                      console.log("Error (7)");
                       console.log(err);
                     }
                     let data = results.rows;
@@ -218,6 +225,7 @@ let postPfPage = (req,res) => {
                   ORDER BY u.id ASC`,
                   [query.minnav,query.maxnav], (err,results)=>{
                     if(err) {
+                      console.log("Error (8)");
                       console.log(err);
                     }
                     let data = results.rows;
@@ -235,6 +243,7 @@ let postPfPage = (req,res) => {
                   ORDER BY u.id ASC`,
                   ['%'+query.ticker.toUpperCase()+'%'], (err,results)=>{
                     if(err) {
+                      console.log("Error (9)");
                       console.log(err);
                     }
                     let data = results.rows;
@@ -283,6 +292,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC;`,
             (err,results) => {
               if(err) {
+                console.log("Error (10)");
                 console.log(err);
               }
               let data = results.rows;
@@ -313,6 +323,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC`,
             ['%'+name+'%','%'+phoneFormatted+'%','%'+email+'%','%'+refSearch+'%','%'+acc+'%','%'+company+'%'], (err,results)=>{
               if(err) {
+                console.log("Error (11)");
                 console.log(err);
               }
               let data = results.rows;
@@ -350,6 +361,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC;`,
             (err,results) => {
               if(err) {
+                console.log("Error (12)");
                 console.log(err);
               }
               let data = results.rows;
@@ -367,6 +379,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC`,
             [minnav,maxnav], (err,results)=>{
               if(err) {
+                console.log("Error (13)");
                 console.log(err);
               }
               let data = results.rows;
@@ -395,6 +408,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC;`,
             (err,results) => {
               if(err) {
+                console.log("Error (14)");
                 console.log(err);
               }
               let data = results.rows;
@@ -412,6 +426,7 @@ let postPfPage = (req,res) => {
             ORDER BY u.id ASC`,
             ['%'+ticker.toUpperCase()+'%'], (err,results)=>{
               if(err) {
+                console.log("Error (15)");
                 console.log(err);
               }
               let data = results.rows;
@@ -578,6 +593,7 @@ let postPfUpdate = (req,res) => {
     pool.query(
       `SELECT * FROM portfolios WHERE acc LIKE $1;`,[0],(err,results) => {
         if(err) {
+          console.log("Error (1)");
           console.log(err);
         } else {
           if(results.rows.length == 0) {
@@ -593,6 +609,7 @@ let postPfUpdate = (req,res) => {
               [fundPfId,dformat],
               (err,results) => {
                 if(err) {
+                  console.log("Error (2)");
                   console.log(err);
                 } else {
                   if(parseInt(results.rows[0].count)==0) {
@@ -642,6 +659,7 @@ let postPfUpdate = (req,res) => {
                       [fundPfId,dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
                       (err,results) => {
                         if(err) {
+                          console.log("Error (3)");
                           console.log(err);
                         } else {
                           console.log('OK');
@@ -699,6 +717,7 @@ let postPfUpdate = (req,res) => {
         `SELECT * FROM users WHERE phone LIKE $1 AND LOWER(email) LIKE $2;`,
         [phoneFormatted,'%'+email+'%'], (err,results) => {
           if(err) {
+            console.log("Error (4)");
             console.log(err);
           } else {
             if(results.rows.length>0) {
@@ -721,6 +740,7 @@ let postPfUpdate = (req,res) => {
                         [pfid,dformat],
                         (err,results) => {
                           if(err) {
+                            console.log("Error (5)");
                             console.log(err);
                           } else {
                             if(parseInt(results.rows[0].count)==0) {
@@ -735,6 +755,7 @@ let postPfUpdate = (req,res) => {
                                 [pfid,dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
                                 (err,results) => {
                                   if(err) {
+                                    console.log("Error (6)");
                                     console.log(err);
                                   } else {
                                     console.log('OK');
@@ -770,6 +791,7 @@ let postPfUpdate = (req,res) => {
                                 [pfid,dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
                                 (err,results) => {
                                   if(err) {
+                                    console.log("Error (7)");
                                     console.log(err);
                                   } else {
                                     console.log('OK');
@@ -807,6 +829,7 @@ let postPfUpdate = (req,res) => {
                         [uid,req.body.acc.toUpperCase(),req.body.company.toUpperCase(),dformat,req.body.portfolio_value,req.body.net_value,req.body.cash_value,req.body.debt,JSON.stringify(req.body.portfolio)],
                         (err,results) => {
                           if(err) {
+                            console.log("Error (8)");
                             console.log(err);
                           } else {
                             console.log('OK');

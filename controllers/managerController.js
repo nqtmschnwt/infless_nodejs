@@ -593,6 +593,41 @@ let postShopManagementPage = (req,res) => {
     return res.json({error:1,message:'User has no permisson.'});
   }
 }
+
+let getShopWarehousePage = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      pool.query(
+        `SELECT o.id,o._date,o.user_id,o.bill_id,o.bill_value,o.order_details,o.bill_status,u.name,u.phone,u.email FROM orders o
+        INNER JOIN users u ON o.user_id=u.id ORDER BY o.id ASC;`,
+        (err,results) => {
+          if(err) {
+            console.log('Error: ',err);
+          } else {
+            let orderlist = results.rows;
+            let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+            return res.render('orderlist',{menu:menuData,user,orderlist});
+          }
+        }
+      )
+    }
+  }
+}
+
+let postShopWarehousePage = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      return res.json({error:0,message:'server response'})
+    } else {
+      return res.json({error:1,message:'User has no permisson.'});
+    }
+  } else {
+    return res.json({error:1,message:'User has no permisson.'});
+  }
+}
+
 /*API*/
 
 let pushTrans = async (req,res) => {
@@ -702,6 +737,8 @@ module.exports = {
   addCusToken: addCusToken,
   getShopManagementPage: getShopManagementPage,
   postShopManagementPage: postShopManagementPage,
+  postShopWarehousePage: postShopWarehousePage,
+  getShopWarehousePage: getShopWarehousePage,
   pushTrans:pushTrans,
   pushAdmMsg:pushAdmMsg,
   updateFundNav:updateFundNav,

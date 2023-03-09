@@ -42,7 +42,8 @@ let initWebRoutes = (app) => {
     router.get("/securities/demolanding2023/", homeController.getDemoLandingPage);
     router.get("/securities/thankyoupage/", homeController.getThankYouPage);
 
-    router.get("/securities/shop/", homeController.getShopPage);
+    router.get("/securities/shop-single/", homeController.getShopPage);
+    router.get("/securities/shop-category/", homeController.getShopCategoryPage);
     router.post("/api/order/", homeController.postShopPage);
 
     /* PLATFORM PAGES */
@@ -82,7 +83,9 @@ let initWebRoutes = (app) => {
     // Shop management page
     router.get("/securities/shop-management", managerController.getShopManagementPage);
     router.post("/securities/shop-management", managerController.postShopManagementPage);
-    //router.post("/securities/shop-management", managerController.postShopManagementPage);
+    router.get("/securities/shop-warehouse", managerController.getShopWarehousePage);
+    router.post("/securities/shop-warehouse", managerController.postShopWarehousePage);
+
     // Change password page
     router.get("/securities/change-password", changePasswordController.getChangePasswordPage);
     router.post("/securities/change-password", changePasswordController.postChangePasswordPage);

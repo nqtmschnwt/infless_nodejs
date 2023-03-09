@@ -461,6 +461,10 @@ let postShopPage = (req, res) => {
     }
 }
 
+let getShopCategoryPage = (req, res) => {
+    return res.render('shop/shopCategory');
+}
+
 module.exports = {
     // Securities pages
     getAppHomePage: getAppHomePage,
@@ -478,6 +482,7 @@ module.exports = {
     getDemoLandingPage: getLanding2023,
     getThankYouPage: getThankYouPage,
     getShopPage: getShopPage,
+    getShopCategoryPage: getShopCategoryPage,
 
     postShopPage: postShopPage,
     // Main UI pages

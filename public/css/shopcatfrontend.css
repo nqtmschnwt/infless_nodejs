@@ -1,0 +1,30 @@
+:root {
+  --color-1: #7f1917;
+  --color-2: #b61f24;
+  --color-3: #fee086;
+  --color-4: #fff;
+}
+
+body {
+  background-color: var(--color-1);
+  color: var(--color-4);
+}
+
+a {
+  color: var(--color-3);
+}
+
+button,
+input[type="submit"] {
+  background-color: var(--color-2);
+  color: var(--color-4);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background-color: var(--color-3);
+}

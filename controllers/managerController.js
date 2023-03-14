@@ -628,6 +628,49 @@ let postShopWarehousePage = (req,res) => {
   }
 }
 
+let getLdpFormData = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      let data = req.body;
+      switch (data.cmd) {
+        case 'getlandingdata':
+          pool.query(
+            `SELECT * FROM ldp_data WHERE status='pending';`,
+            (err, results) => {
+              if(err) {
+                return res.json({error:1,message:err});
+              } else {
+                return res.json({cmd:'getlandingdata',error:0,message:'success',data:results.rows});
+              }
+            }
+          )
+          //return res.json({error:0,message:'server response'});
+          break;
+        default:
+          return res.json({error:1,message:'Unknown command'});
+      }
+    } else {
+      return res.json({error:1,message:'User has no permisson.'});
+    }
+  } else {
+    return res.json({error:1,message:'User has no permisson.'});
+  }
+}
+
+let postLdpAdmin = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      return res.json({error:0,message:'server response'})
+    } else {
+      return res.json({error:1,message:'User has no permisson.'});
+    }
+  } else {
+    return res.json({error:1,message:'User has no permisson.'});
+  }
+}
+
 /*API*/
 
 let pushTrans = async (req,res) => {
@@ -744,4 +787,6 @@ module.exports = {
   updateFundNav:updateFundNav,
   createUser:createUser,
   updateUser:updateUser,
+  getLdpFormData: getLdpFormData,
+  postLdpAdmin: postLdpAdmin,
 }

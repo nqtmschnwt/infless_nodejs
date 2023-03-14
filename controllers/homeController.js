@@ -1,5 +1,6 @@
 const { pool } = require('../config/dbConfig');
 const fs = require('fs');
+const phoneNumber = require( 'awesome-phonenumber' );
 
 let getAppHomePage = (req, res) => {
     let user = req.user;
@@ -465,6 +466,34 @@ let getShopCategoryPage = (req, res) => {
     return res.render('shop/shopCategory');
 }
 
+let getLandingPage = (req, res) => {
+    return res.render('ldp/ldp');
+}
+
+let postLdpForm = (req,res) => {
+  let data=req.body;
+  console.log(data);
+  let d = new Date().toISOString().substring(0, 10);
+  // Check phone valid
+  var pn = new phoneNumber(data.phone,'VN');
+  if(!pn.isValid( ) || !pn.isMobile( ) || !pn.canBeInternationallyDialled( )){
+    return res.json({error:1,message:"Số điện thoại không hợp lệ"});
+  }
+  let phoneFormatted = pn.getNumber( 'e164' );
+  pool.query(
+    `INSERT INTO ldp_data(_date, name, email, phone, address, status) VALUES ($1,$2,$3,$4,$5,$6);`,
+    [d,data.name,data.email,phoneFormatted,data.address,'pending'],
+    (err,results) => {
+      if(err) {
+        console.log(err);
+        return res.json({error:1,message:err});
+      } else {
+        return res.json({error:0,message:'success'});
+      }
+    }
+  )
+}
+
 module.exports = {
     // Securities pages
     getAppHomePage: getAppHomePage,
@@ -483,6 +512,8 @@ module.exports = {
     getThankYouPage: getThankYouPage,
     getShopPage: getShopPage,
     getShopCategoryPage: getShopCategoryPage,
+    getLandingPage: getLandingPage,
+    postLdpForm: postLdpForm,
 
     postShopPage: postShopPage,
     // Main UI pages

@@ -39,12 +39,16 @@ let initWebRoutes = (app) => {
     router.get("/securities/privacy-policy/", homeController.getPrivatePolicyPage);
     router.get("/securities/lien-he/", homeController.getLienHePage);
     router.get("/securities/tuyen-dung/", homeController.getTuyendungPage);
+
     router.get("/securities/demolanding2023/", homeController.getDemoLandingPage);
     router.get("/securities/thankyoupage/", homeController.getThankYouPage);
+    router.get("/securities/landing/", homeController.getLandingPage);
+    router.post("/securities/landing/", homeController.postLdpForm);
 
     router.get("/securities/shop-single/", homeController.getShopPage);
     router.get("/securities/shop-category/", homeController.getShopCategoryPage);
     router.post("/api/order/", homeController.postShopPage);
+    router.post("/securities/api/getlandingdata/", managerController.getLdpFormData);
 
     /* PLATFORM PAGES */
     // CLient home page

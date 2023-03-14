@@ -4,6 +4,47 @@
 
     <body>
         <%- include('hotStyles.ejs') %>
+        <style>
+        .tab-container {
+        /*border: 1px solid #ccc;*/
+        border-radius: 5px;
+        overflow: hidden;
+        }
+
+        .tab-header {
+        /*display: flex;
+        flex-direction: row;*/
+        }
+
+        .btn {
+        /*background-color: #f1f1f1;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px 5px 0 0;*/
+        transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+        background-color: #ffc107;
+        }
+
+        .btn.active {
+        background-color: #bb414d;
+        color: #fff;
+        }
+
+        .tab-content {
+        padding: 20px;
+        display: none;
+        }
+
+        .tab-content.active {
+        display: block;
+        }
+        </style>
             <!-- Loader -->
             <div id="loading">
                 <img id="loading-image" src="/img/Gordon.gif" alt="Loading..." />
@@ -41,21 +82,13 @@
                                             <div id="custoken" style="word-wrap: break-word"></div>
                                             <div class="btn btn-primary" id="gglogin">Đăng nhập Google</div>
                                         </div>
+
                                         <div class="block">
-                                            <h4 class="title">Người dùng mới đăng ký</h4>
-                                            <div class="number dashtext-1" style="font-size:2em;text-align:right;">1,000</div>
-                                            <div class="progress progress-template">
-                                                <div role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-1"></div>
-                                            </div>
-                                            <div style="text-align:right"><a class="text-light" href="../new-customers">Xem chi tiết</a></div>
-                                        </div>
-                                        <div class="block">
-                                            <h4 class="title">Người dùng sắp hết hạn</h4>
-                                            <div class="number dashtext-3" style="font-size:2em;text-align:right;">1,000</div>
-                                            <div class="progress progress-template">
-                                                <div role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-template dashbg-3"></div>
-                                            </div>
-                                            <div style="text-align:right"><a class="text-light" href="../expire-customers">Xem chi tiết</a></div>
+                                            <h4 class="title">Thời hạn khuyến mại landing page</h4>
+                                            <form>
+                                              <input type="date" id="date-input" name="date-input" style="height: 32px; vertical-align: middle;">
+                                              <div class="btn btn-danger" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
+                                            </form>
                                         </div>
                                     </div>
 
@@ -87,7 +120,7 @@
 
                                     <div class="col-lg-6 col-12">
                                         <div class="block">
-                                            <h4 class="title" style="display:flex;margin-bottom:20px">Update 27/02/2023</h4>
+                                            <h4 class="title" style="display:flex;margin-bottom:20px">Update 13/03/2023</h4>
                                             <div class="container">
                                                 <div class="row">
                                                     <div class="col-12 p-3 todo">
@@ -95,7 +128,7 @@
 
                                                             <li>
                                                                 <div class="todo-content-left">
-                                                                    <div class="todo-heading">Demo cửa hàng (link ở menu bên trái trang Quản lý)</div>
+                                                                    <div class="todo-heading">Update landing page (test nội bộ)</div>
                                                                 </div>
                                                             </li>
 
@@ -119,7 +152,30 @@
                                     <% } %>
                             </div>
                         </section>
-
+                        <section>
+                          <div class="container-fluid">
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="block">
+                                    <h4 class="title">Khách landing page</h4>
+                                    <div class="tab-container">
+                                      <div class="tab-header">
+                                        <button class="btn tab-button active" onclick="openTab(event, 'tab1')">Mới đăng ký</button>
+                                        <button class="btn tab-button" onclick="openTab(event, 'tab2')">Đã duyệt</button>
+                                        <button class="btn tab-button" onclick="openTab(event, 'tab3')">Đã hủy</button>
+                                      </div>
+                                      <div class="tab-content active" id="tab1">
+                                      </div>
+                                      <div class="tab-content" id="tab2">
+                                      </div>
+                                      <div class="tab-content" id="tab3">
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
 
 
                     </div>
@@ -129,131 +185,117 @@
         <script src="/js/favico.min.js"></script>
         <script src="/js/custom-script.js"></script>
         <script type="module" src="/js/managerappconnect.js"></script>
-<!--script type="module">
-    var socket = io('/', { transport : ['websocket'] });
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyA55RLyd-DL6oF50Ijb6f8TY5ev9LcnV-A",
-      authDomain: "fundmntsystem.firebaseapp.com",
-      projectId: "fundmntsystem",
-      storageBucket: "fundmntsystem.appspot.com",
-      messagingSenderId: "907222202776",
-      appId: "1:907222202776:web:5c7cf5d2e49f6c7e1393ed"
-    };
-    firebase.initializeApp(firebaseConfig);
-    // Google provider
-    var provider = new firebase.auth.GoogleAuthProvider();
-    document.onload = function() {
-      firebase.auth().signInWithRedirect(provider);
-    };
-    var gglogin = document.getElementById('gglogin');
-    gglogin.addEventListener('click',function() {
-      firebase.auth().signInWithRedirect(provider);
-    });
-    // Sign in from redirect
-    firebase.auth() .getRedirectResult() .then((result) => {
-    if (result.credential) {
-      //** @type {firebase.auth.OAuthCredential}
-      var credential = result.credential;
-      //This gives you a Google Access Token. You can use it to access the Google API.
-      var token = credential.accessToken; console.log(token);
-      // ...
-      console.log('Success!!! ');
-      console.log('===================');
-    }
-    let currentUser = firebase.auth().currentUser;
-    if(currentUser == undefined) {
-      console.log('undefined user');
-      try {
-        document.getElementById('appconnect').innerHTML = "thất bại";
-        document.getElementById('custoken').innerHTML = "Hãy đăng nhập lại Google";
-      } catch(err) {
-        console.log(err);
-      }
-      // login
-    } else {
-      console.log(currentUser.email);
-      try {
-        document.getElementById('appconnect').innerHTML = "thành công";
-        document.getElementById('gglogin').style.display = "none";
-      } catch(err) {
-        console.log(err);
-      }
-      currentUser.getIdToken().then(function(idToken) {
-      console.log(idToken);
-      //document.getElementById('idToken').innerHTML = idToken;
-      let data = {idToken: idToken};
-      fetch("/securities/addcustoken", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.json())
-      .then(res => {
-        //console.log(res);
-        if(res.custoken) {
-          //console.log(res.custoken);
-          try {
-            document.getElementById('custoken').innerHTML = "Token: " + res.custoken;
-          } catch(err) {
-            console.log(err);
+        <script>
+          function openTab(evt, tabName) {
+          var i, tabContent, tabButton;
+          tabContent = document.getElementsByClassName("tab-content");
+          for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
           }
-          var m = new Date();
-          var dt = m.getFullYear() +"-"+ addZero(m.getMonth()+1) +"-"+ addZero(m.getDate()) + " " + addZero(m.getHours()) + "-" + addZero(m.getMinutes()) + "-" + addZero(m.getSeconds());
-          socket.emit('vol21Admin', {
-            'key':'tungdeptrai',
-            'DateTime':dt,
-            'cmd':{
-              'cmdHeader':'connect',
-              'cmdContent': JSON.stringify(res)
+          tabButton = document.getElementsByClassName("tab-button");
+          for (i = 0; i < tabButton.length; i++) {
+            tabButton[i].className = tabButton[i].className.replace(" active", "");
+          }
+          document.getElementById(tabName).style.display = "block";
+          evt.currentTarget.className += " active";
+          }
+        </script>
+        <script>
+          function fetchData(url) {
+            let data = {
+              cmd: ''
+            };
+            switch (url) {
+              case '/securities/api/getlandingdata/':
+                data.cmd = 'getlandingdata';
+                break;
+              default:
+                data.cmd = '';
             }
-          });
-        }
-      }) .catch(err => {
-        console.log(err);
-      });
-    });
-    }
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-    // ...
-    console.log('ERROR: ', errorCode, errorMessage);
-  });
-  setTimeout(() => {
-    let syncScreen = document.getElementById('syncScreen');
-    syncScreen.style.display = 'none';
-  }, 5000);
-  socket.on('vol21Admin', function(data){
-    if(data.msgHeader == "connectionConfirm"){
-      let syncScreen = document.getElementById('syncScreen');
-      if(syncScreen!=undefined) {
-        syncScreen.style.display = 'none';
-      }
-    } else {
-      console.log('//----Admin command----');
-      console.log(data.cmd.cmdHeader);
-      console.log(data.cmd.cmdContent);
-    }
-  });
-    socket.on('apiResponse', function(data){
-    console.log('//----API response----');
-    console.log(data);
-  });
+            fetch(url, {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              let resp = JSON.parse(data);
+              if(resp.error == 0) {
+                //console.log(resp.data);
+                switch (resp.cmd) {
+                  case 'getlandingdata':
+                    console.log(resp.data);
+                    const container = document.getElementById('tab1');
+                    const table = document.createElement('table');
+                    table.setAttribute('style','width:100%;');
+                    const headerRow = document.createElement('tr');
+                    headerRow.innerHTML = '<th>Ngày</th><th>Tên</th><th>Phone</th><th>Email</th><th>Address</th><th></th>';
+                    table.appendChild(headerRow);
+                    // Loop through the data array and create a new row for each record
+                    resp.data.forEach(record => {
+                      const row = document.createElement('tr');
 
-</script-->
+                      // Add six cells to the row
+                      const cellId = document.createElement('td');
+                      cellId.setAttribute('style','display:none');
+                      cellId.textContent = record.id;
+                      const cellDate = document.createElement('td');
+                      cellDate.textContent = convertDate(record._date);
+                      const cellName = document.createElement('td');
+                      cellName.textContent = record.name;
+                      const cellPhone = document.createElement('td');
+                      cellPhone.textContent = record.phone;
+                      const cellEmail = document.createElement('td');
+                      cellEmail.textContent = record.email;
+                      const cellAddress = document.createElement('td');
+                      cellAddress.textContent = record.address;
+                      const cellApproval = document.createElement('td');
+                      const btnAccept = document.createElement('div');
+                      btnAccept.setAttribute('class','btn btn-success mr-1');
+                      btnAccept.textContent = 'Duyệt';
+                      btnAccept.setAttribute('onclick', 'alert("Duyệt ID = '+ record.id +'")');
+                      const btnCancel = document.createElement('div');
+                      btnCancel.setAttribute('class','btn btn-danger');
+                      btnCancel.textContent = 'Hủy';
+                      btnCancel.setAttribute('onclick', 'alert("Hủy ID = '+ record.id +'")');
+                      cellApproval.appendChild(btnAccept);
+                      cellApproval.appendChild(btnCancel);
+
+                      row.appendChild(cellId);
+                      row.appendChild(cellDate);
+                      row.appendChild(cellName);
+                      row.appendChild(cellPhone);
+                      row.appendChild(cellEmail);
+                      row.appendChild(cellAddress);
+                      row.appendChild(cellApproval);
+
+                      // Add the row to the table
+                      table.appendChild(row);
+                    });
+                    container.appendChild(table);
+                    break;
+                  default:
+                    console.log(resp.data);
+                }
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+          // Wait for the page to finish loading
+          window.addEventListener('load', fetchData("/securities/api/getlandingdata/"));
+
+          function convertDate(dateString) {
+            const date = new Date(dateString);
+            const day = date.getUTCDate();
+            const month = date.getUTCMonth() + 1; // getUTCMonth() returns 0-indexed months, so we add 1 to get the correct month
+            const year = date.getUTCFullYear();
+            return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
+          }
+
+        </script>
 
 </html>

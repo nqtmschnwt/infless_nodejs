@@ -8,20 +8,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="../css/shopfrontend.css">
+    <link rel="stylesheet" href="../../css/shopfrontend.css">
 
 </head>
   <body>
     <header>
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="#">
-                    <img class="logo" src="../img/logos/logoshop.png" alt="Logo">
+                <a class="navbar-brand" href="../landing">
+                    <img class="logo" src="../../img/logos/logo_infless_eye.png" alt="Logo">
                 </a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-			  <span class="navbar-toggler-icon"></span>
-			</button>
+          			  <span class="navbar-toggler-icon"></span>
+          			</button>
 
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav ml-auto">
@@ -38,6 +38,10 @@
                         </li>
                     </ul>
                 </div>
+                <ul style="list-style-type: none; display: flex;">
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">About</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -45,24 +49,66 @@
     <main>
       <section  id="product-list" class="product-list">
         <div class="container">
+          <div class="row mt-3">
+            <h3 id="" class="category-title ladi-headline text-center">Danh mục sản phẩm</h3>
+          </div>
           <div class="row" id="product-row">
-            <% for(var i=0; i<10; i++) { %>
-            <div class="col-md-4 mt-3 mb-3">
+            <% for(var i=0; i<1; i++) { %>
+            <div class="col-lg-4 col-md-6 col-12 mt-3 mb-3">
               <div class="card">
-                <img class="card-img-top" src="http://via.placeholder.com/640x360" alt="Product 1">
+                <div class="category-product-img" style="background: url(../../img/hopsanpham.png) no-repeat center center / 100% auto;">
+                  <!--img class="" src="../../img/hopsanpham.png" alt="infless-stock-trading-support-system"-->
+                </div>
                 <div class="card-body">
-                  <h5 class="card-title">Product <%- i %></h5>
+                  <h5 class="card-title">Hệ thống hỗ trợ giao dịch Infless</h5>
                   <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor justo id risus bibendum, a luctus nisl tincidunt.</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="stars-rating">
                       <!-- Stars rating content goes here -->
                     </div>
-                    <a href="#" class="btn btn-primary">Learn more</a>
+                    <a href="../shop-single/" class="btn btn-crimson">Xem chi tiết</a>
                   </div>
                 </div>
               </div>
             </div>
             <% } %>
+
+            <div class="col-lg-4 col-md-6 col-12 mt-3 mb-3">
+              <div class="card">
+                <div class="category-product-img" style="background: url(https://static.news.bitcoin.com/wp-content/uploads/2022/05/img_20220522_115611_467.jpg) no-repeat center center / 100% auto;">
+                  <!--img class="" src="../../img/hopsanpham.png" alt="infless-stock-trading-support-system"-->
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Comming soon...</h5>
+                  <p class="card-text"></p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="stars-rating">
+                      <!-- Stars rating content goes here -->
+                    </div>
+                    <a href="#" class="btn btn-crimson">Xem chi tiết</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-12 mt-3 mb-3">
+              <div class="card">
+                <div class="category-product-img" style="background: url(https://fxaudit.com/fx/upld/2021/04/Lux-Algo3-1024x589.png) no-repeat center center / 100% auto;">
+                  <!--img class="" src="../../img/hopsanpham.png" alt="infless-stock-trading-support-system"-->
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Comming soon...</h5>
+                  <p class="card-text"></p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="stars-rating">
+                      <!-- Stars rating content goes here -->
+                    </div>
+                    <a href="#" class="btn btn-crimson">Xem chi tiết</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="pagination-buttons">
@@ -76,7 +122,22 @@
     </main>
 
     <footer>
-      <!-- Footer content goes here -->
+      <div id="FOOTER" class="ladi-section">
+            <div class="ladi-section-background"></div>
+            <div class="ladi-container">
+                <div id="GROUP362" class="ladi-element">
+                    <div class="ladi-group">
+                        <div id="HEADLINE360" class="ladi-element">
+                            <h3 class="ladi-headline">CÔNG TY CỔ PHẦN INFLESS INVESTMENT<br></h3>
+                        </div>
+                        <div id="HEADLINE361" class="ladi-element">
+                            <h3 class="ladi-headline">Địa chỉ: Tầng 2, Số 59 Ngõ 112 Mễ Trì Thượng, Nam Từ Liêm, Hà Nội<br>Email: contact@infless.vn - Điện thoại: 0964.155.464
+                                <br>Website: https://infless.com.vn/<br></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <!-- Bootstrap JS -->

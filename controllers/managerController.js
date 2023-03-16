@@ -662,7 +662,19 @@ let postLdpAdmin = (req,res) => {
   let user=req.user;
   if(user!=undefined) {
     if(user.role_id>1) {
-      return res.json({error:0,message:'server response'})
+      let data = req.body;
+      if (data.endTime) {
+        pool.query(
+          `UPDATE ldp_settings
+            SET content = $1 WHERE name='endTime';`,
+            [data.endTime],
+            (err,results) => {
+              if (err) return res.json({error:1,message:err});
+              else return res.json({error:0,cmd:'endTime',message:'endTime success'});
+            }
+        )
+      }
+      
     } else {
       return res.json({error:1,message:'User has no permisson.'});
     }

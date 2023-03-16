@@ -87,7 +87,7 @@
                                             <h4 class="title">Thời hạn khuyến mại landing page</h4>
                                             <form>
                                               <input type="date" id="date-input" name="date-input" style="height: 32px; vertical-align: middle;">
-                                              <div class="btn btn-danger" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
+                                              <div class="btn btn-danger" onclick="updateLdpTime()" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
                                             </form>
                                         </div>
                                     </div>
@@ -184,7 +184,7 @@
     <%- include ('tail.ejs') %>
         <script src="/js/favico.min.js"></script>
         <script src="/js/custom-script.js"></script>
-        <script type="module" src="/js/managerappconnect.js"></script>
+        <script type="module" src="../js/managerappconnect.js"></script>
         <script>
           function openTab(evt, tabName) {
           var i, tabContent, tabButton;
@@ -201,6 +201,30 @@
           }
         </script>
         <script>
+          function updateLdpTime() {
+            let dateInput = new Date(document.getElementById('date-input').value);
+            let timestamp = Math.floor(dateInput.getTime()); // convert to Unix timestamp
+            console.log(timestamp);
+            // Push timestamp
+            fetch('/securities/api/postlandingadmin/', {
+              method: 'POST',
+              body: JSON.stringify({endTime:timestamp}),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              let resp = JSON.parse(data);
+              if(resp.error == 0) {
+                alert('Cập nhật thành công!');
+              } else alert(resp.message);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+
           function fetchData(url) {
             let data = {
               cmd: ''

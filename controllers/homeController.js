@@ -467,7 +467,18 @@ let getShopCategoryPage = (req, res) => {
 }
 
 let getLandingPage = (req, res) => {
-    return res.render('ldp/ldp');
+  pool.query(
+    `SELECT * FROM ldp_settings WHERE name='endTime';`,
+    (err,results) => {
+      if(err) console.log(err);
+      else {
+        if(results.rows.length > 0) {
+          return res.render('ldp/ldp',{endTime: results.rows[0].content});
+        } else return res.render('ldp/ldp',{endTime: '1678671390868'});
+      }
+    }
+  )
+
 }
 
 let postLdpForm = (req,res) => {

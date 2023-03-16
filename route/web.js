@@ -49,6 +49,7 @@ let initWebRoutes = (app) => {
     router.get("/securities/shop-category/", homeController.getShopCategoryPage);
     router.post("/api/order/", homeController.postShopPage);
     router.post("/securities/api/getlandingdata/", managerController.getLdpFormData);
+    router.post("/securities/api/postlandingadmin/", managerController.postLdpAdmin);
 
     /* PLATFORM PAGES */
     // CLient home page

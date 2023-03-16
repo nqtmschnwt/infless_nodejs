@@ -21,25 +21,10 @@
                     <img class="logo" src="../../img/logos/logo_infless_eye.png" alt="Logo">
                 </a>
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-			  <span class="navbar-toggler-icon"></span>
-			</button>
-
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a id="user-icon" class="nav-link" href="/securities/home">
-                                <i class="fa fa-user user-icon" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a id="shopping-cart-icon" class="nav-link" href="#">
-                                <i class="fa fa-shopping-cart shopping-cart-icon" aria-hidden="true"></i>
-                                <!--span class="red-dot"></span-->
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <a id="shopping-cart-icon" class="nav-link" href="#">
+                    <i class="fa fa-shopping-cart shopping-cart-icon" aria-hidden="true"></i>
+                    <!--span class="red-dot"></span-->
+                </a>
             </nav>
         </div>
     </header>
@@ -66,7 +51,7 @@
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
+                        <i class="fas fa-star"></i>
                     </div>
 
                     <div class="product-price-group">
@@ -118,15 +103,161 @@
             </ul>
 
             <div class="tab-content active" data-tab="tab1" role="tabpanel">
-                <h2 class="product-title">Product Title</h2>
-                <p class="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac efficitur nisl. Praesent sed orci tristique, finibus odio sed, mollis mauris. Sed efficitur lacus id justo lacinia aliquet.</p>
+                <h2 class="product-title">Đặc điểm chung của sản phẩm</h2>
+                <h3 class="product-subtitle">1. Cấu tạo sản phẩm</h3>
+                <p>Phần mềm được viết trên Amibroker- một phần mềm phân tích kỹ thuật được sử dụng rộng rãi bởi các nhà đầu tư, các chuyên gia trong ngành chứng khoán (Việt Nam, quốc tế). Gồm các chỉ báo được xây dựng bởi đội ngũ chuyên gia của công ty cổ phần Infless Investment.</p>
+                <p>Bộ chỉ báo của Infless gồm 07 chỉ báo, với các tính năng, công dụng khác nhau.</p>
+                <table class="product-desc-table">
+                  <thead>
+                    <tr>
+                      <th>Chỉ báo</th>
+                      <th>Cấu tạo</th>
+                      <th>Công dụng chi tiết</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Chỉ báo ABS</td>
+                      <td>
+                        <p>Được tạo nên bởi 03 yếu tố chín</p>
+                        <ul>
+                          <li>Dải màu xanh lá của xu hướng uptrend và dải màu tím của xu hướng downtrend</li>
+                          <li>Đường mua tại, đường bán tại, kèm theo các mục về Chốt lời, Cắt lỗ cho từng lệnh</li>
+                          <li>Các mũi tên biểu hiện lệnh màu tím (lệnh mua), xanh dương (lệnh bán) và các mũi tên rỗng (lệnh nhanh)</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li>Đưa ra cái nhìn tổng quát về thị trường</li>
+                          <li>Xác định các ngưỡng hỗ trợ kháng cự quan trọng</li>
+                          <li>Xác định các vùng mua, bán có kèm Chốt lời, Cắt lỗ cho từng lệnh</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chỉ báo SPI</td>
+                      <td>
+                        <p>Được tạo thành từ tổ hợp các nến</p>
+                        <ul>
+                          <li>Nến đỏ: Biểu thị tốc độ giá giảm</li>
+                          <li>Nến xanh: Biểu thị tốc độ giá tăng</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li>Tìm điểm mua bán ngắn hạn</li>
+                          <li>Xác định điểm đảo chiều</li>
+                          <li>Xác định cường độ của xu hướng</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chỉ báo IRB</td>
+                      <td>
+                        <p>Xây dựng bởi các nhóm đường nhiều màu sắc như cầu vồng, mỗi nhóm màu đại diện cho một xu hướng- cũng chính là các vùng hỗ trợ, kháng cự của giá.</p>
+                        <ul>
+                          <li>Nhóm đường màu đỏ mô phỏng xu hướng ngắn hạn.</li>
+                          <li>Đường màu xanh lá cây là đường trung tâm, là đường hỗ trợ mua bán cho xu hướng ngắn hạn</li>
+                          <li>Nhóm đường màu vàng mô phỏng xu hướng trung ngắn hạn.</li>
+                          <li>Nhóm đường màu xanh lam mô phỏng xu hướng trung dài hạn.</li>
+                          <li>Nhóm đường màu trắng mô phỏng xu hướng dài hạn.</li>
+                          <li>Nhóm đường màu tím và nhóm đường màu xanh lục mô phỏng xu hướng siêu dài hạn</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li>Đưa ra cái nhìn tổng quát về xu hướng thị trường (ngắn hạn, trung hạn và dài hạn).</li>
+                          <li>Xác định vùng kháng cự, hỗ trợ quan trọng.</li>
+                          <li>Phân tích chuyên sâu giúp nhà đầu tư nhìn được dòng tiền và định lượng được sức mạnh của các thành phần tham gia trong thị trường</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chỉ báo AMF</td>
+                      <td>
+                        <p>Gồm 02 thành phần:</p>
+                        <ul>
+                          <li>Phân tích dòng tiền đầu cơ.</li>
+                          <li>Phân tích dòng tiền đầu cơ.</li>
+                        </ul>
+                        <p>Trong mỗi thành phần gồm có cột giá trị cường độ (màu xanh lá cây, màu xanh lam và màu đỏ) và đường tín hiệu.</p>
+                        <ul>
+                          <li>Đường giá trị màu xanh lá cây: Tiền vào.</li>
+                          <li>Đường màu xanh lam: Tiền đang luân chuyển.</li>
+                          <li>Đường màu đỏ :Tiền được rút ra.</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li>Xác định vùng mua bán.</li>
+                          <li>Nhận biết được các dòng tiền khi tham gia thị trường.</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chỉ báo KDJ</td>
+                      <td>
+                        <p>Gồm những tính năng ưu việt của RSI và trung bình động. Thể hiện qua 03 đường</p>
+                        <ul>
+                          <li>Đường %K màu vàng </li>
+                          <li>Đường %D màu xanh lam.</li>
+                          <li>Đường J màu đỏ nét đặc</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li>Xác định vùng mua bán</li>
+                          <li>Xác định điểm đảo chiều</li>
+                          <li>Xác định cường độ của xu hướng</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chỉ báo VAP</td>
+                      <td>Đồ thị gồm giá dạng nến và những thanh chữ nhật ngang màu xanh. Những thanh ngang màu xanh đại diện cho khối lượng tại mức giá đó.</td>
+                      <td>
+                        <ul>
+                          <li>Tìm vùng giá phân phối đỉnh, tạo đáy.</li>
+                          <li>Xác định vùng kháng cự hỗ trợ</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Chỉ báo FIBO và Bộ dò sóng</td>
+                      <td>
+                        <p>Gồm 02 phần</p>
+                        <ul>
+                          <li>Chỉ báo FIBO hay chỉ báo Fibonacci : đây là một chỉ báo phổ biến, và được cung cấp miễn phí ở nhiều nền tảng</li>
+                          <li>Bộ dò sóng: gồm các đường đỏ, xanh biển, vàng.</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li>Xác định vùng kháng cự hỗ trợ</li>
+                          <li>Xác định vùng đỉnh, đáy</li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <h3 class="product-subtitle">2. Tính năng sản phẩm</h3>
+                <p>Tham gia đầu tư chứng khoán, công việc thường nhật, gần như lặp đi lặp lại của tất cả các nhà đầu tư hay các chuyên gia, đó là tìm ra “Cơ hội” trên thị trường chứng khoán. Cơ hội này thực ra chính là các cổ phiếu. Vậy một cổ phiếu như thế nào được coi là cơ hội? Không phải điều gì cao siêu, cơ hội nằm trong “Sự tăng giá của cổ phiếu” hay những cổ phiếu sắp tăng là điều mà mọi người đang tìm kiếm</p>
+                <p>Những yếu tố quan trọng nhất với “Sự tăng giá cổ phiếu” được tổng hợp gọn gàng, biểu hiện bởi các dạng dải màu, đường nét, thông tin cụ thể, dễ hiểu, dễ nắm bắt. Hệ thống <strong>đưa ra cái nhìn trực quan về một cổ phiếu, từ tổng thể tới chi tiết</strong>, giúp nhà đầu tư <strong>nắm bắt toàn bộ chỉ sau vài phút</strong>. Phù hợp với tất cả mọi người, từ các nhà đầu tư từ không chuyên đến các nhà đầu tư chuyên nghiệp đều có thể sử dụng thành thạo</p>
+                <p>Với bộ 07 chỉ báo, mỗi chỉ báo sẽ đem lại một công dụng chi tiết khác nhau. Nổi bật hơn cả là những yếu tố quan trọng nhất, những điều nhà đầu tư cần biết nhất khi tham gia giao dịch cổ phiếu, đó là 04 chỉ báo đầu tiên ABS, SPI, IRB, AMF. Cụ thể các chỉ báo cho biết: <strong>điểm mua-bán cụ thể, mức chốt lời/ cắt lỗ cho từng lệnh, tương quan cung-cầu hay chính là tương quan giữa phe bán và phe mua, xu hướng cổ phiếu và cuối cùng là dòng tiền</strong>. Ngoài ra, những chỉ báo còn lại có tác dụng bổ trợ, xác nhận thêm về kết luận đã đưa ra, bao gồm 03 chỉ báo KDJ, VAP, FIBO+ Bộ dò sóng</p>
+                <p>Hãy thử kết hợp các nhóm chỉ báo với nhau, để tự mình <strong>xây dựng một chiến thuật đầu tư phù hợp</strong> với nhu cầu nhé. Từ <strong>ngắn hạn, trung hạn, dài hạn</strong>, hệ thống đều phát huy hiệu quả tối đa. Thực sự tuyệt vời</p>
+                <h3 class="product-subtitle">3. Lợi ích sản phẩm giải quyết nhu cầu gì của Khách hàng => Lợi thế cạnh tran</h3>
+                <p>Khi sử dụng hệ thống và sự kết hợp các chỉ báo, mỗi cổ phiếu như một bức tranh rõ ràng, đưa ra những góc nhìn tổng thể, nhưng cũng rất chi tiết, giúp các nhà đầu tư <strong>đưa ra quyết định đầu tư một cách rõ ràng, có chiến thuật</strong>. Hệ thống giúp khách hàng <strong>tăng tỷ lệ đúng</strong> trong việc tìm ra cơ hội ở các cổ phiếu. Với chiến thuật đã được hình thành trước, nhà đầu tư có thể quản trị rủi ro tốt hơn, <strong>bảo toàn lãi và hạn chế lỗ</strong> một cách tối đa.</p>
+                <p>Hệ thống cũng là <strong>“điểm tựa”</strong> mỗi khi có sự hoang mang, lo lắng khi nắm giữ cổ phiếu. Vì lúc này, nhà đầu tư nắm giữ cổ phiếu với tâm thế: tôi hiểu rõ về cổ phiếu này, rủi ro nằm trong mức tôi chấp nhận được, và tôi thấy cơ hội đang lớn hơn rất nhiều so với rủi ro! Khi bạn hiểu về cổ phiếu mà mình đang nắm giữ, bạn sẽ không còn sợ những cú lừa của thị trường. Đơn giản là bạn biết rõ đích đến là đâu, bạn cần làm gì lúc này. Cũng giống như khi đi trên đường vậy, đường về nhà lúc nào cũng ngắn hơn đường phải đi, đúng không? Vì khi ta hiểu rõ, ta sẽ không còn sợ hãi nữa</p>
+                <p>Thay vì lặp đi lặp lại các hành động giống nhau, ngồi lần mò từng cổ phiếu, kẻ vẽ vu vơ theo những hướng dẫn chung chung được tìm thấy trên internet. Giờ đây, hệ thống Infess ra đời đã cung cấp một công cụ mạnh hơn, <strong>giảm bớt những công việc lặp lại ấy</strong>. Mỗi bức tranh phân tích, được hiện ra chỉ sau một nút bấm chuyển. Hệ thống là công cụ hỗ trợ đắc lực, giảm thiểu khối lượng lớn công việc trong quá trình đầu tư. Đặc biệt thích hợp với những nhà đầu tư mới, những nhà đầu tư không chuyên, hoặc vẫn đang mải mê tìm kiếm một phương pháp phù hợp. Infless sẽ đem đến câu trả lời dành cho mọi người</p>
+                <p>Mang trong mình nhiều tính năng và tiện ích như vậy, nhưng hệ thống lại có một <strong>giao diện cực kỳ thân thiện với người dùng</strong>. Các thao tác cài đặt được thực hiện đơn giản như khi cài đặt một phần mềm thông dụng (như Cốc Cốc, Google Chrome,..). Bạn chỉ cần chuẩn bị một chiếc laptop với hệ điều hành Windows (tạm thời chưa có phiên bản trên Mac OS). Tất nhiên, bất cứ vấn đề nào với vấn đề cài đặt và gia hạn, sử dụng, hãy liên hệ ngay với Infless, đội hỗ trợ của chúng tôi luôn sẵn sàng hỗ trợ tận tình tới các khách hàng.</p>
+                <p>Với bộ 07 chỉ báo, bao gồm 04 chỉ báo chính, 03 chỉ báo phụ, người sử dụng sẽ <strong>dễ dàng tiếp cận, dễ dàng học và dùng ngay</strong> trong thực chiến đầu tư. Bộ sản phẩm đi kèm hướng dẫn sử dụng chi tiết và đầy đủ. Ngoài ra, đội hỗ trợ cũng sẵn sàng giải đáp các thắc mắc, trăn trở, những câu hỏi của quý khách hàng. Bên cạnh đó, các kênh thương mại điện tử, mạng xã hội, cũng luôn được Infless update những thông tin mới nhất về kiến thức đầu tư, những bài học, kinh nghiệm thực chiến, các tips sử dụng hệ thống hiệu quả, là kho dữ liệu tham khảo cực kỳ hữu ích cho các nhà đầu tư. Hãy theo dõi Infless trên tất cả các nền tảng Facebook, Youtube, Tiktok, Zalo nhé!</p>
             </div>
             <div class="tab-content" data-tab="tab2" role="tabpanel">
-                <h2 class="product-title">Product Reviews</h2>
+
                 <ul>
                     <li>
                         <p class="reviewer">Người dùng A</p>
-                        <p class="review-content">Sản phẩm rất tốt, tôi rất hài lòng với nó.</p>
+
                         <div class="review-rating">
                             <span class="fa fa-star checked"></span>
                             <span class="fa fa-star checked"></span>
@@ -134,10 +265,11 @@
                             <span class="fa fa-star"></span>
                             <span class="fa fa-star"></span>
                         </div>
+                        <p class="review-content">Sản phẩm rất tốt, tôi rất hài lòng với nó.</p>
                     </li>
                     <li>
                         <p class="reviewer">Người dùng B</p>
-                        <p class="review-content">Sản phẩm không được như mong đợi, tôi không hài lòng với nó.</p>
+
                         <div class="review-rating">
                             <span class="fa fa-star checked"></span>
                             <span class="fa fa-star"></span>
@@ -145,6 +277,19 @@
                             <span class="fa fa-star"></span>
                             <span class="fa fa-star"></span>
                         </div>
+                        <p class="review-content">Sản phẩm có các tính năng độc đáo và hữu ích.</p>
+                    </li>
+                    <li>
+                        <p class="reviewer">Người dùng C</p>
+
+                        <div class="review-rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <p class="review-content">Giá cả của sản phẩm là rất hợp lý so với những gì nó cung cấp.</p>
                     </li>
                 </ul>
             </div>
@@ -208,7 +353,7 @@
                                     </ul>
                                 </div>
                                 <div class="col-lg-6">
-                                    <img class="img-fluid" src="../img/Logo_BIDV.png" alt="">
+                                    <img class="img-fluid" src="../../img/Logo_BIDV.png" alt="">
                                 </div>
                             </div>
                         </div>

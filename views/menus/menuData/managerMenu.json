@@ -47,7 +47,7 @@
         "link": "#",
         "child": [{
                 "title": "Xem giao diện cửa hàng",
-                "link": "/securities/shop"
+                "link": "/securities/shop-category"
             },
             {
                 "title": "Quản lý đơn hàng",

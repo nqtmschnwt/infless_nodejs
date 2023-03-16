@@ -122,6 +122,8 @@ main {
 #shopping-cart-icon {
     line-height: 24px;
     color: #7e1916;
+    position: absolute;
+    right: 0;
 }
 
 
@@ -193,6 +195,26 @@ main {
     font-size: 1.5rem;
     font-weight: bold;
     margin-top: 1rem;
+}
+
+.product-subtitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.product-desc-table {
+  width: 100%;
+}
+
+.product-desc-table td, .product-desc-table th {
+    border: 1px solid #ccc;
+    padding: 5px;
+    vertical-align: top;
+}
+
+.product-desc-table th {
+  text-align: center;
 }
 
 .product-description {

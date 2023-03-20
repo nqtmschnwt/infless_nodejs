@@ -438,7 +438,7 @@ main {
     font-weight: bold;
 }
 
-#bill-code {
+#bill-code, #bill-code-2 {
     color: red;
 }
 
@@ -633,4 +633,61 @@ main {
   #HEADLINE361>.ladi-headline {
     font-size: 15px;
   }
+}
+
+/* single page slide show */
+.slide-container {
+  display: flex;
+}
+.swiper, .product-img {
+  flex: 1;
+  height: 450px;
+}
+.product-img-thumbnails {
+  width: 80px;
+}
+.product-img-thumbnails-list {
+  padding: 0;
+  margin: 0 !important;
+}
+.product-img-thumbnails-list li {
+  height: 80px;
+  border:1px solid #ddd;
+}
+.product-img-thumbnails-list li:hover {
+  border:1px solid #7e1916;
+}
+.product-img-show {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#product-img-show-main {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+}
+.img-thumbnail-item {
+  height: 100%;
+  width: auto;
+}
+.thumbnail-nav {
+  height: 25px;
+  color: #5a5a5a;
+  border:1px solid #ccc;
+  text-align: center;
+  background-color: #ccc;
+  cursor: pointer;
+  -moz-user-select: none !important;
+  -webkit-touch-callout: none!important;
+  -webkit-user-select: none!important;
+  -khtml-user-select: none!important;
+  -moz-user-select: none!important;
+  -ms-user-select: none!important;
+  user-select: none!important;
+}
+.thumbnail-nav:hover {
+  background-color: #7e1916;
+  border:1px solid #7e1916;
+  color: #fff;
 }

@@ -180,10 +180,13 @@ btnPaymentOpen.addEventListener('click', function() {
 function openPaymentModal() {
     // Update bill code
     document.getElementById("bill-code").innerHTML = orderBill.billCode;
+    document.getElementById("bill-code-2").innerHTML = orderBill.billCode;
     // Update bill money
     document.getElementById("payment-money").innerHTML = separateThousands(orderBill.billValue);
+    document.getElementById("payment-money-2").innerHTML = separateThousands(orderBill.billValue);
     // Update bill money spell
     document.getElementById("payment-money-spell").innerHTML = spellGen();
+    document.getElementById("payment-money-spell-2").innerHTML = spellGen();
 
     // Hide cart modal
     cartModal.style.display = 'none';
@@ -446,7 +449,7 @@ document.getElementById('shop-done-btn').addEventListener('click', function() {
                 serverMessageSuccess.innerHTML = '<p>Đơn hàng đang được xử lý. Chúng tôi sẽ liên hệ lại với bạn.</p>';
                 serverMessageSuccess.style.display = 'block';
             } else {
-                serverMessageError.innerHTML = '<p>Rất tiếc, đã có lỗi xảy ra.</p>';
+                serverMessageError.innerHTML = '<p>Rất tiếc, đã có lỗi xảy ra: ' + data.message +'</p>';
                 serverMessageError.style.display = 'block';
             }
         })

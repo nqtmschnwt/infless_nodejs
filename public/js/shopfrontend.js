@@ -430,6 +430,9 @@ function separateThousands(num) {
 
 // Submit order to server
 document.getElementById('shop-done-btn').addEventListener('click', function() {
+  const customerName = document.getElementById('customer_name').value;
+  const customerPhone = document.getElementById('customer_phone').value;
+  const customerEmail = document.getElementById('customer_email').value;
     fetch('/api/order', {
             method: 'POST',
             headers: {
@@ -437,7 +440,10 @@ document.getElementById('shop-done-btn').addEventListener('click', function() {
             },
             body: JSON.stringify({
                 orderArr: orderArr,
-                orderBill: orderBill
+                orderBill: orderBill,
+                customer_name: customerName,
+                customer_phone: customerPhone,
+                customer_email: customerEmail
             })
         })
         .then(response => response.json())
@@ -449,7 +455,7 @@ document.getElementById('shop-done-btn').addEventListener('click', function() {
                 serverMessageSuccess.innerHTML = '<p>Đơn hàng đang được xử lý. Chúng tôi sẽ liên hệ lại với bạn.</p>';
                 serverMessageSuccess.style.display = 'block';
             } else {
-                serverMessageError.innerHTML = '<p>Rất tiếc, đã có lỗi xảy ra: ' + data.message +'</p>';
+                serverMessageError.innerHTML = '<p>Rất tiếc, đã có lỗi xảy ra: ' + JSON.stringify(data.message) +'</p>';
                 serverMessageError.style.display = 'block';
             }
         })

@@ -90,6 +90,25 @@
                                               <div class="btn btn-danger" onclick="updateLdpTime()" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
                                             </form>
                                         </div>
+
+                                        <div class="block">
+                                            <h4 class="title">Set số lượng sản phẩm</h4>
+                                            <form>
+                                              <div style="width:100%">
+                                                <label for="product-code-input" style="width:50%">Mã sản phẩm</label>
+                                                <input type="text" id="product-code-input" name="product-code-input" style="height: 32px; vertical-align: middle;">
+                                              </div>
+                                              <div style="width:100%">
+                                                <label for="product-name-input" style="width:50%">Tên sản phẩm</label>
+                                                <input type="text" id="product-name-input" name="product-name-input" style="height: 32px; vertical-align: middle;">
+                                              </div>
+                                              <div style="width:100%">
+                                                <label for=product-quant-input"" style="width:50%">Số lượng</label>
+                                                <input type="number" id="product-quant-input" name="product-quant-input" min="0" style="height: 32px; vertical-align: middle;">
+                                              </div>
+                                              <div class="btn btn-danger" onclick="updateProductQuant()" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
+                                            </form>
+                                        </div>
                                     </div>
 
                                     <!--div class="col-lg-6 col-12">
@@ -146,15 +165,26 @@
                                             <div class="block">
                                                 <h4 class="title">Admin tools</h4>
                                                 <div class="btn" id="create-fundpf-btn" style="background-color:#9100ff">Tạo danh mục quỹ</div>
+                                                <hr style="border-top: 1px solid white;" />
+                                                <!-- SQL console -->
+                                                <p>SQL tool</p>
+                                                <div class="sql-container">
+                                                  <form action="" style="margin-bottom:10px;">
+                                                    <input type="text" id="sql-cmd" style="width:100%;">
+                                                    <div class="btn btn-danger" id="sql-btn" onclick="sqlSend()">Gửi</div>
+                                                  </form>
+                                                  <div id="SQLConsole" class="console"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <% } %>
+                                <% } %>
                             </div>
                         </section>
                         <section>
                           <div class="container-fluid">
                             <div class="row">
+                              <!-- Landing page customers -->
                               <div class="col-12">
                                 <div class="block">
                                     <h4 class="title">Khách landing page</h4>
@@ -173,6 +203,15 @@
                                     </div>
                                 </div>
                               </div>
+
+                              <!-- Shop single page customers -->
+                              <div class="col-12">
+                                <div class="block">
+                                    <h4 class="title">Đơn hàng shop</h4>
+                                    <div id="orderlist"></div>
+                                </div>
+                              </div>
+
                             </div>
                           </div>
                         </section>
@@ -225,13 +264,109 @@
             });
           }
 
-          function fetchData(url) {
+          function approveLdpForm(id,approve) {
+            // Push timestamp
+            fetch('/securities/api/postlandingadmin/', {
+              method: 'POST',
+              body: JSON.stringify({approve_id:id,approve:approve}),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              let resp = JSON.parse(data);
+              console.log(data);
+              if(resp.error == 0) {
+                alert('Cập nhật thành công!');
+                document.getElementById('tab1').innerHTML = '';
+                document.getElementById('tab2').innerHTML = '';
+                document.getElementById('tab3').innerHTML = '';
+                fetchData("/securities/api/getlandingdata/",{});
+                fetchData("/securities/api/getproductquant/",{product_code:'INF0001'});
+              } else alert(resp.message);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+
+          function updateProductQuant() {
+            let productCodeInput = document.getElementById('product-code-input').value;
+            let productNameInput = document.getElementById('product-name-input').value;
+            let productQuantInput = document.getElementById('product-quant-input').value;
+            // Push timestamp
+            fetch('/securities/api/postlandingadmin/', {
+              method: 'POST',
+              body: JSON.stringify({
+                product_code:productCodeInput,
+                product_name:productNameInput,
+                quantity:productQuantInput
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              let resp = JSON.parse(data);
+              if(resp.error == 0) {
+                alert('Cập nhật thành công!');
+              } else alert(resp.message);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+
+          function sqlSend() {
+            const sqlCmd = document.getElementById('sql-cmd').value;
+            const sqlConsole = document.getElementById('SQLConsole');
+            console.log(sqlCmd);
+
+            // Push cmd
+            fetch('/securities/api/postsqlcmd/', {
+              method: 'POST',
+              body: JSON.stringify({cmd:sqlCmd}),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              let resp = JSON.parse(data);
+              //console.log(data);
+              if(resp.error == 0) {
+                let sqlConsoleLog = document.createElement('p');
+                sqlConsoleLog.innerHTML = JSON.stringify(resp.message);
+                sqlConsoleLog.classList.add('text-success');
+                sqlConsole.appendChild(sqlConsoleLog);
+              } else {
+                let sqlConsoleLog = document.createElement('p');
+                sqlConsoleLog.innerHTML = JSON.stringify(resp.message);
+                sqlConsoleLog.classList.add('text-danger');
+                sqlConsole.appendChild(sqlConsoleLog);
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+
+          function fetchData(url,args) {
             let data = {
               cmd: ''
             };
             switch (url) {
               case '/securities/api/getlandingdata/':
                 data.cmd = 'getlandingdata';
+                break;
+              case '/securities/api/getproductquant/':
+                data.cmd = 'getproductquant';
+                data.product_code = args.product_code;
+                break;
+              case '/securities/api/getordersdata/':
+                data.cmd = 'getordersdata';
                 break;
               default:
                 data.cmd = '';
@@ -251,12 +386,27 @@
                 switch (resp.cmd) {
                   case 'getlandingdata':
                     console.log(resp.data);
+                    /* Creating tables */
                     const container = document.getElementById('tab1');
                     const table = document.createElement('table');
                     table.setAttribute('style','width:100%;');
                     const headerRow = document.createElement('tr');
                     headerRow.innerHTML = '<th>Ngày</th><th>Tên</th><th>Phone</th><th>Email</th><th>Address</th><th></th>';
                     table.appendChild(headerRow);
+
+                    const container2 = document.getElementById('tab2');
+                    const table2 = document.createElement('table');
+                    table2.setAttribute('style','width:100%;');
+                    const headerRow2 = document.createElement('tr');
+                    headerRow2.innerHTML = '<th>Ngày</th><th>Tên</th><th>Phone</th><th>Email</th><th>Address</th><th></th>';
+                    table2.appendChild(headerRow2);
+
+                    const container3 = document.getElementById('tab3');
+                    const table3 = document.createElement('table');
+                    table3.setAttribute('style','width:100%;');
+                    const headerRow3 = document.createElement('tr');
+                    headerRow3.innerHTML = '<th>Ngày</th><th>Tên</th><th>Phone</th><th>Email</th><th>Address</th><th></th>';
+                    table3.appendChild(headerRow3);
                     // Loop through the data array and create a new row for each record
                     resp.data.forEach(record => {
                       const row = document.createElement('tr');
@@ -276,16 +426,18 @@
                       const cellAddress = document.createElement('td');
                       cellAddress.textContent = record.address;
                       const cellApproval = document.createElement('td');
-                      const btnAccept = document.createElement('div');
-                      btnAccept.setAttribute('class','btn btn-success mr-1');
-                      btnAccept.textContent = 'Duyệt';
-                      btnAccept.setAttribute('onclick', 'alert("Duyệt ID = '+ record.id +'")');
-                      const btnCancel = document.createElement('div');
-                      btnCancel.setAttribute('class','btn btn-danger');
-                      btnCancel.textContent = 'Hủy';
-                      btnCancel.setAttribute('onclick', 'alert("Hủy ID = '+ record.id +'")');
-                      cellApproval.appendChild(btnAccept);
-                      cellApproval.appendChild(btnCancel);
+                      if (record.status == 'pending') {
+                        const btnAccept = document.createElement('div');
+                        btnAccept.setAttribute('class','btn btn-success mr-1');
+                        btnAccept.textContent = 'Duyệt';
+                        btnAccept.setAttribute('onclick', 'approveLdpForm('+ record.id +',"accepted")');
+                        const btnCancel = document.createElement('div');
+                        btnCancel.setAttribute('class','btn btn-danger');
+                        btnCancel.textContent = 'Hủy';
+                        btnCancel.setAttribute('onclick', 'approveLdpForm('+ record.id +',"cancelled")');
+                        cellApproval.appendChild(btnAccept);
+                        cellApproval.appendChild(btnCancel);
+                      }
 
                       row.appendChild(cellId);
                       row.appendChild(cellDate);
@@ -296,10 +448,27 @@
                       row.appendChild(cellApproval);
 
                       // Add the row to the table
-                      table.appendChild(row);
+                      if (record.status == 'pending') table.appendChild(row);
+                      else if (record.status == 'accepted') table2.appendChild(row);
+                      else if (record.status == 'cancelled') table3.appendChild(row);
                     });
                     container.appendChild(table);
+                    container2.appendChild(table2);
+                    container3.appendChild(table3);
                     break;
+                  case 'getproductquant':
+                    const productCodeInput = document.getElementById('product-code-input');
+                    const productNameInput = document.getElementById('product-name-input');
+                    const productQuantInput = document.getElementById('product-quant-input');
+                    if(data.length>0) {
+                      productCodeInput.value = resp.data[0].product_code;
+                      productNameInput.value = resp.data[0].product_name;
+                      productQuantInput.value = resp.data[0].quantity;
+                    }
+                    break;
+                  case 'getordersdata':
+                    console.log(resp.data);
+                    renderOrderTable(resp.data);
                   default:
                     console.log(resp.data);
                 }
@@ -310,7 +479,9 @@
             });
           }
           // Wait for the page to finish loading
-          window.addEventListener('load', fetchData("/securities/api/getlandingdata/"));
+          window.addEventListener('load', fetchData("/securities/api/getlandingdata/",{}));
+          window.addEventListener('load', fetchData("/securities/api/getproductquant/",{product_code:'INF0001'}));
+          window.addEventListener('load', fetchData("/securities/api/getordersdata/",{}));
 
           function convertDate(dateString) {
             const date = new Date(dateString);
@@ -318,6 +489,173 @@
             const month = date.getUTCMonth() + 1; // getUTCMonth() returns 0-indexed months, so we add 1 to get the correct month
             const year = date.getUTCFullYear();
             return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
+          }
+
+          function separateThousands(num) {
+            return Number(num).toLocaleString('vi-VN');
+          }
+
+          function renderOrderTable(orderlist) {
+            let orderlistDiv = document.getElementById('orderlist');
+            if(orderlist.length==0) orderlistDiv.innerHTML = 'Danh sách đang trống';
+            else {
+              const orderTable = document.createElement("table");
+              orderTable.setAttribute('id','order-table');
+              orderTable.setAttribute('style','width:100%;');
+              const orderTableHeading = document.createElement('thead');
+              orderTableHeading.innerHTML = '<tr><th>Ngày</th><th>Tên khách hàng</th><th>Điện thoại</th><th>Email</th><th>Mã đơn hàng</th><th>Số tiền</th><th>Nội dung</th><th>Tình trạng</th><th></th></tr>';
+              orderTable.appendChild(orderTableHeading);
+              const orderTableBody = document.createElement('tbody');
+              for(var i=0; i<orderlist.length;i++) {
+                let dateCell = document.createElement('td');
+                try {
+                  let d = new Date(orderlist[i]._date);
+                  dateCell.innerHTML = d.toLocaleString('vi-VN',{
+                    year: 'numeric', month: 'numeric', day: 'numeric',
+                  });
+                } catch (e) {
+                  dateCell.innerHTML = '';
+                }
+                let orderTableRow = document.createElement('tr');
+                let nameCell = document.createElement('td');
+                nameCell.innerHTML = orderlist[i].name;
+                let phoneCell = document.createElement('td');
+                phoneCell.innerHTML = orderlist[i].phone;
+                let emailCell = document.createElement('td');
+                emailCell.innerHTML = orderlist[i].email;
+                let billIDCell = document.createElement('td');
+                billIDCell.innerHTML = orderlist[i].bill_id;
+                let billValueCell = document.createElement('td');
+                billValueCell.innerHTML = separateThousands(orderlist[i].bill_value * (10**9));
+                let orderDetailCell = document.createElement('td');
+                let orderDetails = JSON.parse(orderlist[i].order_details);
+                if (orderDetails.length==0) orderDetailCell.innerHTML = 'Đơn hàng trống';
+                else {
+                  let orderUL = document.createElement('ul');
+                  for (var j=0;j<orderDetails.length;j++) {
+                    let orderLI = document.createElement('li');
+                    orderLI.innerHTML = 'Mã SP: ' + orderDetails[j].orderDetails.code + "; Số lượng: " + orderDetails[j].orderDetails.quantity + "; Đơn giá: " + separateThousands(orderDetails[j].orderDetails.price);
+                    orderUL.appendChild(orderLI);
+                  }
+                  orderDetailCell.appendChild(orderUL);
+                }
+
+                let billStatusCell = document.createElement('td');
+                billStatusCell.setAttribute('id','status-' + orderlist[i].bill_id)
+                switch (orderlist[i].bill_status) {
+                  case '':
+                    billStatusCell.innerHTML = 'Chờ thanh toán';
+                    billStatusCell.setAttribute('class','text-warning');
+                    break;
+                  case 'pending_payment':
+                    billStatusCell.innerHTML = 'Chờ thanh toán';
+                    billStatusCell.setAttribute('class','text-warning');
+                    break;
+                  case 'paid':
+                    billStatusCell.innerHTML = 'Đã thanh toán';
+                    billStatusCell.setAttribute('class','text-success');
+                    break;
+                  case 'cancelled':
+                    billStatusCell.innerHTML = 'Đã hủy';
+                    billStatusCell.setAttribute('class','text-danger');
+                    break;
+                  default:
+                    billStatusCell.innerHTML = 'Chờ thanh toán';
+                    billStatusCell.setAttribute('class','text-warning');
+                }
+
+                let appovalCell = document.createElement('td');
+                appovalCell.setAttribute('class', 'text-center');
+                if (orderlist[i].bill_status != 'paid' && orderlist[i].bill_status != 'cancelled') {
+                  var form = document.createElement("form");
+                  form.setAttribute("method", "post");
+                  form.setAttribute("action", "");
+                  form.setAttribute("id", "form-" + orderlist[i].bill_id);
+                  let orderInp = document.createElement('input');
+                  orderInp.type = "text";
+                  orderInp.setAttribute('value', orderlist[i].bill_id);
+                  orderInp.setAttribute('style', 'display:none');
+                  orderInp.setAttribute('name', 'bill_id');
+                  orderInp.readOnly = true;
+                  let orderAcceptBtn = document.createElement('div');
+                  orderAcceptBtn.setAttribute('class', 'btn btn-success');
+                  orderAcceptBtn.setAttribute('type', 'submit');
+                  orderAcceptBtn.setAttribute('value', 'orderAccept');
+                  orderAcceptBtn.setAttribute('name', 'action');
+                  orderAcceptBtn.setAttribute('style', 'width:100%;');
+                  orderAcceptBtn.setAttribute('onclick', 'orderApproval(true,"'+ orderlist[i].bill_id +'")');
+                  let orderAcceptIcon = document.createElement('i');
+                  orderAcceptIcon.setAttribute('class', 'fa fa-check');
+                  orderAcceptBtn.appendChild(orderAcceptIcon);
+                  let orderCancelBtn = document.createElement('div');
+                  orderCancelBtn.setAttribute('class', 'btn btn-danger');
+                  orderCancelBtn.setAttribute('type', 'submit');
+                  orderCancelBtn.setAttribute('value', 'orderCancel');
+                  orderCancelBtn.setAttribute('name', 'action');
+                  orderCancelBtn.setAttribute('style', 'width:100%;');
+                  orderCancelBtn.setAttribute('onclick', 'orderApproval(false,"'+ orderlist[i].bill_id +'")');
+                  let orderCancelIcon = document.createElement('i');
+                  orderCancelIcon.setAttribute('class', 'fa fa-trash');
+                  orderCancelBtn.appendChild(orderCancelIcon);
+                  form.appendChild(orderInp);
+                  form.appendChild(orderAcceptBtn);
+                  form.appendChild(orderCancelBtn);
+                  appovalCell.appendChild(form);
+                }
+
+                orderTableRow.appendChild(dateCell);
+                orderTableRow.appendChild(nameCell);
+                orderTableRow.appendChild(phoneCell);
+                orderTableRow.appendChild(emailCell);
+                orderTableRow.appendChild(billIDCell);
+                orderTableRow.appendChild(billValueCell);
+                orderTableRow.appendChild(orderDetailCell);
+                orderTableRow.appendChild(billStatusCell);
+                orderTableRow.appendChild(appovalCell);
+
+                orderTableBody.appendChild(orderTableRow);
+              }
+              orderTable.appendChild(orderTableBody);
+              orderlistDiv.appendChild(orderTable);
+            }
+          }
+
+          // Submit order to server
+          function orderApproval(accept,code) {
+              fetch('/securities/api/submitshoporder', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          orderAccept: accept,
+                          orderBill: code
+                      })
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      console.log(data);
+                      if (data.error == 0) {
+                        const statusCell = document.getElementById('status-' + data.message.split(',')[1]);
+                        if (data.message.split(',')[0] == 'accepted') {
+                          statusCell.innerHTML = 'Đã thanh toán';
+                          document.getElementById('product-quant-input').value--;
+                          // Change color, remove buttons
+                          statusCell.setAttribute('class', 'text-success');
+                          document.getElementById('form-' + data.message.split(',')[1]).innerHTML = '';
+                        } else if (data.message.split(',')[0] == 'cancelled') {
+                          statusCell.innerHTML = 'Đã hủy';
+                          // Change color, remove buttons
+                          statusCell.setAttribute('class', 'text-danger');
+                          document.getElementById('form-' + data.message.split(',')[1]).innerHTML = '';
+                        }
+                      } else {
+                        console.log('Error: ',data.message);
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                  });
           }
 
         </script>

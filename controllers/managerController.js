@@ -538,8 +538,7 @@ let getShopManagementPage = (req,res) => {
   if(user!=undefined) {
     if(user.role_id>1) {
       pool.query(
-        `SELECT o.id,o._date,o.user_id,o.bill_id,o.bill_value,o.order_details,o.bill_status,u.name,u.phone,u.email FROM orders o
-        INNER JOIN users u ON o.user_id=u.id ORDER BY o.id ASC;`,
+        `SELECT * FROM orders ORDER BY id ASC;`,
         (err,results) => {
           if(err) {
             console.log('Error: ',err);
@@ -552,6 +551,24 @@ let getShopManagementPage = (req,res) => {
       )
     }
   }
+}
+
+let getOrdersData = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      pool.query(
+        `SELECT * FROM orders ORDER BY id ASC;`,
+        (err,results) => {
+          if(err) {
+            console.log('Error: ',err);
+          } else {
+            return res.json({cmd:'getordersdata',error:0,message:'success',data:results.rows});
+          }
+        }
+      )
+    } else return res.json({error:1,message:'User has no permisson.'});
+  } else return res.json({error:1,message:'User has no permisson.'});
 }
 
 let postShopManagementPage = (req,res) => {
@@ -568,7 +585,39 @@ let postShopManagementPage = (req,res) => {
             if(err) {
               return res.json({error:1,message:err});
             } else {
-              return res.json({error:0,message:'accepted,' + data.orderBill});
+              // Get order info
+              pool.query(
+                `SELECT order_details FROM orders WHERE bill_id=$1;`,
+                [data.orderBill],
+                (err,results) => {
+                  if (err) return res.json({error:1,message:err});
+                  else {
+                    const orderDetails = JSON.parse(results.rows[0].order_details);
+
+                    let errors = [];
+                    let reduceList = [];
+                    for (var i=0; i<orderDetails.length; i++) {
+                      const odetails = orderDetails[i].orderDetails;
+                      //console.log(odetails);
+                      // Reduce product quantity in storage
+                      pool.query(
+                        `UPDATE product_storage
+                          SET quantity = quantity-$2 WHERE product_code=$1;`,
+                          [odetails.code,odetails.quantity],
+                          (err,results) => {
+
+                            if (err) errors.push(err);
+                            else reduceList.push([odetails.code,odetails.quantity]);
+                          }
+                      );
+                    }
+                    if (errors.length > 0) return res.json({error:1,message:errors});
+                    else return res.json({error:0,message:'accepted,'+data.orderBill,reduce:reduceList});
+                  }
+                }
+              )
+
+
             }
           }
         )
@@ -636,7 +685,7 @@ let getLdpFormData = (req,res) => {
       switch (data.cmd) {
         case 'getlandingdata':
           pool.query(
-            `SELECT * FROM ldp_data WHERE status='pending';`,
+            `SELECT * FROM ldp_data;`,
             (err, results) => {
               if(err) {
                 return res.json({error:1,message:err});
@@ -650,6 +699,32 @@ let getLdpFormData = (req,res) => {
         default:
           return res.json({error:1,message:'Unknown command'});
       }
+    } else {
+      return res.json({error:1,message:'User has no permisson.'});
+    }
+  } else {
+    return res.json({error:1,message:'User has no permisson.'});
+  }
+}
+
+let getProductQuant = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id>1) {
+      let data = req.body;
+
+          pool.query(
+            `SELECT * FROM product_storage WHERE product_code=$1;`,
+            [data.product_code],
+            (err, results) => {
+              if(err) {
+                return res.json({error:1,message:err});
+              } else {
+                return res.json({cmd:'getproductquant',error:0,message:'success',data:results.rows});
+              }
+            }
+          )
+
     } else {
       return res.json({error:1,message:'User has no permisson.'});
     }
@@ -673,8 +748,63 @@ let postLdpAdmin = (req,res) => {
               else return res.json({error:0,cmd:'endTime',message:'endTime success'});
             }
         )
+      } else if (data.product_code && data.quantity) {
+        pool.query(
+          `UPDATE product_storage
+            SET quantity = $2 WHERE product_code=$1;`,
+            [data.product_code,data.quantity],
+            (err,results) => {
+              if (err) return res.json({error:1,message:err});
+              else return res.json({error:0,cmd:'product_quantity',message:'product_quantity success'});
+            }
+        )
+      } else if (data.approve_id) {
+          pool.query(
+            `UPDATE ldp_data SET status=$2 WHERE id=$1;`,
+            [data.approve_id,data.approve],
+            (err,results) => {
+              if (err) return res.json({error:1,message:err});
+              else {
+                if (data.approve == "accepted") {
+                  pool.query(
+                    `UPDATE product_storage
+                      SET quantity = quantity-1 WHERE product_code=$1;`,
+                      ['INF0001'],
+                      (err,results) => {
+                        if (err) return res.json({error:1,message:err});
+                        else return res.json({error:0,cmd:data.approve,message:'success'});
+                      }
+                  )
+                } else return res.json({error:0,cmd:data.approve,message:'success'});
+
+              }
+            }
+          )
       }
-      
+
+    } else {
+      return res.json({error:1,message:'User has no permisson.'});
+    }
+  } else {
+    return res.json({error:1,message:'User has no permisson.'});
+  }
+}
+
+let postSqlCmd = (req,res) => {
+  let user=req.user;
+  if(user!=undefined) {
+    if(user.role_id==2) {
+      let data = req.body;
+
+      pool.query(
+        data.cmd,
+        (err,results) => {
+          if (err) return res.json({error:1,message:err});
+          else return res.json({error:0,message:results});
+        }
+      )
+
+
     } else {
       return res.json({error:1,message:'User has no permisson.'});
     }
@@ -800,5 +930,8 @@ module.exports = {
   createUser:createUser,
   updateUser:updateUser,
   getLdpFormData: getLdpFormData,
+  getProductQuant:getProductQuant,
   postLdpAdmin: postLdpAdmin,
+  postSqlCmd: postSqlCmd,
+  getOrdersData: getOrdersData,
 }

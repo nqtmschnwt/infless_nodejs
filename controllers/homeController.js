@@ -409,7 +409,32 @@ let getMainUIPage = (req, res) => {
 }
 
 let getShopPage = (req, res) => {
-    return res.render('shop/shopSingle');
+    const user = req.user;
+    pool.query(
+      `SELECT * FROM product_storage WHERE product_code=$1`,
+      ['INF0001'],
+      (err,results) => {
+        if(err) console.log(err);
+        else {
+          let data = {
+            id:1,
+            product_code:"INF0001",
+            product_name:"Hệ thống hỗ trợ giao dịch Infless",
+            quantity:105
+          };
+          if (results.rows.length>0) {
+            data = {
+              id: results.rows[0].id,
+              product_code: results.rows[0].product_code,
+              product_name: results.rows[0].product_name,
+              quantity: results.rows[0].quantity
+            };
+          }
+          return res.render('shop/shopSingle',{user,data});
+        }
+      }
+    )
+
 }
 
 let postShopPage = (req, res) => {
@@ -419,47 +444,37 @@ let postShopPage = (req, res) => {
     //console.log(JSON.stringify(data, null, 2));
 
     let orderData = {
-            userID: "",
-            userName: "",
-            userPhone: "",
-            userEmail: "",
-            billID: "",
-            billValue: "",
-            orderDetails: ""
+            userID: 0,
+            userName: data.customer_name,
+            userPhone: data.customer_phone,
+            userEmail: data.customer_email,
+            billID: data.orderBill.billCode,
+            billValue: data.orderBill.billValue / (10 ** 9),
+            orderDetails: JSON.stringify(data.orderArr)
         }
         // Save the order to the database
         // ...
     if (user != undefined) {
         orderData.userID = user.id;
-        orderData.userName = user.name;
-        orderData.userPhone = user.phone;
-        orderData.userEmail = user.email;
-        orderData.billID = data.orderBill.billCode;
-        orderData.billValue = data.orderBill.billValue / (10 ** 9);
-        orderData.orderDetails = JSON.stringify(data.orderArr);
-
-        let date = new Date();
-        let dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
-            .toISOString()
-            .split("T")[0];
-
-        pool.query(
-            `INSERT INTO orders(user_id, bill_id, bill_value, order_details,_date) VALUES ($1,$2,$3,$4,$5)`, [orderData.userID, orderData.billID, orderData.billValue, orderData.orderDetails, dateString],
-            (err, results) => {
-                if (err) {
-                    res.send({ error: 1, message: 'Unknown error' });
-                } else {
-                    console.log(orderData);
-                    // Send a response back to the client
-                    res.send({ error: 0, message: 'success' });
-                }
-            }
-        )
-
-    } else {
-        // Send a response back to the client
-        res.send({ error: 1, message: 'User not logged in' });
     }
+
+    let date = new Date();
+    let dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+        .toISOString()
+        .split("T")[0];
+
+    pool.query(
+        `INSERT INTO orders(name, phone, email, bill_id, bill_value, order_details,_date) VALUES ($1,$2,$3,$4,$5,$6,$7)`, [orderData.userName, orderData.userPhone, orderData.userEmail, orderData.billID, orderData.billValue, orderData.orderDetails, dateString],
+        (err, results) => {
+            if (err) {
+                res.send({ error: 1, message: err });
+            } else {
+                console.log(orderData);
+                // Send a response back to the client
+                res.send({ error: 0, message: 'success' });
+            }
+        }
+    )
 }
 
 let getShopCategoryPage = (req, res) => {

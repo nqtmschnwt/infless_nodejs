@@ -109,6 +109,16 @@
                                               <div class="btn btn-danger" onclick="updateProductQuant()" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
                                             </form>
                                         </div>
+
+                                        <div class="block">
+                                            <h4 class="title">Chèn code</h4>
+                                            <form>
+                                              <div style="width:100%">
+                                                <textarea id="embed-code-input" name="embed-code-input" style="height: 120px; width: 100%;"></textarea>
+                                              </div>
+                                              <div class="btn btn-danger" onclick="updateEmbedCode()" style="height: 32px; vertical-align: middle; margin: 0px !important;">Duyệt</div>
+                                            </form>
+                                        </div>
                                     </div>
 
                                     <!--div class="col-lg-6 col-12">
@@ -302,6 +312,30 @@
                 product_code:productCodeInput,
                 product_name:productNameInput,
                 quantity:productQuantInput
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              let resp = JSON.parse(data);
+              if(resp.error == 0) {
+                alert('Cập nhật thành công!');
+              } else alert(resp.message);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+
+          function updateEmbedCode() {
+            let embedCodeInput = document.getElementById('embed-code-input').value;
+            // Push
+            fetch('/securities/api/postlandingadmin/', {
+              method: 'POST',
+              body: JSON.stringify({
+                embedCode:embedCodeInput
               }),
               headers: {
                 'Content-Type': 'application/json'

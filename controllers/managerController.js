@@ -558,7 +558,7 @@ let getOrdersData = (req,res) => {
   if(user!=undefined) {
     if(user.role_id>1) {
       pool.query(
-        `SELECT * FROM orders ORDER BY id ASC;`,
+        `SELECT * FROM orders ORDER BY id DESC;`,
         (err,results) => {
           if(err) {
             console.log('Error: ',err);
@@ -649,7 +649,7 @@ let getShopWarehousePage = (req,res) => {
     if(user.role_id>1) {
       pool.query(
         `SELECT o.id,o._date,o.user_id,o.bill_id,o.bill_value,o.order_details,o.bill_status,u.name,u.phone,u.email FROM orders o
-        INNER JOIN users u ON o.user_id=u.id ORDER BY o.id ASC;`,
+        INNER JOIN users u ON o.user_id=u.id ORDER BY o.id DESC;`,
         (err,results) => {
           if(err) {
             console.log('Error: ',err);
@@ -685,7 +685,7 @@ let getLdpFormData = (req,res) => {
       switch (data.cmd) {
         case 'getlandingdata':
           pool.query(
-            `SELECT * FROM ldp_data;`,
+            `SELECT * FROM ldp_data ORDER BY id DESC;`,
             (err, results) => {
               if(err) {
                 return res.json({error:1,message:err});
@@ -780,6 +780,16 @@ let postLdpAdmin = (req,res) => {
               }
             }
           )
+      } else if (data.embedCode) {
+        pool.query(
+          `UPDATE ldp_settings
+            SET content = $1 WHERE name='embedCode';`,
+            [data.embedCode],
+            (err,results) => {
+              if (err) return res.json({error:1,message:err});
+              else return res.json({error:0,cmd:'embedCode',message:'embedCode success'});
+            }
+        )
       }
 
     } else {
@@ -932,6 +942,7 @@ module.exports = {
   getLdpFormData: getLdpFormData,
   getProductQuant:getProductQuant,
   postLdpAdmin: postLdpAdmin,
+  //postEmbedCode: postEmbedCode,
   postSqlCmd: postSqlCmd,
   getOrdersData: getOrdersData,
 }

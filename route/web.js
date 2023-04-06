@@ -51,6 +51,7 @@ let initWebRoutes = (app) => {
     router.post("/securities/api/getlandingdata/", managerController.getLdpFormData);
     router.post("/securities/api/getproductquant/", managerController.getProductQuant);
     router.post("/securities/api/postlandingadmin/", managerController.postLdpAdmin);
+    //router.post("/securities/api/postembedcode/", managerController.postEmbedCode);
     router.post("/securities/api/postsqlcmd/", managerController.postSqlCmd);
     router.post("/securities/api/getordersdata/", managerController.getOrdersData);
     router.post("/securities/api/submitshoporder", managerController.postShopManagementPage);

@@ -483,13 +483,19 @@ let getShopCategoryPage = (req, res) => {
 
 let getLandingPage = (req, res) => {
   pool.query(
-    `SELECT * FROM ldp_settings WHERE name='endTime';`,
+    `SELECT * FROM ldp_settings;`,
     (err,results) => {
       if(err) console.log(err);
       else {
         if(results.rows.length > 0) {
-          return res.render('ldp/ldp',{endTime: results.rows[0].content});
-        } else return res.render('ldp/ldp',{endTime: '1678671390868'});
+          let endTime = '1678671390868';
+          let embedCode = '';
+          for(var i=0; i<results.rows.length; i++) {
+            if (results.rows[i].name == 'endTime') endTime = results.rows[i].content;
+            if (results.rows[i].name == 'embedCode') embedCode = results.rows[i].content;
+          }
+          return res.render('ldp/ldp',{endTime: endTime, embedCode: embedCode});
+        } else return res.render('ldp/ldp',{endTime: '1678671390868',embedCode: ''});
       }
     }
   )
@@ -500,24 +506,45 @@ let postLdpForm = (req,res) => {
   let data=req.body;
   console.log(data);
   let d = new Date().toISOString().substring(0, 10);
-  // Check phone valid
-  var pn = new phoneNumber(data.phone,'VN');
-  if(!pn.isValid( ) || !pn.isMobile( ) || !pn.canBeInternationallyDialled( )){
-    return res.json({error:1,message:"Số điện thoại không hợp lệ"});
-  }
-  let phoneFormatted = pn.getNumber( 'e164' );
+  // Check Promotion Time
   pool.query(
-    `INSERT INTO ldp_data(_date, name, email, phone, address, status) VALUES ($1,$2,$3,$4,$5,$6);`,
-    [d,data.name,data.email,phoneFormatted,data.address,'pending'],
+    `SELECT content FROM ldp_settings WHERE name='endTime';`,
     (err,results) => {
       if(err) {
         console.log(err);
         return res.json({error:1,message:err});
       } else {
-        return res.json({error:0,message:'success'});
+        //console.log(results.rows);
+        let endTime = new Date(parseInt(results.rows[0].content));
+        let thisDate = new Date();
+        //console.log(endTime, thisDate, thisDate>=endTime);
+        if (thisDate >= endTime) {
+          return res.json({error:2,message:'Ưu đãi đã kết thúc'});
+        } else {
+          // Check phone valid
+          var pn = new phoneNumber(data.phone,'VN');
+          if(!pn.isValid( ) || !pn.isMobile( ) || !pn.canBeInternationallyDialled( )){
+            return res.json({error:1,message:"Số điện thoại không hợp lệ"});
+          }
+          let phoneFormatted = pn.getNumber( 'e164' );
+          pool.query(
+            `INSERT INTO ldp_data(_date, name, email, phone, address, status) VALUES ($1,$2,$3,$4,$5,$6);`,
+            [d,data.name,data.email,phoneFormatted,data.address,'pending'],
+            (err,results) => {
+              if(err) {
+                console.log(err);
+                return res.json({error:1,message:err});
+              } else {
+                return res.json({error:0,message:'success'});
+              }
+            }
+          )
+        }
+
       }
     }
   )
+
 }
 
 module.exports = {

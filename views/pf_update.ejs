@@ -37,12 +37,256 @@
 <script src="/js/favico.min.js"></script>
 <script src="/js/custom-script.js"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<!-- Sheet -->
 <script>
+  let SHEET_ID = '1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg';
+  let SHEET_TITLE = 'GDKH';
+  let SHEET_RANGE = 'A:L';
+
+  //let FULL_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?sheet=' + SHEET_TITLE + "&range=" + SHEET_RANGE;
+  let FULL_URL = 'https://docs.google.com/spreadsheets/d/1BSXJVLWeoEZe0c1UnP58tAHXUbbWrobLLq0oTWv3xKg/gviz/tq?sheet=GDKH_new&range=A:O';
+  //console.log(FULL_URL);
+  fetch(FULL_URL)
+    .then(res => res.text())
+    .then(res => {
+      //console.log(res);
+      const data = JSON.parse(res.substr(47).slice(0,-2));
+      //console.log(data);
+      const values = data.table.rows;
+      let data2 = [];
+      let pointer=0;
+      console.log(values);
+      let clientObj = {};
+      for (var i=0; i<values.length-1; i++) {
+        if (values[i].c[0] != null && values[i+1].c[0] == null) {
+          // client info
+          let row = values[i].c;
+          let acc = cellVal(row[0], 'string');
+          let company = cellVal(row[1], 'string').toUpperCase();
+          let name = cellVal(row[2], 'string');
+          let phone = cellVal(row[3], 'string');
+          let email = cellVal(row[4], 'string');
+          let net_value = cellVal(row[5], 'int')/1000000000;
+          let portfolio_value = cellVal(row[6], 'int')/1000000000;
+          let cash_value = cellVal(row[7], 'int')/1000000000;
+          let debt = cellVal(row[9], 'int')/1000000000;
+
+          clientObj.acc = acc;
+          clientObj.company = company;
+          clientObj.name = name;
+          clientObj.phone = phone;
+          clientObj.email = email;
+          clientObj.net_value = net_value;
+          clientObj.portfolio_value = portfolio_value;
+          clientObj.cash_value = cash_value;
+          clientObj.debt = debt;
+          clientObj.portfolio = [];
+
+        } else  if (values[i].c[0] == null && values[i+1].c[0] == null) {
+          let row = values[i].c;
+          if (row[0]==null) {
+            if (row[10] != null) {
+              let buyprice = 0;
+              let currentprice = 0;
+              if(row[12].v!=null) buyprice = row[12].v;
+              if(row[13].v!=null) currentprice = row[13].v;
+              clientObj.portfolio.push({
+                ticker:row[10].v,
+                vol:row[11].v,
+                buyprice:buyprice,
+                currentprice:currentprice,
+              });
+            }
+          }
+        } else if (values[i].c[0] == null && values[i+1].c[0] != null) {
+          data2.push(clientObj);
+          clientObj = {};
+        }
+        /*
+        // Old sheet
+        const row = values[i].c;
+        if (row[0].v == 'SỐ TK') {
+          //console.log(row);
+          let phone = '';
+
+          if(row.length==12) phone=row[11].v;
+          else phone='';
+
+          let tsrong = 0;
+          let cash = 0;
+          let debt = 0;
+
+          let acc = '';
+          if (row[1] != null) acc = row[1].f;
+
+          let company = '';
+          if (row[2] != null) company = row[2].toUpperCase();
+
+          try {
+            if(row.length>=7 && row[7] != null){
+              tsrong = row[7].v/1000000000;
+            }
+            else tsrong = 0;
+          }
+          catch(err) {
+            console.log(err);
+            //console.log(i,row);
+          }
+          try {
+            if(row.length>=9 && row[9] != null){
+              cash = row[9].v/1000000000;
+            }
+            else cash = 0;
+          }
+          catch(err) {
+            console.log(err);
+            //console.log(i,row);
+          }
+
+          data2.push({
+            acc:acc,
+            company:company,
+            phone:phone,
+            net_value:tsrong,
+            portfolio_value: 0,
+            cash_value:cash,
+            debt:debt,
+            portfolio:[]
+            });
+        } else if (row[0].v=='HỌ VÀ TÊN') {
+          //console.log(row);
+          let tstt = 0;
+          if(row[7] != null) tstt = row[7].v/1000000000;
+          data2[data2.length-1].portfolio_value = tstt;
+          //email
+          if(row.length==12 && row[11]!=null) {
+            if (row[11].v) {
+              if (row[11].v!=null) {
+                data2[data2.length-1].email = row[11].v.toLowerCase();
+              }
+            }
+          } else data2[data2.length-1].email = '';
+          //name
+          if(row[5]!=null) {
+            if (row[5].v) {
+              if (row[5].v!=null) {
+                data2[data2.length-1].name = row[5].v;
+              }
+            }
+          } else data2[data2.length-1].name = '';
+        } else if (row[0].v=='Chi tiết giao dịch') {
+          //console.log(row);
+          let debt = 0;
+          if(row[9]!=null) {
+            if (row[9].v) {
+              if (row[9].v!=null) {
+                debt = row[9].v/1000000000;
+              }
+            }
+          }
+          data2[data2.length-1].debt = debt;
+        } else if (row[0].v=='Mã') {
+          pointer = i;
+        } else if (row[0].v!='' && row[0].v.length<10 && i>pointer) {
+        //  console.log(row);
+
+          let buyprice = 0;
+          let currentprice = 0;
+          if(row[2].v!=null) buyprice = row[2].v;
+          if(row[3].v!=null) currentprice = row[3].v;
+          data2[data2.length-1].portfolio.push({
+            ticker:row[0].v,
+            vol:row[1].v,
+            buyprice:buyprice,
+            currentprice:currentprice,
+          });
+        }*/
+      }
+      console.log(data2);
+
+      for(var i=0;i<data2.length;i++) {
+        fetch("/securities/pf-update", {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data2[i])
+        }).then(res => res.json())
+          .then(res => {
+            let fr = document.getElementById('fetch-results');
+            let frcol = document.createElement("div");
+            frcol.classList.add('col-12');
+            let frblock = document.createElement("div");
+            frblock.classList.add('block');
+            let frblockcontent = document.createElement("div");
+            frblockcontent.classList.add('block-content');
+            let frName = document.createElement("p");
+            frName.innerHTML = 'Họ và tên: ' + res.inputParams.name;
+            let frPhone = document.createElement("p");
+            frPhone.innerHTML = 'Điện thoại: ' + res.inputParams.phone;
+            let frEmail = document.createElement("p");
+            frEmail.innerHTML = 'Email: ' + res.inputParams.email;
+            let frAcc = document.createElement("p");
+            frAcc.innerHTML = 'Số TK: ' + res.inputParams.acc;
+            let frCompany = document.createElement("p");
+            frCompany.innerHTML = 'Công ty: ' + res.inputParams.company;
+            let frMsg = document.createElement("p");
+
+            frMsg.innerHTML = res.message;
+            fr.appendChild(frcol);
+            frcol.appendChild(frblock);
+            frblock.appendChild(frblockcontent);
+            frblockcontent.appendChild(frMsg);
+            frblockcontent.appendChild(frName);
+            frblockcontent.appendChild(frPhone);
+            frblockcontent.appendChild(frEmail);
+            frblockcontent.appendChild(frAcc);
+            frblockcontent.appendChild(frCompany);
+
+
+            switch(res.errorCode) {
+              case 0:
+                frMsg.classList.remove("text-danger");
+                frMsg.classList.add('text-success');
+                break;
+              case 1:
+                frMsg.classList.remove("text-success");
+                frMsg.classList.add('text-danger');
+                break;
+              default:
+                console.log(res);
+            }
+          })
+          .catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err));
+
+    function cellVal(cell, format) {
+      if (cell != null) {
+        if (format=='string') {
+          if(cell.v) return('' + cell.v);
+          else return('');
+        }
+        if (format=='int') {
+          if (typeof(cell.v)=='number') return(parseInt(cell.v));
+          if (typeof(cell.v)=='string') return(parseInt(cell.v.replace(/[^\w\s]/gi, '')));
+        }
+        if (format=='float') {
+          if (typeof(cell.v)=='number') return(parseFloat(cell.v));
+          if (typeof(cell.v)=='string') return(parseFloat(cell.v.replace(/[^\w\s]/gi, '')));
+        }
+      } else {
+        if (format=='string') return('');
+        if (format=='int') return(0);
+        if (format=='float') return(0.0);
+      }
+    }
+</script>
+<!--script>
   // UPDATE FUND'S PF
-  var prices = <%- JSON.stringify(prices) %>;
+  var prices = [];
 
   var records = [];  //time,direction,ticker,vol,pct,price,avg_cost,profit
-  var trades = <%- JSON.stringify(trades) %>;
+  var trades = [];
   var initCap = 10;
   var portfolio = [{ticker:'Tiền mặt',amount:initCap*1000,equity:initCap,price:0.001}];  //ticker,amount,equity,price
 
@@ -277,5 +521,5 @@
       })
       .catch(err => console.log(err));
   }
-</script>
+</script-->
 </html>

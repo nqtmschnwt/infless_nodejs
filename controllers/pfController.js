@@ -515,6 +515,8 @@ let getPfUpdate = async (req,res) => {
   if(user!=undefined){
     if(user.role_id==2 || user.role_id==3)
     {
+      /*
+      // Server side GG sheet
       const auth = new google.auth.GoogleAuth({
         keyFile: './sample_query/sheetkey.json',
         scopes: 'https://www.googleapis.com/auth/spreadsheets'
@@ -562,7 +564,21 @@ let getPfUpdate = async (req,res) => {
           }
         }
       )
-
+      */
+      // get fund's trade orders
+      pool.query(
+        `SELECT * FROM trade_orders;`, (err,results) => {
+          if(err) console.log(err);
+          else {
+            let trades = [];
+            if(results.rows.length > 0) {
+              trades = results.rows;
+              let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
+              return res.render('pf_update', {menu:menuData,user,data:[],trades:[]});
+            }
+          }
+        }
+      )
 
 
       //let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));

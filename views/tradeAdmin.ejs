@@ -227,7 +227,7 @@
     var socket = io('/', { transport : ['websocket'] });
 
     // GET custoken from DB
-    let custoken = '<%- custoken %>';
+    let custoken = '';
 
     //document.getElementById('fnav').value = fundnav.value;
     // Emit events
@@ -253,7 +253,7 @@
             price: price.value
         });
 
-        fetch("/securities/pushtrans", {
+        /*fetch("/securities/pushtrans", {
           method: "POST",
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -272,7 +272,7 @@
         })
         .catch(err => {
           console.log(err);
-        });
+        });*/
 
         alert("Lệnh đã được gửi!");
     }
@@ -413,7 +413,7 @@
         for(var j=0; j<portfolio.length; j++) {  // check if portfolio has this ticker
           if(dividend[i][1] == portfolio[j].ticker) {
             switch(dividend[i][0]) {
-              case 'Trả cổ tức bằng cổ phiếu':      
+              case 'Trả cổ tức bằng cổ phiếu':
               case 'Thưởng cổ phiếu':
                 console.log(dates[t] + ' ' + portfolio[j].ticker + ' thưởng cổ phiếu về TK');
                 portfolio[j].volAvailable += portfolio[j].pending;

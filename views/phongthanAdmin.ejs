@@ -155,7 +155,7 @@
       echo = document.getElementById('echo');
 
   // GET custoken from DB
-  let custoken = '<%- custoken %>';
+  let custoken = '';
 
   var m = new Date();
   var dt = m.getFullYear() +"-"+ addZero(m.getMonth()+1) +"-"+ addZero(m.getDate())  + " " + addZero(m.getHours()) + "-" + addZero(m.getMinutes()) + "-" + addZero(m.getSeconds());
@@ -273,7 +273,7 @@
       'speed':canhbaoSpeed.value
     });
 
-    fetch("/securities/pushadmmsg", {
+    /*fetch("/securities/pushadmmsg", {
       method: "POST",
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -294,7 +294,7 @@
     })
     .catch(err => {
       console.log(err);
-    });
+    });*/
 
   });
 

@@ -88,8 +88,13 @@
             if (row[10] != null) {
               let buyprice = 0;
               let currentprice = 0;
-              if(row[12].v!=null) buyprice = row[12].v;
-              if(row[13].v!=null) currentprice = row[13].v;
+              if(row[12]!=null && row[12].v) {
+                if(row[12].v!=null) buyprice = row[12].v;
+              } else console.log('Row ' + i + "[12]: error"  );
+
+              if(row[13]!=null && row[13].v) {
+                  if(row[13].v!=null) currentprice = row[13].v;
+              } else console.log('Row ' + i + "[13]: error"  );
               clientObj.portfolio.push({
                 ticker:row[10].v,
                 vol:row[11].v,

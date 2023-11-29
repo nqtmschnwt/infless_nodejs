@@ -571,7 +571,7 @@ let getPfUpdate = async (req,res) => {
           if(err) console.log(err);
           else {
             let trades = [];
-            if(results.rows.length > 0) {
+            if(results.rows.length >= 0) {
               trades = results.rows;
               let menuData = JSON.parse(fs.readFileSync('./views/menus/menuData/managerMenu.json'));
               return res.render('pf_update', {menu:menuData,user,data:[],trades:[]});
